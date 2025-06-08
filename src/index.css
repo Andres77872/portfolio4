@@ -1,18 +1,5 @@
-/* CSS Variable Definitions for Easy Theme Management */
+/* Import CSS Variables */
 @import './css/variables/index.css';
-
-:root {
-    --font-primary: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
-    --color-bg-primary: #121212;
-    --color-bg-secondary: #1f1f1f;
-    --color-text-primary: #ffffff;
-    --color-text-secondary: #b0b0b0;
-    --color-accent: #bb86fc;
-    --color-accent-hover: #61dafb;
-    --border-radius: 8px;
-    --transition-speed: 0.3s;
-    --box-shadow: rgba(0, 0, 0, 0.4) 0px 4px 12px;
-}
 
 /* Reset and Global settings */
 *,
@@ -29,14 +16,15 @@ body {
 }
 
 body {
-    font-family: var(--font-primary);
-    line-height: 1.6;
+    font-family: var(--font-family-base);
+    line-height: var(--line-height-normal);
     font-weight: 400;
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-primary);
+    color: var(--text-color);
+    background-color: var(--background-color-website);
     display: flex;
     flex-direction: column;
     align-items: center;
+    scroll-behavior: smooth;
 }
 
 /* Typography Settings */
@@ -47,7 +35,7 @@ h4,
 h5,
 h6 {
     font-weight: 700;
-    line-height: 1.2;
+    line-height: var(--line-height-normal);
     margin: 0;
 }
 
@@ -60,44 +48,44 @@ h2 {
 }
 
 p {
-    color: var(--color-text-secondary);
+    color: var(--text-color-secondary);
 }
 
 /* Anchor Links */
 a {
     font-weight: 500;
-    color: var(--color-accent);
+    color: var(--accent-color);
     text-decoration: none;
-    transition: color var(--transition-speed);
+    transition: color var(--transition-standard);
 }
 
 a:hover {
-    color: var(--color-accent-hover);
+    color: var(--accent-color-hover);
 }
 
 /* Buttons and other interactive elements */
 button {
     border-radius: var(--border-radius);
-    border: none;
-    padding: 0.75em 1.5em;
-    font-size: 1em;
-    font-weight: 600;
+    border: var(--button-border);
+    padding: var(--button-padding-vertical) var(--button-padding-horizontal);
+    font-size: var(--button-font-size);
+    font-weight: var(--button-font-weight);
     font-family: inherit;
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-secondary);
+    color: var(--button-text-color);
+    background-color: var(--button-background-color);
     cursor: pointer;
-    box-shadow: var(--box-shadow);
-    transition: background-color var(--transition-speed), transform var(--transition-speed);
+    box-shadow: var(--button-box-shadow-hover);
+    transition: background-color var(--transition-standard), transform var(--transition-standard);
 }
 
 button:hover {
-    background-color: var(--color-accent);
+    background-color: var(--button-background-color-hover);
     transform: translateY(-2px);
 }
 
 button:focus-visible {
-    outline: 2px solid var(--color-accent-hover);
-    outline-offset: 2px;
+    outline: var(--focus-outline);
+    outline-offset: var(--padding-small);
 }
 
 /* Scrollbar improvements (for modern browsers) */
@@ -106,38 +94,21 @@ button:focus-visible {
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--color-bg-secondary);
+    background: var(--background-color-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: var(--color-accent);
+    background-color: var(--accent-color);
     border-radius: var(--border-radius);
 }
 
 /* Responsive Media Queries */
 @media (max-width: 600px) {
-    body {
-        padding: 0;
-    }
-
     h1 {
         font-size: 2.25rem;
     }
 
     h2 {
         font-size: 1.75rem;
-    }
-}
-
-/* Light Theme Support (optional) */
-@media (prefers-color-scheme: light) {
-    :root {
-        --color-bg-primary: #ffffff;
-        --color-bg-secondary: #f0f0f0;
-        --color-text-primary: #212121;
-        --color-text-secondary: #424242;
-        --color-accent: #646cff;
-        --color-accent-hover: #535bf2;
-        --box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
     }
 }

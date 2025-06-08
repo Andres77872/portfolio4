@@ -20,7 +20,7 @@
 
     /* Accent Colors (Softer, more muted blue-violet) */
     --accent-color: #6773a8; /* Muted soft indigo */
-    --accent-color-hover: #7c88b8; /* Slightly lighter indigo */
+    --accent-color-hover: #3d4675; /* Slightly lighter indigo */
 
     /* Status Message Colors (desaturated/friendly for dark UI) */
     --color-messages-info: #4a90b4; /* Muted info blue */
