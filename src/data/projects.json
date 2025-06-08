@@ -46,6 +46,15 @@
     "status": "production"
   },
   {
+    "title": "spyder.findit",
+    "description": "Reverse image search tool that displays results in a graph, using vector embeddings to calculate edges. Consumes the api.findit.moe API.",
+    "url": "https://spyder.findit.moe/",
+    "image": "https://img.arz.ai/z9WApj2V",
+    "repoUrl": "https://github.com/Andres77872/spyder.findit.moe",
+    "tags": ["React", "Three.js", "react-force-graph-3d", "Reverse Image Search", "Graph Visualization", "Vector Embeddings"],
+    "status": "production"
+  },
+  {
     "title": "magic-llm",
     "description": "LLM wrapper unifying providers like Anthropic, Cohere, AWS Bedrock, OpenAI, and any OpenAI compatible provider into a single OpenAI schema-based output format.",
     "repoUrl": "https://github.com/Andres77872/magic-llm",
