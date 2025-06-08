@@ -122,6 +122,63 @@ body {
   color: var(--text-secondary);
 }
 
+/* Project Card Image */
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+}
+
+/* Status Badge */
+.status {
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--border-radius);
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  margin-left: 0.5rem;
+}
+.status-production {
+  background-color: var(--accent-color);
+  color: var(--bg-primary);
+}
+.status-repo {
+  background-color: var(--text-secondary);
+  color: var(--bg-primary);
+}
+
+/* Tags */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0 1rem;
+}
+.tag {
+  background-color: var(--accent-color);
+  color: var(--bg-primary);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--border-radius);
+  font-size: 0.8rem;
+}
+
+/* Filters */
+.project-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.project-filters input,
+.project-filters select {
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  border: none;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
 /* Footer */
 .footer {
   padding: 2rem 0;

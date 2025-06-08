@@ -1,10 +1,18 @@
 [
   {
     "title": "Project One",
-    "description": "Brief description of the project with key features and technologies used."
+    "description": "Brief description of the project with key features and technologies used.",
+    "url": "https://github.com/andres/project-one",
+    "image": "https://img.arz.ai/0RgBiDTt",
+    "tags": ["React", "TypeScript"],
+    "status": "repo"
   },
   {
     "title": "Project Two",
-    "description": "Another interesting project you have accomplished."
+    "description": "Another interesting project you have accomplished.",
+    "url": "https://project-two.example.com",
+    "image": "https://img.arz.ai/76vCzkA1",
+    "tags": ["Node.js", "Express", "MongoDB"],
+    "status": "production"
   }
 ]
