@@ -257,7 +257,6 @@ main {
 
 .section:hover {
   box-shadow: var(--box-shadow-hover);
-  transform: translateY(-5px);
 }
 
 .section h2 {
@@ -664,11 +663,6 @@ main {
   border-radius: var(--border-radius-medium);
   margin-bottom: var(--margin-medium);
   box-shadow: var(--box-shadow-light);
-  transition: transform var(--transition-standard);
-}
-
-.projects__card:hover img {
-  transform: scale(1.05);
 }
 
 .projects__live {
