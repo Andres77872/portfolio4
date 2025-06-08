@@ -38,7 +38,7 @@ export default function Projects() {
         <section id="projects" className="section projects">
             <h2>My Projects</h2>
 
-            <div className="project-filters">
+            <div className="projects__filters">
                 <input
                     type="text"
                     placeholder="Search projects..."
@@ -58,50 +58,68 @@ export default function Projects() {
                 </select>
             </div>
 
-            <div className="cards-container">
+            <div className="projects__cards">
                 {filteredProjects.map((project, index) => (
-                    <div key={index} className="card">
+                    <div key={index} className="projects__card">
                         {project.url && (
-                            <div className="live-decorator">Live</div>
+                            <div className="projects__live">Live</div>
                         )}
                         {project.image && (
-                            <img src={project.image} alt={project.title}/>
+                            <img src={project.image} alt={project.title} />
                         )}
                         <h3>
                             {project.title}
                             {project.status && (
-                                <span className={`status status-${project.status}`}>
-                                  {project.status}
+                                <span
+                                    className={`projects__status projects__status--${project.status}`}
+                                >
+                                    {project.status}
                                 </span>
                             )}
                         </h3>
                         <p>{project.description}</p>
                         {project.tags && (
-                            <div className="tags-container">
+                            <div className="projects__tags">
                                 {project.tags.map(tag => (
                                     <span
                                         key={tag}
-                                        className="tag"
+                                        className={`projects__tag ${
+                                            selectedTag === tag
+                                                ? 'projects__tag--active'
+                                                : ''
+                                        }`}
                                         onClick={() => setSelectedTag(tag)}
                                     >
-                                    {tag}
-                                  </span>
+                                        {tag}
+                                    </span>
                                 ))}
                             </div>
                         )}
-                        <div className="links-container">
+                        <div className="projects__links">
                             {project.url && (
-                                <a href={project.url} target="_blank" rel="noopener noreferrer">
+                                <a
+                                    href={project.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
                                     Live Site
                                 </a>
                             )}
                             {project.apiUrl && (
-                                <a href={project.apiUrl} target="_blank" rel="noopener noreferrer">
+                                <a
+                                    href={project.apiUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
                                     API
                                 </a>
                             )}
                             {project.repoUrl && (
-                                <a href={project.repoUrl} target="_blank" rel="noopener noreferrer">
+                                <a
+                                    href={project.repoUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
                                     GitHub
                                 </a>
                             )}
