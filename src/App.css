@@ -309,7 +309,6 @@ main {
 .about__description,
 .contact__description {
   color: var(--text-color-secondary);
-  max-width: 800px;
   margin: 0 0 var(--margin-medium) 0;
   line-height: var(--line-height-relaxed);
 }
@@ -543,7 +542,7 @@ main {
 
 .chatbot__message--user {
   align-self: flex-end;
-  background: linear-gradient(135deg, var(--accent-color), var(--accent-color-secondary));
+  background-color: var(--background-color-tertiary);
   color: var(--text-color);
   border-bottom-right-radius: 4px;
 }

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, ChangeEvent, FormEvent } from 'react';
 import { streamChatCompletion } from '../services/chatService';
+import ReactMarkdown from "react-markdown";
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -108,7 +109,7 @@ export default function ChatBot() {
                       : 'chatbot__message--assistant'
                   }`}
                 >
-                  {message.content}
+                  <ReactMarkdown>{message.content}</ReactMarkdown>
                 </div>
               ))
             )}

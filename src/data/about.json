@@ -1,0 +1,29 @@
+[
+  {
+    "title": "AI Developer",
+    "description": [
+      "I'm Andres, an AI Developer specializing in Generative AI and large language model (LLM) systems. I design and build end-to-end AI solutions—from research prototypes to production-ready services—leveraging FastAPI backends, React frontends, and state-of-the-art machine learning frameworks.",
+      "My work spans reverse search engines powered by neural embeddings (FindIT), node-graph agent orchestration tools (Novus Talk & magic-agents), encrypted file-sharing platforms (JustAnotherFileStorage), and unified LLM provider wrappers (magic-llm). I'm passionate about diffusion models, vector databases (Qdrant), and autonomous agent systems that bridge the gap between research and real-world applications."
+    ],
+    "skills": [
+      {
+        "category": "AI & Machine Learning",
+        "items": ["Large Language Models (LLMs)", "Diffusion Models", "Neural Embeddings", "Vector Databases", "Autonomous Agents"]
+      },
+      {
+        "category": "Backend Development",
+        "items": ["FastAPI", "Python", "AWS", "API Design", "Database Management"]
+      },
+      {
+        "category": "Frontend Development",
+        "items": ["React", "TypeScript", "CSS", "Responsive Design", "UI/UX"]
+      }
+    ],
+    "contactLinks": [
+      {
+        "name": "GitHub",
+        "url": "https://github.com/Andres77872"
+      }
+    ]
+  }
+]
