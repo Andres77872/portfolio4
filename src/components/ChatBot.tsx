@@ -9,6 +9,7 @@ interface Message {
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 350, height: 500 });
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +22,10 @@ export default function ChatBot() {
 
   const toggleChatbot = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleReset = () => {
+    setMessages([]);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -90,9 +95,49 @@ export default function ChatBot() {
       </button>
 
       {isOpen && (
-        <div className="chatbot__window">
+        <div
+          className="chatbot__window"
+          style={{ width: dimensions.width, height: dimensions.height }}
+        >
+          <div
+            className="chatbot__resize-handle"
+            title="Drag to resize"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              const startX = e.clientX;
+              const startY = e.clientY;
+              const { width, height } = dimensions;
+              let resizing = true;
+              const onMouseMove = (ev: MouseEvent) => {
+                if (!resizing) return;
+                const deltaX = startX - ev.clientX;
+                const deltaY = startY - ev.clientY;
+                setDimensions({
+                  width: Math.max(200, width + deltaX),
+                  height: Math.max(200, height + deltaY),
+                });
+              };
+              const onMouseUp = () => {
+                resizing = false;
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+              };
+              document.addEventListener('mousemove', onMouseMove);
+              document.addEventListener('mouseup', onMouseUp);
+            }}
+          />
           <div className="chatbot__header">
             <h3>AI Assistant</h3>
+            <div className="chatbot__controls">
+              <button
+                type="button"
+                className="chatbot__control-button"
+                onClick={handleReset}
+                title="Reset conversation"
+              >
+                🔄
+              </button>
+            </div>
           </div>
           <div className="chatbot__messages">
             {messages.length === 0 ? (
