@@ -3,7 +3,10 @@ export default function About() {
     <section id="about" className="section about">
       <h2>About Me</h2>
       <p className="about__description">
-        Hello! I'm a Mexican System Engineer specialized in Machine Learning (ML) and Web Services (WS) Back-End. I'm working in research, designing and deploying ML models as WS in self-hosted servers, ML models for segmentation, detection and OCR in the computer vision field, also predictive models for auto tagging images and efficient search engines. Welcome to my portfolio!
+        I’m Andres, an AI Developer specializing in Generative AI and large language model (LLM) systems. I design and build end-to-end AI solutions—from research prototypes to production-ready services—leveraging FastAPI backends, React frontends, and state-of-the-art machine learning frameworks.
+      </p>
+      <p className="about__description">
+        My work spans reverse search engines powered by neural embeddings (FindIT), node-graph agent orchestration tools (Novus Talk & magic-agents), encrypted file-sharing platforms (JustAnotherFileStorage), and unified LLM provider wrappers (magic-llm). I’m passionate about diffusion models, vector databases (Qdrant), and autonomous agent systems that bridge the gap between research and real-world applications.
       </p>
     </section>
   );
