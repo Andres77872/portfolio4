@@ -1,6 +1,6 @@
 import './App.css';
 
-import { Header, About, Projects, Contact, Footer } from './components';
+import { Header, About, Projects, Contact, Footer, ChatBot } from './components';
 
 function App() {
   return (
@@ -14,6 +14,9 @@ function App() {
       </main>
 
       <Footer />
+
+      {/* Floating ChatBot button */}
+      <ChatBot />
     </div>
   );
 }
