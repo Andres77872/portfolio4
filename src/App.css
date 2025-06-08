@@ -8,6 +8,7 @@
   --text-secondary: #b0b0b0;
   --border-radius: 12px;
   --shadow: rgba(0, 0, 0, 0.4);
+  --header-height: 0px; /* Will be updated via JavaScript */
 }
 
 body {
@@ -23,12 +24,30 @@ body {
   max-width: 1200px;
   margin: auto;
   padding: 0 20px;
+  /* Add padding to account for sticky header */
+  padding-top: 1rem;
 }
 
 /* Header Section */
 .header {
-  margin-top: 3rem;
-  margin-bottom: 2.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background-color: var(--bg-primary);
+  padding: 1.5rem 0;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.header__content {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .header__title {
@@ -40,16 +59,33 @@ body {
   color: var(--text-secondary);
 }
 
+.header__links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header__github-link {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--accent-color);
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+}
+
+.header__github-link:hover {
+  background-color: var(--accent-color);
+  color: var(--bg-primary);
+}
+
 /* Navbar */
 .navbar {
-  position: sticky;
-  top: 0;
   z-index: 100;
   background-color: rgba(18, 18, 18, 0.95);
   backdrop-filter: blur(5px);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   padding: 0.75rem 0;
-  margin-bottom: 2rem;
   transition: all 0.3s ease;
 }
 
@@ -182,6 +218,21 @@ body {
   left: 25%;
   background: linear-gradient(to right, var(--accent-color), var(--accent-hover));
   border-radius: 2px;
+}
+
+/* About section styles */
+.about__header {
+  margin-bottom: 2rem;
+}
+
+.about__title {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.about__subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
 }
 
 .about__description,
@@ -345,8 +396,28 @@ body {
     gap: 0.5rem;
   }
 
-  .header__title {
+  .header {
+    padding: 1rem 0;
+  }
+
+  .header__content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header__links {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+  }
+
+  /* Responsive About section */
+  .about__title {
     font-size: 2.25rem;
+  }
+
+  .about__header {
+    margin-bottom: 1.5rem;
   }
 
   /* Mobile navbar styles */

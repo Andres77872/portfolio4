@@ -1,12 +1,11 @@
 import './App.css';
 
-import { Header, Navbar, About, Projects, Contact, Footer } from './components';
+import { Header, About, Projects, Contact, Footer } from './components';
 
 function App() {
   return (
     <div className="App">
       <Header />
-      <Navbar />
 
       <main>
         <About />
