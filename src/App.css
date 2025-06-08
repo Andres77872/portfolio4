@@ -162,6 +162,7 @@ body {
   padding: 0.2rem 0.5rem;
   border-radius: var(--border-radius);
   font-size: 0.8rem;
+  cursor: pointer;
 }
 
 /* Filters */
