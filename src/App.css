@@ -93,6 +93,24 @@ body {
   margin: 0 auto;
 }
 
+/* Contact Links */
+.contact__links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+.contact__link {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+.contact__link:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
 /* Projects Section Styles */
 .projects__filters {
   display: flex;
