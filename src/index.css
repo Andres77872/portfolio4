@@ -1,4 +1,6 @@
 /* CSS Variable Definitions for Easy Theme Management */
+@import './css/variables/index.css';
+
 :root {
     --font-primary: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
     --color-bg-primary: #121212;

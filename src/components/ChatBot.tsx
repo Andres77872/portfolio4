@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
-import '../styles/ChatBot.css';
+import { useState, useRef, useEffect, ChangeEvent, FormEvent } from 'react';
 import { streamChatCompletion } from '../services/chatService';
 
 interface Message {
@@ -7,7 +6,7 @@ interface Message {
   content: string;
 }
 
-const ChatBot: React.FC = () => {
+export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -23,11 +22,11 @@ const ChatBot: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
@@ -80,9 +79,9 @@ const ChatBot: React.FC = () => {
   };
 
   return (
-    <div className="chatbot-container">
-      <button 
-        className="chatbot-toggle-button"
+    <div className="chatbot">
+      <button
+        className="chatbot__toggle"
         onClick={toggleChatbot}
         aria-label={isOpen ? 'Close chatbot' : 'Open chatbot'}
       >
@@ -90,45 +89,54 @@ const ChatBot: React.FC = () => {
       </button>
 
       {isOpen && (
-        <div className="chatbot-window">
-          <div className="chatbot-header">
+        <div className="chatbot__window">
+          <div className="chatbot__header">
             <h3>AI Assistant</h3>
           </div>
-          <div className="chatbot-messages">
+          <div className="chatbot__messages">
             {messages.length === 0 ? (
-              <div className="chatbot-welcome">
+              <div className="chatbot__welcome">
                 <p>Hello! How can I help you today?</p>
               </div>
             ) : (
               messages.map((message, index) => (
-                <div 
-                  key={index} 
-                  className={`chatbot-message ${message.role === 'user' ? 'user-message' : 'assistant-message'}`}
+                <div
+                  key={index}
+                  className={`chatbot__message ${
+                    message.role === 'user'
+                      ? 'chatbot__message--user'
+                      : 'chatbot__message--assistant'
+                  }`}
                 >
                   {message.content}
                 </div>
               ))
             )}
             {isLoading && (
-              <div className="chatbot-message assistant-message">
-                <div className="typing-indicator">
-                  <span></span>
-                  <span></span>
-                  <span></span>
+              <div className="chatbot__message chatbot__message--assistant">
+                <div className="chatbot__typing">
+                  <span />
+                  <span />
+                  <span />
                 </div>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
-          <form className="chatbot-input-form" onSubmit={handleSubmit}>
+          <form className="chatbot__input" onSubmit={handleSubmit}>
             <input
+              className="chatbot__input-field"
               type="text"
               value={input}
               onChange={handleInputChange}
               placeholder="Type your message..."
               disabled={isLoading}
             />
-            <button type="submit" disabled={isLoading || !input.trim()}>
+            <button
+              className="chatbot__input-button"
+              type="submit"
+              disabled={isLoading || !input.trim()}
+            >
               Send
             </button>
           </form>
@@ -136,6 +144,5 @@ const ChatBot: React.FC = () => {
       )}
     </div>
   );
-};
+}
 
-export default ChatBot;
