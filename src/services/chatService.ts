@@ -4,9 +4,9 @@
 
 // API Configuration
 const API_CONFIG = {
-  BASE_URL: 'https://llm.arz.ai/v1/chat/completions',
+  BASE_URL: 'https://magic.arz.ai/chat/openai/v1/completion',
   API_KEY: 'None', // Use environment variable if available
-  MODEL: '@01/gpt-4o-mini'
+  MODEL: 'agt-d0625c6e-5757-4580-b6f4-2fb681f2c9a3'
 };
 
 interface Message {

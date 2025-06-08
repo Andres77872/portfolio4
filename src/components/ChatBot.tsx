@@ -85,7 +85,7 @@ export default function ChatBot() {
         onClick={toggleChatbot}
         aria-label={isOpen ? 'Close chatbot' : 'Open chatbot'}
       >
-        {isOpen ? '✕' : '💬'}
+        <span>{isOpen ? '✕' : '💬'}</span>
       </button>
 
       {isOpen && (
@@ -137,7 +137,7 @@ export default function ChatBot() {
               type="submit"
               disabled={isLoading || !input.trim()}
             >
-              Send
+              <span>Send</span>
             </button>
           </form>
         </div>
@@ -145,4 +145,3 @@ export default function ChatBot() {
     </div>
   );
 }
-

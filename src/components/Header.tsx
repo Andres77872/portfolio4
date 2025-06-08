@@ -44,7 +44,7 @@ export default function Header() {
             className="header__github-link"
             aria-label="GitHub repository"
           >
-            GitHub
+            <span>GitHub</span>
           </a>
         </div>
       </div>
