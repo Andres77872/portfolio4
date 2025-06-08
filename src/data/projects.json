@@ -50,6 +50,7 @@
     "description": "Reverse image search tool that displays results in a graph, using vector embeddings to calculate edges. Consumes the api.findit.moe API.",
     "url": "https://spyder.findit.moe/",
     "image": "https://img.arz.ai/z9WApj2V",
+    "apiUrl": "https://api.findit.moe/docs#/General%20anime%20image%20search",
     "repoUrl": "https://github.com/Andres77872/spyder.findit.moe",
     "tags": ["React", "Three.js", "react-force-graph-3d", "Reverse Image Search", "Graph Visualization", "Vector Embeddings"],
     "status": "production"
