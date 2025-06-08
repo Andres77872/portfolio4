@@ -1,9 +1,11 @@
 import {useMemo, useState} from 'react';
+import ReactMarkdown from 'react-markdown';
 import projectsData from '../data/projects.json';
 
 interface Project {
     title: string;
     description: string;
+    descriptionMD: string;
     url?: string;
     apiUrl?: string;
     repoUrl?: string;
@@ -16,6 +18,19 @@ export default function Projects() {
     const projects = projectsData as Project[];
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedTag, setSelectedTag] = useState('');
+    const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openProjectModal = (project: Project) => {
+        setSelectedProject(project);
+        setIsModalOpen(true);
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+    };
+
+    const closeProjectModal = () => {
+        setIsModalOpen(false);
+        document.body.style.overflow = ''; // Re-enable scrolling
+    };
 
     const allTags = useMemo(() => {
         const tags = projects.flatMap(p => p.tags || []);
@@ -60,7 +75,11 @@ export default function Projects() {
 
             <div className="projects__cards">
                 {filteredProjects.map((project, index) => (
-                    <div key={index} className="projects__card">
+                    <div 
+                        key={index} 
+                        className="projects__card"
+                        onClick={() => openProjectModal(project)}
+                    >
                         {project.url && (
                             <div className="projects__live">Live</div>
                         )}
@@ -77,7 +96,7 @@ export default function Projects() {
                                 </span>
                             )}
                         </h3>
-                        <p>{project.description}</p>
+                        <p>{project.description.substring(0, 150)}...</p>
                         {project.tags && (
                             <div className="projects__tags">
                                 {project.tags.map(tag => (
@@ -88,7 +107,10 @@ export default function Projects() {
                                                 ? 'projects__tag--active'
                                                 : ''
                                         }`}
-                                        onClick={() => setSelectedTag(tag)}
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // Prevent card click
+                                            setSelectedTag(tag);
+                                        }}
                                     >
                                         {tag}
                                     </span>
@@ -101,6 +123,7 @@ export default function Projects() {
                                     href={project.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()} // Prevent card click
                                 >
                                     Live Site
                                 </a>
@@ -110,6 +133,7 @@ export default function Projects() {
                                     href={project.apiUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()} // Prevent card click
                                 >
                                     API
                                 </a>
@@ -119,6 +143,7 @@ export default function Projects() {
                                     href={project.repoUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()} // Prevent card click
                                 >
                                     GitHub
                                 </a>
@@ -127,6 +152,92 @@ export default function Projects() {
                     </div>
                 ))}
             </div>
+
+            {/* Project Modal */}
+            {isModalOpen && selectedProject && (
+                <div className="project-modal">
+                    <div className="project-modal__overlay" onClick={closeProjectModal}></div>
+                    <div className="project-modal__content">
+                        <button className="project-modal__close" onClick={closeProjectModal}>
+                            &times;
+                        </button>
+
+                        {selectedProject.image && (
+                            <img 
+                                src={selectedProject.image} 
+                                alt={selectedProject.title} 
+                                className="project-modal__image" 
+                            />
+                        )}
+
+                        <h2 className="project-modal__title">
+                            {selectedProject.title}
+                            {selectedProject.status && (
+                                <span
+                                    className={`projects__status projects__status--${selectedProject.status}`}
+                                >
+                                    {selectedProject.status}
+                                </span>
+                            )}
+                        </h2>
+
+                        <div className="project-modal__description">
+                            <ReactMarkdown>{selectedProject.descriptionMD}</ReactMarkdown>
+                        </div>
+
+                        {selectedProject.tags && (
+                            <div className="projects__tags project-modal__tags">
+                                {selectedProject.tags.map(tag => (
+                                    <span
+                                        key={tag}
+                                        className={`projects__tag ${
+                                            selectedTag === tag
+                                                ? 'projects__tag--active'
+                                                : ''
+                                        }`}
+                                        onClick={() => {
+                                            setSelectedTag(tag);
+                                            closeProjectModal();
+                                        }}
+                                    >
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+
+                        <div className="projects__links project-modal__links">
+                            {selectedProject.url && (
+                                <a
+                                    href={selectedProject.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Live Site
+                                </a>
+                            )}
+                            {selectedProject.apiUrl && (
+                                <a
+                                    href={selectedProject.apiUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    API
+                                </a>
+                            )}
+                            {selectedProject.repoUrl && (
+                                <a
+                                    href={selectedProject.repoUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    GitHub
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     );
 }

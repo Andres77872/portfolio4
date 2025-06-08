@@ -2,6 +2,7 @@
   {
     "title": "FindIT",
     "description": "Reverse search engine powered by an NN model, openclip, and Qdrant. Features a FastAPI backend and a React frontend.",
+    "descriptionMD": "**FindIT: Advanced Reverse Image Search**\n\nDiscover the story behind any image with FindIT, a sophisticated reverse search engine.\nUtilizing a powerful **Neural Network (NN) model**, **OpenCLIP** for robust image embeddings, and **Qdrant** for efficient vector similarity search, FindIT delivers accurate and relevant results.\n\n**Key Technologies:**\n*   **Frontend:** Built with **React** for a dynamic and responsive user experience.\n*   **Backend:** Powered by **FastAPI**, ensuring high performance and scalability.\n*   **Core:** Leverages **OpenCLIP** for image understanding and **Qdrant** for managing and searching image embeddings.\n\nSimply upload an image, and let FindIT unveil its origins and related content.",
     "url": "https://findit.moe/",
     "apiUrl": "https://api.findit.moe/",
     "image": "https://img.arz.ai/0RgBiDTt",
@@ -17,6 +18,7 @@
   {
     "title": "Novus Talk",
     "description": "Node graph agent creation tool inspired by ComfyUI. Uses LLMs with JSON graph definitions for agents/assistants, aiming for OpenAI schema compatible output. FastAPI backend with magic-llm. Work in progress.",
+    "descriptionMD": "**Novus Talk: Intuitive Node-Based Agent Creation**\n\nInspired by the flexibility of ComfyUI, Novus Talk is a cutting-edge tool for designing and deploying **AI agents and assistants** using a visual node graph interface.\n\n**Core Features:**\n*   **Visual Programming:** Define complex agent behaviors by connecting nodes in an intuitive graph.\n*   **LLM Integration:** Seamlessly integrates with Large Language Models (LLMs) through **JSON graph definitions**.\n*   **Standardized Output:** Aims for compatibility with the **OpenAI schema** for consistent agent interactions.\n*   **Backend:** Robust **FastAPI** backend utilizing the **magic-llm** library for versatile LLM provider connections.\n\nNovus Talk is currently under active development, paving the way for innovative AI agent creation.",
     "url": "https://talk.novus.chat/",
     "apiUrl": "https://magic.arz.ai/",
     "image": "https://img.arz.ai/0GSBN8FV",
@@ -34,6 +36,7 @@
   {
     "title": "JustAnotherFileStorage",
     "description": "Temporal file sharing system creating unique, encrypted file links. Decryption key is part of the URL; URLs are not stored, making recovery impossible. FastAPI backend, React frontend.",
+    "descriptionMD": "**JustAnotherFileStorage (JAFS): Secure & Ephemeral File Sharing**\n\nShare files with an emphasis on privacy and security using JAFS. This system generates unique, encrypted links for your files, offering a temporal sharing solution.\n\n**Security by Design:**\n*   **Client-Side Encryption:** Files are encrypted in your browser before upload.\n*   **Key in URL:** The decryption key is embedded directly within the shared link's fragment identifier (hash).\n*   **Zero Knowledge (Server-Side):** The server never sees the decryption key, and the links themselves are not stored, making file recovery impossible if the link is lost. This ensures maximum privacy.\n\n**Technology Stack:**\n*   **Frontend:** Interactive and user-friendly interface built with **React**.\n*   **Backend:** High-performance and secure API developed with **FastAPI**.\n\nJAFS is ideal for sharing sensitive information that requires a self-destructing mechanism or when you want to ensure that only the recipient with the exact link can access the content.",
     "url": "https://shr.wtf/",
     "apiUrl": "https://shr.arz.ai/",
     "image": "https://img.arz.ai/gHIAqEJR",
@@ -48,6 +51,7 @@
   {
     "title": "spyder.findit",
     "description": "Reverse image search tool that displays results in a graph, using vector embeddings to calculate edges. Consumes the api.findit.moe API.",
+    "descriptionMD": "**spyder.findit: Visualizing Image Similarity**\n\nExplore image connections like never before with `spyder.findit`. This innovative tool takes reverse image search a step further by displaying results as an interactive 3D graph.\n\n**Key Features:**\n*   **Graph-Based Results:** Instead of a simple list, `spyder.findit` visualizes image relationships, with **edges calculated based on the similarity of their vector embeddings**.\n*   **Powered by FindIT API:** Leverages the robust search capabilities of the `api.findit.moe` backend.\n*   **Immersive Exploration:** Navigate through a 3D force-directed graph to uncover visual connections and discover related imagery.\n\n**Technologies:**\n*   **Frontend:** Built with **React**.\n*   **3D Visualization:** Utilizes **Three.js** and **react-force-graph-3d** to render interactive and dynamic graphs.\n\n`spyder.findit` offers a unique and engaging way to perform reverse image searches and understand the intricate relationships between visual content.",
     "url": "https://spyder.findit.moe/",
     "image": "https://img.arz.ai/z9WApj2V",
     "apiUrl": "https://api.findit.moe/docs#/General%20anime%20image%20search",
@@ -58,6 +62,7 @@
   {
     "title": "Colpali-Arxiv Chat",
     "description": "Proof-of-concept showcasing Colpali's capabilities for embedding, indexing, and RAG from Arxiv papers. Reformulates queries for targeted searches via Colpali index (llm.arz.ai) and generates summaries. Built with Streamlit, uses magic-llm. Single-turn chat POC, conversational features planned.",
+    "descriptionMD": "**Colpali-Arxiv Chat: RAG for Scientific Research**\n\nThis **Proof-of-Concept (POC)** demonstrates the power of Colpali in revolutionizing how we interact with scientific literature from Arxiv.\n\n**Core Functionality:**\n*   **Retrieval-Augmented Generation (RAG):** Leverages Colpali for advanced embedding, indexing, and retrieval of information from Arxiv research papers.\n*   **Intelligent Query Reformulation:** When you enter a topic, the system uses Colpali to break it down into 1-5 targeted search queries for more precise results from the Colpali index (hosted at `llm.arz.ai`).\n*   **Concise Summaries:** Generates a summary report based on the retrieved information, providing quick insights into complex topics.\n*   **LLM Integration:** Uses the **magic-llm** wrapper for flexible language model interactions.\n\n**Development & Future:**\n*   **Platform:** Built with **Streamlit** for rapid prototyping and interactive web application development.\n*   **Current Stage:** A POC focusing on **single-turn chat interactions**.\n*   **Roadmap:** Enhancements for conversational abilities are planned for the future.\n*   **Independent Index:** The Colpali index is maintained separately, ensuring up-to-date and comprehensive data.\n\nColpali-Arxiv Chat aims to make navigating and understanding scientific research more efficient and accessible.",
     "url": "https://magic-reports.streamlit.app/",
     "image": "https://img.arz.ai/7NWBNqhx",
     "repoUrl": "https://github.com/Andres77872/magic-reports",
@@ -68,6 +73,7 @@
   {
     "title": "magic-llm",
     "description": "LLM wrapper unifying providers like Anthropic, Cohere, AWS Bedrock, OpenAI, and any OpenAI compatible provider into a single OpenAI schema-based output format.",
+    "descriptionMD": "**magic-llm: Unified LLM Integration Framework**\n\n`magic-llm` is a powerful Python library designed to simplify interactions with a multitude of Large Language Model (LLM) providers. It acts as a versatile wrapper, abstracting the complexities of different APIs.\n\n**Key Goals & Features:**\n*   **Provider Agnostic:** Supports major LLM providers including **Anthropic, Cohere, AWS Bedrock, OpenAI**, and any **OpenAI-compatible** service.\n*   **Standardized Output:** Unifies the output from various providers into a **single, consistent schema based on OpenAI's format**. This dramatically reduces the effort required to switch between or use multiple LLMs.\n*   **Simplified Development:** Allows developers to write code once and interact with different LLMs without significant modifications.\n\n**Core Dependencies:**\n*   **`boto3`**: For AWS Bedrock integration.\n*   **`httpx` / `aiohttp`**: For efficient asynchronous and synchronous HTTP requests to LLM APIs.\n\n`magic-llm` streamlines the development of LLM-powered applications by providing a consistent and easy-to-use interface across various providers.",
     "repoUrl": "https://github.com/Andres77872/magic-llm",
     "image": "https://img.arz.ai/5n3AU6bp",
     "tags": [
@@ -86,6 +92,7 @@
   {
     "title": "magic-agents",
     "description": "Graph framework for Novus Talk, inspired by ComfyUI. Uses magic-llm for LLM connections. Graph built with NetworkX, Jinja2 for node logic. Under development.",
+    "descriptionMD": "**magic-agents: A ComfyUI-Inspired Graph Framework for AI Agents**\n\n`magic-agents` is the foundational graph framework powering **Novus Talk**, offering a flexible and intuitive way to construct sophisticated AI agents. Drawing inspiration from the node-based paradigm of ComfyUI, it allows for modular and visual agent design.\n\n**Core Components & Philosophy:**\n*   **Node-Based Architecture:** Agents are built by connecting functional nodes in a graph, where each node represents a specific task or logic unit.\n*   **LLM Connectivity:** Seamlessly integrates with Large Language Models through the **`magic-llm`** wrapper, enabling versatile LLM provider support.\n*   **Graph Management:** Utilizes **NetworkX** for robust graph creation, manipulation, and analysis.\n*   **Dynamic Node Logic:** Employs **Jinja2 templating** to define and execute logic within individual nodes, allowing for dynamic and configurable agent behaviors.\n\n**Current Status:**\n*   Actively **under development**, with a focus on building a comprehensive and user-friendly framework for creating next-generation AI agents.\n\n`magic-agents` aims to empower developers to build complex and adaptable AI systems with ease and precision.",
     "repoUrl": "https://github.com/Andres77872/magic-agents",
     "image": "https://img.arz.ai/pfgAs1_B",
     "tags": [
