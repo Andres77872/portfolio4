@@ -56,6 +56,16 @@
     "status": "production"
   },
   {
+    "title": "Colpali-Arxiv Chat",
+    "description": "Proof-of-concept showcasing Colpali's capabilities for embedding, indexing, and RAG from Arxiv papers. Reformulates queries for targeted searches via Colpali index (llm.arz.ai) and generates summaries. Built with Streamlit, uses magic-llm. Single-turn chat POC, conversational features planned.",
+    "url": "https://magic-reports.streamlit.app/",
+    "image": "https://img.arz.ai/7NWBNqhx",
+    "repoUrl": "https://github.com/Andres77872/magic-reports",
+    "apiUrl": "https://llm.arz.ai/docs#/data%20sources/colpali_rag_colpali_arxiv_post",
+    "tags": ["POC", "RAG", "Arxiv", "Streamlit", "magic-llm", "Colpali", "Information Retrieval", "AI", "LLM"],
+    "status": "production"
+  },
+  {
     "title": "magic-llm",
     "description": "LLM wrapper unifying providers like Anthropic, Cohere, AWS Bedrock, OpenAI, and any OpenAI compatible provider into a single OpenAI schema-based output format.",
     "repoUrl": "https://github.com/Andres77872/magic-llm",
