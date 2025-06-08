@@ -8,29 +8,35 @@
     --background-color-hover: #333333; /* Subtle hover state */
     --background-color-focus: #3a3a3a; /* Subtle focus state */
     --background-color-disable: #1e1e1e; /* Darker for disabled elements */
+    --background-color-header: #1a1a1a; /* Specific color for header background */
 
     /* Text Colors */
     --text-color: #f5f5f5; /* Slightly off-white for better eye comfort */
     --text-color-secondary: #b0b0b0; /* Medium gray for secondary text */
+    --text-color-tertiary: #8a8a8a; /* Darker gray for less emphasis */
     --text-color-placeholder: #707070; /* Darker gray for placeholders */
+    --text-color-header: #f5f5f5; /* Specific color for header text */
 
     /* Border Colors */
     --border-color: #333333; /* Dark gray for borders */
     --border-color-lighter: #444444; /* Slightly lighter for emphasis */
+    --border-color-header: #333333; /* Specific color for header borders */
 
-    /* Accent Colors (Softer, more muted blue-violet) */
-    --accent-color: #6773a8; /* Muted soft indigo */
-    --accent-color-hover: #3d4675; /* Slightly lighter indigo */
+    /* Accent Colors (Improved palette with better contrast) */
+    --accent-color: #7a84b8; /* Brighter indigo for better visibility */
+    --accent-color-hover: #5a6498; /* Darker indigo for hover states */
+    --accent-color-secondary: #9ba4d0; /* Lighter indigo for secondary elements */
+    --accent-color-muted: #4d5680; /* Muted indigo for subtle accents */
 
-    /* Status Message Colors (desaturated/friendly for dark UI) */
-    --color-messages-info: #4a90b4; /* Muted info blue */
-    --color-messages-success: #4d8563; /* Calm, muted green */
-    --color-messages-error: #c15c5c; /* Desaturated, deep red */
-    --color-messages-warning: #b58d4a; /* Muted, warm amber */
+    /* Status Message Colors (improved contrast for better readability) */
+    --color-messages-info: #5aa0c4; /* Brighter info blue */
+    --color-messages-success: #5d9573; /* Brighter success green */
+    --color-messages-error: #d16c6c; /* Brighter error red */
+    --color-messages-warning: #c59d5a; /* Brighter warning amber */
 
     /* Miscellaneous Colors */
     --color-dark: #0a0a0a; /* Very dark for special cases */
-    --color-hover-secondary: #2a2a2a; /* Alternative hover color */
+    --color-hover-secondary: #2a2a2a; /* Alternative hover state */
     --color-footer: #121212; /* Match website background for footer */
     --color-brighter: #ffffff; /* Pure white for high contrast elements */
 
@@ -39,4 +45,7 @@
     --background-transparency-light: rgba(0, 0, 0, 0.3);
     --background-transparency-dark: rgba(0, 0, 0, 0.8);
     --background-transparency: var(--background-transparency-dark);
+
+    /* Header-specific transparency */
+    --header-transparency: rgba(26, 26, 26, 0.95); /* Semi-transparent header background */
 }
