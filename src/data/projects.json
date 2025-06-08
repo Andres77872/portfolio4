@@ -1,18 +1,48 @@
 [
   {
-    "title": "Project One",
-    "description": "Brief description of the project with key features and technologies used.",
-    "url": "https://github.com/andres/project-one",
+    "title": "FindIT",
+    "description": "Reverse search engine powered by an NN model, openclip, and Qdrant. Features a FastAPI backend and a React frontend.",
+    "url": "https://findit.moe/",
     "image": "https://img.arz.ai/0RgBiDTt",
-    "tags": ["React", "TypeScript"],
+    "tags": [
+      "React",
+      "FastAPI",
+      "NN",
+      "openclip",
+      "qdrant"
+    ],
+    "status": "production"
+  },
+  {
+    "title": "Novus Talk",
+    "description": "Node graph agent creation tool inspired by ComfyUI. Uses LLMs with JSON graph definitions for agents/assistants, aiming for OpenAI schema compatible output. FastAPI backend with magic-llm. Work in progress.",
+    "url": "https://talk.novus.chat/",
+    "image": "https://img.arz.ai/0GSBN8FV",
+    "tags": ["FastAPI", "LLM", "Node Graph", "Agents", "JSON", "OpenAI", "magic-llm"],
+    "status": "production"
+  },
+  {
+    "title": "JustAnotherFileStorage",
+    "description": "Temporal file sharing system creating unique, encrypted file links. Decryption key is part of the URL; URLs are not stored, making recovery impossible. FastAPI backend, React frontend.",
+    "url": "https://shr.wtf/",
+    "image": "https://img.arz.ai/gHIAqEJR",
+    "tags": ["FastAPI", "React", "File Sharing", "Encryption"],
+    "status": "production"
+  },
+  {
+    "title": "magic-llm",
+    "description": "LLM wrapper unifying providers like Anthropic, Cohere, AWS Bedrock, OpenAI, and any OpenAI compatible provider into a single OpenAI schema-based output format.",
+    "repoUrl": "https://github.com/Andres77872/magic-llm",
+    "image": "https://img.arz.ai/5n3AU6bp",
+    "tags": ["LLM", "Wrapper", "OpenAI", "Anthropic", "Cohere", "AWS Bedrock", "boto3", "httpx", "aiohttp"],
     "status": "repo"
   },
   {
-    "title": "Project Two",
-    "description": "Another interesting project you have accomplished.",
-    "url": "https://project-two.example.com",
-    "image": "https://img.arz.ai/76vCzkA1",
-    "tags": ["Node.js", "Express", "MongoDB"],
-    "status": "production"
+    "title": "magic-agents",
+    "description": "Graph framework for Novus Talk, inspired by ComfyUI. Uses magic-llm for LLM connections. Graph built with NetworkX, Jinja2 for node logic. Under development.",
+    "repoUrl": "https://github.com/Andres77872/magic-agents",
+    "image": "https://img.arz.ai/pfgAs1_B",
+    "tags": ["Graph Framework", "LLM", "ComfyUI", "magic-llm", "NetworkX", "Jinja2", "Agents"],
+    "status": "repo"
   }
 ]

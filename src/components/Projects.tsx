@@ -5,6 +5,8 @@ interface Project {
   title: string;
   description: string;
   url?: string;
+  apiUrl?: string;
+  repoUrl?: string;
   image?: string;
   tags?: string[];
   status?: 'production' | 'repo';
@@ -59,6 +61,9 @@ export default function Projects() {
       <div className="cards-container">
         {filteredProjects.map((project, index) => (
           <div key={index} className="card">
+            {project.url && (
+              <div className="live-decorator">Live</div>
+            )}
             {project.image && (
               <img src={project.image} alt={project.title} />
             )}
@@ -80,15 +85,23 @@ export default function Projects() {
                 ))}
               </div>
             )}
-            {project.url && (
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View More
-              </a>
-            )}
+            <div className="links-container">
+              {project.url && (
+                <a href={project.url} target="_blank" rel="noopener noreferrer">
+                  Live Site
+                </a>
+              )}
+              {project.apiUrl && (
+                <a href={project.apiUrl} target="_blank" rel="noopener noreferrer">
+                  API
+                </a>
+              )}
+              {project.repoUrl && (
+                <a href={project.repoUrl} target="_blank" rel="noopener noreferrer">
+                  GitHub
+                </a>
+              )}
+            </div>
           </div>
         ))}
       </div>
