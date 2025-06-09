@@ -56,7 +56,14 @@
     "image": "https://img.arz.ai/z9WApj2V",
     "apiUrl": "https://api.findit.moe/docs#/General%20anime%20image%20search",
     "repoUrl": "https://github.com/Andres77872/spyder.findit.moe",
-    "tags": ["React", "Three.js", "react-force-graph-3d", "Reverse Image Search", "Graph Visualization", "Vector Embeddings"],
+    "tags": [
+      "React",
+      "Three.js",
+      "react-force-graph-3d",
+      "Reverse Image Search",
+      "Graph Visualization",
+      "Vector Embeddings"
+    ],
     "status": "production"
   },
   {
@@ -67,7 +74,38 @@
     "image": "https://img.arz.ai/7NWBNqhx",
     "repoUrl": "https://github.com/Andres77872/magic-reports",
     "apiUrl": "https://llm.arz.ai/docs#/data%20sources/colpali_rag_colpali_arxiv_post",
-    "tags": ["POC", "RAG", "Arxiv", "Streamlit", "magic-llm", "Colpali", "Information Retrieval", "AI", "LLM"],
+    "tags": [
+      "POC",
+      "RAG",
+      "Arxiv",
+      "Streamlit",
+      "magic-llm",
+      "Colpali",
+      "Information Retrieval",
+      "AI",
+      "LLM"
+    ],
+    "status": "production"
+  },
+  {
+    "title": "Magic Slider",
+    "description": "AI-powered slide creator that generates RevealJS presentations through LLM prompts. Integrates with talk.novus.chat backend API for intelligent content generation. Built with React + Vite, featuring RAG and agentic capabilities through magic-agents. Proof-of-concept for automated presentation creation.",
+    "descriptionMD": "**Magic Slider: AI-Powered Presentation Creator**\n\nTransform your ideas into compelling presentations effortlessly with Magic Slider, an innovative **Proof-of-Concept (POC)** that leverages AI to generate professional slides from simple prompts.\n\n**Core Features:**\n*   **LLM-Driven Content Generation:** Simply describe your presentation topic, and let AI create structured, engaging slides for you.\n*   **RevealJS Integration:** Generates modern, interactive presentations using the powerful RevealJS framework.\n*   **Intelligent Backend:** Powered by the **talk.novus.chat API** for sophisticated content processing and generation.\n*   **Advanced AI Capabilities:** Incorporates **RAG (Retrieval-Augmented Generation)** and **agentic workflows** through the **magic-agents** framework.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for fast development and optimal performance.\n*   **AI Framework:** Utilizes **magic-agents** for sophisticated AI-driven content creation.\n*   **Presentation Engine:** **RevealJS** for creating beautiful, interactive slide presentations.\n\n**Current Status:**\n*   **Proof-of-Concept** demonstrating the potential of AI-assisted presentation creation.\n\nMagic Slider represents the future of presentation design, where creativity meets artificial intelligence to streamline content creation.",
+    "url": "https://magic-slider.novus.chat/",
+    "image": "https://img.arz.ai/vGqCivS9",
+    "apiUrl": "https://magic.arz.ai/docs#/Chat/completion_chat_openai_v1_completion_post",
+    "repoUrl": "https://github.com/Andres77872/magic-slider",
+    "tags": [
+      "POC",
+      "React",
+      "Vite",
+      "RevealJS",
+      "LLM",
+      "RAG",
+      "magic-agents",
+      "Presentation",
+      "AI"
+    ],
     "status": "production"
   },
   {

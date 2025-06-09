@@ -5,7 +5,7 @@
 // API Configuration
 const API_CONFIG = {
   BASE_URL: 'https://magic.arz.ai/chat/openai/v1/completion',
-  API_KEY: 'None', // Use environment variable if available
+  API_KEY: 'None',
   MODEL: 'agt-d0625c6e-5757-4580-b6f4-2fb681f2c9a3'
 };
 
