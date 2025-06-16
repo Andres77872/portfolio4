@@ -1,47 +1,93 @@
 /* spacing.css */
 :root {
-    /* Base Spacing Scale */
-    --space-xxs: 0.25rem;   /* 4px */
-    --space-xs: 0.5rem;     /* 8px */
-    --space-sm: 0.75rem;    /* 12px */
-    --space-md: 1rem;       /* 16px */
-    --space-lg: 1.5rem;     /* 24px */
-    --space-xl: 2rem;       /* 32px */
-    --space-xxl: 3rem;      /* 48px */
-    --space-xxxl: 4rem;     /* 64px */
+    /* Base Spacing Scale - Using an 8pt grid system (multiples of 4px) */
+    --space-unit: 0.25rem;      /* 4px - Base unit */
+    --space-xxs: var(--space-unit);   /* 4px */
+    --space-xs: calc(var(--space-unit) * 2);     /* 8px */
+    --space-sm: calc(var(--space-unit) * 3);    /* 12px */
+    --space-md: calc(var(--space-unit) * 4);       /* 16px */
+    --space-lg: calc(var(--space-unit) * 6);     /* 24px */
+    --space-xl: calc(var(--space-unit) * 8);     /* 32px */
+    --space-2xl: calc(var(--space-unit) * 12);    /* 48px */
+    --space-3xl: calc(var(--space-unit) * 16);     /* 64px */
+    --space-4xl: calc(var(--space-unit) * 20);     /* 80px */
+    --space-5xl: calc(var(--space-unit) * 24);     /* 96px */
+
+    /* Fluid Spacing - Responsive spacing that scales with viewport */
+    --fluid-space-sm: clamp(var(--space-xs), 2vw, var(--space-sm));
+    --fluid-space-md: clamp(var(--space-sm), 3vw, var(--space-md));
+    --fluid-space-lg: clamp(var(--space-md), 5vw, var(--space-lg));
+    --fluid-space-xl: clamp(var(--space-lg), 7vw, var(--space-xl));
+    --fluid-space-2xl: clamp(var(--space-xl), 10vw, var(--space-2xl));
 
     /* Padding Variables - Using the spacing scale */
     --padding-xxs: var(--space-xxs);
     --padding-xs: var(--space-xs);
-    --padding-small: var(--space-xs);
+    --padding-small: var(--space-xs); /* For backward compatibility */
     --padding-sm: var(--space-sm);
-    --padding-medium: var(--space-md);
+    --padding-medium: var(--space-md); /* For backward compatibility */
     --padding-lg: var(--space-lg);
-    --padding-large: var(--space-lg);
+    --padding-large: var(--space-lg); /* For backward compatibility */
     --padding-xl: var(--space-xl);
-    --padding-xxl: var(--space-xxl);
+    --padding-2xl: var(--space-2xl);
+    --padding-3xl: var(--space-3xl);
+    --padding-4xl: var(--space-4xl);
 
     /* Margin Variables - Using the spacing scale */
     --margin-xxs: var(--space-xxs);
     --margin-xs: var(--space-xs);
-    --margin-small: var(--space-xs);
+    --margin-small: var(--space-xs); /* For backward compatibility */
     --margin-sm: var(--space-sm);
-    --margin-medium: var(--space-md);
+    --margin-medium: var(--space-md); /* For backward compatibility */
     --margin-lg: var(--space-lg);
-    --margin-large: var(--space-lg);
+    --margin-large: var(--space-lg); /* For backward compatibility */
     --margin-xl: var(--space-xl);
-    --margin-xxl: var(--space-xxl);
+    --margin-2xl: var(--space-2xl);
+    --margin-3xl: var(--space-3xl);
+    --margin-4xl: var(--space-4xl);
 
     /* Gap Variables - Using the spacing scale */
     --gap-xxs: var(--space-xxs);
     --gap-xs: var(--space-xs);
-    --gap-small: var(--space-xs);
+    --gap-small: var(--space-xs); /* For backward compatibility */
     --gap-sm: var(--space-sm);
-    --gap-medium: var(--space-md);
+    --gap-medium: var(--space-md); /* For backward compatibility */
     --gap-lg: var(--space-lg);
-    --gap-large: var(--space-lg);
+    --gap-large: var(--space-lg); /* For backward compatibility */
     --gap-xl: var(--space-xl);
-    --gap-xxl: var(--space-xxl);
+    --gap-2xl: var(--space-2xl);
+    --gap-3xl: var(--space-3xl);
+
+    /* Inset (Padding Shorthand) Variables */
+    --inset-xxs: var(--space-xxs);
+    --inset-xs: var(--space-xs);
+    --inset-sm: var(--space-sm);
+    --inset-md: var(--space-md);
+    --inset-lg: var(--space-lg);
+    --inset-xl: var(--space-xl);
+
+    /* Squish (Horizontal emphasis) Variables */
+    --squish-xs: var(--space-xxs) var(--space-xs);
+    --squish-sm: var(--space-xs) var(--space-sm);
+    --squish-md: var(--space-sm) var(--space-md);
+    --squish-lg: var(--space-md) var(--space-lg);
+
+    /* Stretch (Vertical emphasis) Variables */
+    --stretch-xs: var(--space-xs) var(--space-xxs);
+    --stretch-sm: var(--space-sm) var(--space-xs);
+    --stretch-md: var(--space-md) var(--space-sm);
+    --stretch-lg: var(--space-lg) var(--space-md);
+
+    /* Container Padding */
+    --container-padding-x: var(--space-md);
+    --container-padding-y: var(--space-lg);
+    --container-padding: var(--container-padding-y) var(--container-padding-x);
+    
+    /* Section Spacing */
+    --section-spacing-sm: var(--space-2xl);
+    --section-spacing-md: var(--space-3xl);
+    --section-spacing-lg: var(--space-4xl);
+    --section-spacing: var(--section-spacing-md); /* Default */
 
     /* Header-specific spacing */
     --header-padding-vertical: var(--space-sm);
@@ -49,4 +95,26 @@
     --header-height: 4rem; /* Fixed header height */
     --header-item-gap: var(--space-md);
     --header-nav-item-gap: var(--space-lg);
+    
+    /* Content Spacing */
+    --content-spacing-xs: var(--space-xs);
+    --content-spacing-sm: var(--space-sm);
+    --content-spacing-md: var(--space-md);
+    --content-spacing-lg: var(--space-lg);
+    --content-spacing-xl: var(--space-xl);
+    --content-spacing: var(--content-spacing-md); /* Default */
+    
+    /* Grid System */
+    --grid-gap-sm: var(--space-sm);
+    --grid-gap-md: var(--space-md);
+    --grid-gap-lg: var(--space-lg);
+    --grid-gap: var(--grid-gap-md); /* Default */
+    
+    /* Z-index Scale */
+    --z-index-negative: -1;
+    --z-index-base: 0;
+    --z-index-low: 10;
+    --z-index-medium: 100;
+    --z-index-high: 1000;
+    --z-index-highest: 10000;
 }

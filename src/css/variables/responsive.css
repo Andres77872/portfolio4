@@ -1,0 +1,138 @@
+/* responsive.css */
+:root {
+    /* Breakpoint values */
+    --breakpoint-xs: 320px;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-2xl: 1400px;
+    
+    /* Container max widths */
+    --container-max-width-xs: 100%;
+    --container-max-width-sm: 540px;
+    --container-max-width-md: 720px;
+    --container-max-width-lg: 960px;
+    --container-max-width-xl: 1140px;
+    --container-max-width-2xl: 1320px;
+    
+    /* Responsive spacing multipliers */
+    --spacing-multiplier-xs: 0.75;
+    --spacing-multiplier-sm: 0.85;
+    --spacing-multiplier-md: 1;
+    --spacing-multiplier-lg: 1.1;
+    --spacing-multiplier-xl: 1.2;
+    
+    /* Responsive font size multipliers */
+    --font-size-multiplier-xs: 0.85;
+    --font-size-multiplier-sm: 0.9;
+    --font-size-multiplier-md: 1;
+    --font-size-multiplier-lg: 1.05;
+    --font-size-multiplier-xl: 1.1;
+    
+    /* Adaptive layouts */
+    --columns-xs: 1;
+    --columns-sm: 2;
+    --columns-md: 3;
+    --columns-lg: 4;
+    --columns-xl: 6;
+    
+    /* Component sizing by viewport */
+    --header-height-xs: 3rem;
+    --header-height-sm: 3.5rem;
+    --header-height-md: 4rem;
+    --header-height-lg: 4.5rem;
+    --header-height-xl: 5rem;
+}
+
+/* Media query mixins - Reuse these in your component CSS */
+
+/* Mobile first approach */
+@custom-media --viewport-xs (min-width: var(--breakpoint-xs));
+@custom-media --viewport-sm (min-width: var(--breakpoint-sm));
+@custom-media --viewport-md (min-width: var(--breakpoint-md));
+@custom-media --viewport-lg (min-width: var(--breakpoint-lg));
+@custom-media --viewport-xl (min-width: var(--breakpoint-xl));
+@custom-media --viewport-2xl (min-width: var(--breakpoint-2xl));
+
+/* Desktop first approach */
+@custom-media --viewport-max-xs (max-width: calc(var(--breakpoint-sm) - 1px));
+@custom-media --viewport-max-sm (max-width: calc(var(--breakpoint-md) - 1px));
+@custom-media --viewport-max-md (max-width: calc(var(--breakpoint-lg) - 1px));
+@custom-media --viewport-max-lg (max-width: calc(var(--breakpoint-xl) - 1px));
+@custom-media --viewport-max-xl (max-width: calc(var(--breakpoint-2xl) - 1px));
+
+/* Device specific */
+@custom-media --mobile-only (max-width: calc(var(--breakpoint-md) - 1px));
+@custom-media --tablet-only (min-width: var(--breakpoint-md)) and (max-width: calc(var(--breakpoint-lg) - 1px));
+@custom-media --desktop-only (min-width: var(--breakpoint-lg));
+@custom-media --touch-device (max-width: calc(var(--breakpoint-lg) - 1px));
+
+/* Special cases */
+@custom-media --reduced-motion (prefers-reduced-motion: reduce);
+@custom-media --dark-mode (prefers-color-scheme: dark);
+@custom-media --light-mode (prefers-color-scheme: light);
+@custom-media --high-contrast (prefers-contrast: high);
+@custom-media --portrait (orientation: portrait);
+@custom-media --landscape (orientation: landscape);
+
+/* Utility classes for responsive display */
+.hide-xs {
+    @media (--viewport-max-xs) {
+        display: none !important;
+    }
+}
+
+.hide-sm {
+    @media (--viewport-max-sm) {
+        display: none !important;
+    }
+}
+
+.hide-md {
+    @media (--viewport-max-md) {
+        display: none !important;
+    }
+}
+
+.hide-lg {
+    @media (--viewport-max-lg) {
+        display: none !important;
+    }
+}
+
+.hide-xl {
+    @media (--viewport-max-xl) {
+        display: none !important;
+    }
+}
+
+.show-xs-only {
+    @media not all and (--viewport-max-xs) {
+        display: none !important;
+    }
+}
+
+.show-sm-only {
+    @media not all and (--viewport-sm) and (--viewport-max-sm) {
+        display: none !important;
+    }
+}
+
+.show-md-only {
+    @media not all and (--viewport-md) and (--viewport-max-md) {
+        display: none !important;
+    }
+}
+
+.show-lg-only {
+    @media not all and (--viewport-lg) and (--viewport-max-lg) {
+        display: none !important;
+    }
+}
+
+.show-xl-only {
+    @media not all and (--viewport-xl) and (--viewport-max-xl) {
+        display: none !important;
+    }
+}
