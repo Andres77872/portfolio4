@@ -1,12 +1,67 @@
 /* borders.css */
 :root {
-    /* Borders */
-    --border-radius-small: 4px;
-    --border-radius-medium: 8px;
-    --border-radius-large: 16px;
-    --border-standard: 1px solid var(--border-color);
-    --border-hover: 1px solid var(--border-color);
-    --border-focus: 1px solid var(--border-color);
-    --border-dashed: 2px dashed var(--border-color-lighter);
-    --border-radius: var(--border-radius-small);
+    /* Border Radius Scale */
+    --radius-none: 0;
+    --radius-xs: 2px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-2xl: 32px;
+    --radius-full: 9999px;
+    
+    /* For backward compatibility */
+    --border-radius-small: var(--radius-sm);
+    --border-radius-medium: var(--radius-md);
+    --border-radius-large: var(--radius-lg);
+    --border-radius: var(--radius-sm);
+    
+    /* Border Widths */
+    --border-width-none: 0;
+    --border-width-thin: 1px;
+    --border-width-medium: 2px;
+    --border-width-thick: 4px;
+    
+    /* Border Styles */
+    --border-style-solid: solid;
+    --border-style-dashed: dashed;
+    --border-style-dotted: dotted;
+    --border-style-double: double;
+    --border-style-groove: groove;
+    --border-style-ridge: ridge;
+    --border-style-outset: outset;
+    --border-style-inset: inset;
+    
+    /* Compound Border Variables */
+    --border-standard: var(--border-width-thin) var(--border-style-solid) var(--border-color);
+    --border-hover: var(--border-width-thin) var(--border-style-solid) var(--border-color-lighter);
+    --border-focus: var(--border-width-thin) var(--border-style-solid) var(--accent-color);
+    --border-dashed: var(--border-width-medium) var(--border-style-dashed) var(--border-color-lighter);
+    --border-dotted: var(--border-width-thin) var(--border-style-dotted) var(--border-color-lighter);
+    
+    /* Outline Variables */
+    --outline-width-thin: 1px;
+    --outline-width-medium: 2px;
+    --outline-width-thick: 4px;
+    
+    /* Compound Outline Variables */
+    --outline-focus: var(--outline-width-medium) solid var(--accent-color);
+    --outline-standard: var(--outline-width-thin) solid var(--border-color);
+    --outline-error: var(--outline-width-medium) solid var(--color-messages-error);
+    --outline-success: var(--outline-width-medium) solid var(--color-messages-success);
+    
+    /* Special Border Types */
+    --border-interactive: var(--border-width-thin) var(--border-style-solid) var(--accent-color);
+    --border-subtle: var(--border-width-thin) var(--border-style-solid) var(--border-color-lighter);
+    --border-input: var(--border-width-thin) var(--border-style-solid) var(--border-color);
+    --border-input-focus: var(--border-width-thin) var(--border-style-solid) var(--accent-color);
+    --border-input-error: var(--border-width-thin) var(--border-style-solid) var(--color-messages-error);
+    
+    /* Special Border Radius Utilities */
+    --radius-button: var(--radius-md);
+    --radius-card: var(--radius-md);
+    --radius-input: var(--radius-sm);
+    --radius-image: var(--radius-md);
+    --radius-badge: var(--radius-full);
+    --radius-tooltip: var(--radius-sm);
 }

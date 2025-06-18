@@ -1,0 +1,58 @@
+/* Main CSS Entry Point */
+
+/* Import all CSS variable definitions first */
+@import './variables/index.css';
+
+/* Import all component-specific styles */
+@import './components/index.css';
+
+/* Additional global styles and resets can be added here if needed */
+
+/* Set z-index variables for proper layering */
+:root {
+  --z-index-base: 1;
+  --z-index-header: 100;
+  --z-index-nav: 110;
+  --z-index-dropdown: 120;
+  --z-index-modal: 500;
+  --z-index-chatbot: 999;
+  --z-index-tooltip: 1000;
+}
+
+/* Modern CSS reset additions */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+/* Improved focus styles for keyboard navigation */
+:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Fix for Safari overflow bug */
+body {
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
+}
+
+/* CSS smooth scrolling, but respect user preferences */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Section spacing and layout */
+.section {
+  width: 100%;
+  max-width: var(--container-max-width-xl);
+  margin: 0 auto;
+  padding: 0 var(--container-padding-x);
+  position: relative;
+}

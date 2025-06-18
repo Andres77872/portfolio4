@@ -1,0 +1,164 @@
+/* navbar.css - Modern styling for AI research/engineer portfolio navbar */
+
+.navbar {
+  width: 100%;
+  position: relative;
+  z-index: var(--z-index-nav);
+}
+
+.navbar__container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.navbar__toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+}
+
+.navbar__toggle-bar {
+  width: 100%;
+  height: 2px;
+  background-color: var(--text-color);
+  transition: var(--transition-all);
+  transform-origin: left center;
+}
+
+.navbar__toggle--active .navbar__toggle-bar:nth-child(1) {
+  transform: rotate(45deg);
+  width: 28px;
+}
+
+.navbar__toggle--active .navbar__toggle-bar:nth-child(2) {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.navbar__toggle--active .navbar__toggle-bar:nth-child(3) {
+  transform: rotate(-45deg);
+  width: 28px;
+}
+
+.navbar__list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--space-md);
+}
+
+.navbar__item {
+  position: relative;
+}
+
+.navbar__link {
+  display: inline-block;
+  font-family: var(--nav-font-family);
+  font-size: var(--nav-font-size);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-color-secondary);
+  text-decoration: none;
+  padding: var(--space-xs) var(--space-sm);
+  transition: var(--transition-colors);
+  position: relative;
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.navbar__link::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent-color);
+  transition: var(--transition-transform);
+  transform: translateX(-50%);
+  transform-origin: center;
+  transition: width 0.25s var(--ease-out);
+  border-radius: var(--border-radius-small);
+}
+
+.navbar__link:hover {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.navbar__link:hover::after {
+  width: 60%;
+}
+
+.navbar__link--active {
+  color: var(--text-color);
+  font-weight: var(--font-weight-semibold);
+}
+
+.navbar__link--active::after {
+  width: 80%;
+  background-color: var(--accent-color);
+}
+
+/* AI-inspired glowing effect on hover */
+.navbar__link:hover {
+  text-shadow: 0 0 8px rgba(var(--accent-color), 0.4);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .navbar__toggle {
+    display: flex;
+  }
+
+  .navbar__list {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 70%;
+    max-width: 300px;
+    height: 100vh;
+    background-color: var(--background-color-primary);
+    flex-direction: column;
+    padding: 80px var(--space-lg) var(--space-lg);
+    transition: right 0.3s var(--ease-out);
+    box-shadow: var(--shadow-lg);
+    gap: var(--space-lg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .navbar__list--open {
+    right: 0;
+    animation: slideInRight 0.3s var(--ease-out-back) forwards;
+  }
+
+  .navbar__link {
+    font-size: calc(var(--nav-font-size) * 1.15);
+  }
+
+  .navbar__link::after {
+    bottom: -5px;
+  }
+}
+
+/* Animation for mobile menu */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

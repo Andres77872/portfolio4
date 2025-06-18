@@ -1,23 +1,140 @@
 /* effects.css */
 :root {
-    /* Transitions */
-    --transition-colors: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-    --transition-standard: 0.2s ease-in-out;
+    /* Transition Durations */
+    --transition-duration-fast: 150ms;
+    --transition-duration-normal: 200ms;
+    --transition-duration-slow: 300ms;
+    --transition-duration-slower: 500ms;
+    
+    /* Transition Timing Functions */
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-linear: linear;
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    
+    /* Transition Shortcuts */
+    --transition-colors: background-color var(--transition-duration-normal) var(--ease-in-out), 
+                        color var(--transition-duration-normal) var(--ease-in-out),
+                        border-color var(--transition-duration-normal) var(--ease-in-out),
+                        fill var(--transition-duration-normal) var(--ease-in-out),
+                        stroke var(--transition-duration-normal) var(--ease-in-out),
+                        opacity var(--transition-duration-normal) var(--ease-in-out);
+    --transition-opacity: opacity var(--transition-duration-normal) var(--ease-in-out);
+    --transition-transform: transform var(--transition-duration-normal) var(--ease-in-out);
+    --transition-shadow: box-shadow var(--transition-duration-normal) var(--ease-in-out);
+    --transition-all: all var(--transition-duration-normal) var(--ease-in-out);
+    --transition-standard: var(--transition-duration-normal) var(--ease-in-out);
+    --transition-bounce: transform var(--transition-duration-normal) var(--ease-bounce);
 
-    /* Animations */
-    --spin-animation: 1s linear infinite;
-
-    /* Shadows */
-    --box-shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.2);
-    --box-shadow-focus: 0 0 0 1px var(--border-color);
-    --box-shadow-active: 0 2px 3px rgba(0, 0, 0, 0.1);
-    --box-shadow-light: 0 2px 3px rgba(0, 0, 0, 0.1);
-    --box-shadow-dark: 0 0 10px rgba(0, 0, 0, 0.4);
-    --box-shadow: var(--box-shadow-light);
-
-    /* Focus */
-    --focus-outline: 3px solid var(--accent-color);
-
+    /* Animation Durations */
+    --animation-duration-fast: 0.5s;
+    --animation-duration-normal: 1s;
+    --animation-duration-slow: 2s;
+    
+    /* Common Animation Definitions */
+    --spin-animation: var(--animation-duration-normal) linear infinite;
+    --pulse-animation: pulse var(--animation-duration-slow) cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    --bounce-animation: bounce var(--animation-duration-normal) infinite;
+    --fade-in-animation: fadeIn var(--animation-duration-fast) var(--ease-in-out);
+    --fade-out-animation: fadeOut var(--animation-duration-fast) var(--ease-in-out);
+    --slide-in-animation: slideIn var(--animation-duration-normal) var(--ease-out);
+    --slide-out-animation: slideOut var(--animation-duration-normal) var(--ease-in);
+    
+    /* Shadow Elevations - Using a systematic elevation approach */
+    --shadow-color: 220 3% 15%; /* HSL values for shadow color */
+    --shadow-strength: 1%;
+    
+    --shadow-xs: 0 1px 2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 5%));
+    --shadow-sm: 
+        0 1px 2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 9%)),
+        0 1px 3px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 8%));
+    --shadow-md: 
+        0 2px 4px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 8%)),
+        0 4px 6px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 6%));
+    --shadow-lg: 
+        0 4px 6px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 7%)),
+        0 10px 15px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 5%));
+    --shadow-xl: 
+        0 10px 15px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 6%)),
+        0 20px 25px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 5%));
+    --shadow-2xl: 
+        0 20px 25px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 5%)),
+        0 40px 60px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 4%));
+    
+    /* For backward compatibility */
+    --box-shadow-hover: var(--shadow-md);
+    --box-shadow-focus: var(--shadow-sm);
+    --box-shadow-active: var(--shadow-sm);
+    --box-shadow-light: var(--shadow-sm);
+    --box-shadow-dark: var(--shadow-lg);
+    --box-shadow: var(--shadow-sm);
+    
+    /* Inner Shadows */
+    --inner-shadow-sm: inset 0 2px 4px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 6%));
+    --inner-shadow-md: inset 0 4px 6px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 5%));
+    --inner-shadow-lg: inset 0 8px 10px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 4%));
+    
+    /* Focus Ring Styles */
+    --focus-ring-width: 3px;
+    --focus-ring-color: var(--accent-color);
+    --focus-ring-offset: 2px;
+    --focus-outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    
     /* Transforms */
-    --hover-scale: 1.1;
+    --hover-scale: 1.05;
+    --hover-scale-lg: 1.1;
+    --hover-scale-sm: 1.025;
+    --active-scale: 0.95;
+    
+    /* Filters */
+    --blur-sm: blur(4px);
+    --blur-md: blur(8px);
+    --blur-lg: blur(16px);
+    
+    --brightness-dim: brightness(0.8);
+    --brightness-normal: brightness(1);
+    --brightness-bright: brightness(1.2);
+    
+    /* Backdrop Filters */
+    --backdrop-blur-sm: blur(4px);
+    --backdrop-blur-md: blur(8px);
+    --backdrop-blur-lg: blur(16px);
+    --glass-effect: backdrop-filter: var(--backdrop-blur-md);
+    
+    /* Gradients */
+    --gradient-fade-to-bottom: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.6));
+    --gradient-fade-to-top: linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.6));
+    --gradient-accent: linear-gradient(135deg, var(--accent-color), var(--accent-color-secondary));
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(20px); opacity: 0; }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }

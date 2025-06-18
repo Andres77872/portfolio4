@@ -1,43 +1,100 @@
 /* colors.css */
 :root {
+    /* Color Palette System - Each color has a complete range of shades */
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --gray-950: #030712;
+
+    /* Indigo color palette (accent) */
+    --indigo-50: #eef2ff;
+    --indigo-100: #e0e7ff;
+    --indigo-200: #c7d2fe;
+    --indigo-300: #a5b4fc;
+    --indigo-400: #818cf8;
+    --indigo-500: #6366f1;
+    --indigo-600: #4f46e5;
+    --indigo-700: #4338ca;
+    --indigo-800: #3730a3;
+    --indigo-900: #312e81;
+    --indigo-950: #1e1b4b;
+
+    /* Status Colors Palettes */
+    /* Blue (Info) */
+    --blue-300: #93c5fd;
+    --blue-400: #60a5fa;
+    --blue-500: #3b82f6;
+    --blue-600: #2563eb;
+    --blue-700: #1d4ed8;
+    
+    /* Green (Success) */
+    --green-300: #86efac;
+    --green-400: #4ade80;
+    --green-500: #22c55e;
+    --green-600: #16a34a;
+    --green-700: #15803d;
+    
+    /* Red (Error) */
+    --red-300: #fca5a5;
+    --red-400: #f87171;
+    --red-500: #ef4444;
+    --red-600: #dc2626;
+    --red-700: #b91c1c;
+    
+    /* Amber (Warning) */
+    --amber-300: #fcd34d;
+    --amber-400: #fbbf24;
+    --amber-500: #f59e0b;
+    --amber-600: #d97706;
+    --amber-700: #b45309;
+
+    /* Theme variables - mapped to color palette */
+    
     /* Primary Background Colors */
-    --background-color-website: #121212; /* Deeper black for website background */
-    --background-color-primary: #1a1a1a; /* Slightly lighter black for primary containers */
-    --background-color-secondary: #242424; /* Dark gray for secondary elements */
-    --background-color-tertiary: #2c2c2c; /* Slightly lighter for tertiary elements */
-    --background-color-hover: #333333; /* Subtle hover state */
-    --background-color-focus: #3a3a3a; /* Subtle focus state */
-    --background-color-disable: #1e1e1e; /* Darker for disabled elements */
-    --background-color-header: #1a1a1a; /* Specific color for header background */
+    --background-color-website: var(--gray-950); /* Deeper black for website background */
+    --background-color-primary: var(--gray-900); /* Slightly lighter black for primary containers */
+    --background-color-secondary: var(--gray-800); /* Dark gray for secondary elements */
+    --background-color-tertiary: var(--gray-700); /* Slightly lighter for tertiary elements */
+    --background-color-hover: var(--gray-600); /* Subtle hover state */
+    --background-color-focus: var(--gray-500); /* Subtle focus state */
+    --background-color-disable: var(--gray-800); /* Darker for disabled elements */
+    --background-color-header: var(--gray-900); /* Specific color for header background */
 
     /* Text Colors */
-    --text-color: #f5f5f5; /* Slightly off-white for better eye comfort */
-    --text-color-secondary: #b0b0b0; /* Medium gray for secondary text */
-    --text-color-tertiary: #8a8a8a; /* Darker gray for less emphasis */
-    --text-color-placeholder: #707070; /* Darker gray for placeholders */
-    --text-color-header: #f5f5f5; /* Specific color for header text */
+    --text-color: var(--gray-50); /* Slightly off-white for better eye comfort */
+    --text-color-secondary: var(--gray-400); /* Medium gray for secondary text */
+    --text-color-tertiary: var(--gray-500); /* Darker gray for less emphasis */
+    --text-color-placeholder: var(--gray-600); /* Darker gray for placeholders */
+    --text-color-header: var(--gray-50); /* Specific color for header text */
 
     /* Border Colors */
-    --border-color: #333333; /* Dark gray for borders */
-    --border-color-lighter: #444444; /* Slightly lighter for emphasis */
-    --border-color-header: #333333; /* Specific color for header borders */
+    --border-color: var(--gray-600); /* Dark gray for borders */
+    --border-color-lighter: var(--gray-500); /* Slightly lighter for emphasis */
+    --border-color-header: var(--gray-600); /* Specific color for header borders */
 
     /* Accent Colors (Improved palette with better contrast) */
-    --accent-color: #7a84b8; /* Brighter indigo for better visibility */
-    --accent-color-hover: #5a6498; /* Darker indigo for hover states */
-    --accent-color-secondary: #9ba4d0; /* Lighter indigo for secondary elements */
-    --accent-color-muted: #4d5680; /* Muted indigo for subtle accents */
+    --accent-color: var(--indigo-500); /* Brighter indigo for better visibility */
+    --accent-color-hover: var(--indigo-600); /* Darker indigo for hover states */
+    --accent-color-secondary: var(--indigo-400); /* Lighter indigo for secondary elements */
+    --accent-color-muted: var(--indigo-700); /* Muted indigo for subtle accents */
 
     /* Status Message Colors (improved contrast for better readability) */
-    --color-messages-info: #5aa0c4; /* Brighter info blue */
-    --color-messages-success: #5d9573; /* Brighter success green */
-    --color-messages-error: #d16c6c; /* Brighter error red */
-    --color-messages-warning: #c59d5a; /* Brighter warning amber */
+    --color-messages-info: var(--blue-500); /* Brighter info blue */
+    --color-messages-success: var(--green-500); /* Brighter success green */
+    --color-messages-error: var(--red-500); /* Brighter error red */
+    --color-messages-warning: var(--amber-500); /* Brighter warning amber */
 
     /* Miscellaneous Colors */
-    --color-dark: #0a0a0a; /* Very dark for special cases */
-    --color-hover-secondary: #2a2a2a; /* Alternative hover state */
-    --color-footer: #121212; /* Match website background for footer */
+    --color-dark: var(--gray-950); /* Very dark for special cases */
+    --color-hover-secondary: var(--gray-800); /* Alternative hover state */
+    --color-footer: var(--gray-950); /* Match website background for footer */
     --color-brighter: #ffffff; /* Pure white for high contrast elements */
 
     /* Transparency */
@@ -48,4 +105,15 @@
 
     /* Header-specific transparency */
     --header-transparency: rgba(26, 26, 26, 0.95); /* Semi-transparent header background */
+    
+    /* Light theme variables - for future theme switching */
+    --light-background-color-website: var(--gray-50);
+    --light-background-color-primary: var(--gray-100);
+    --light-background-color-secondary: var(--gray-200);
+    --light-background-color-tertiary: var(--gray-300);
+    --light-background-color-hover: var(--gray-400);
+    --light-text-color: var(--gray-900);
+    --light-text-color-secondary: var(--gray-700);
+    --light-text-color-tertiary: var(--gray-600);
+    --light-border-color: var(--gray-300);
 }

@@ -1,0 +1,11 @@
+/* components/index.css - Imports all component-specific CSS files */
+
+/* Import all component styles */
+@import './header.css';
+@import './hero.css';
+@import './navbar.css';
+@import './about.css';
+@import './projects.css';
+@import './contact.css';
+@import './footer.css';
+@import './chatbot.css';

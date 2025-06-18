@@ -1,5 +1,5 @@
-/* Import CSS Variables */
-@import './css/variables/index.css';
+/* Import CSS Variables and Component Styles */
+@import './css/index.css';
 
 /* Reset and Global settings */
 *,

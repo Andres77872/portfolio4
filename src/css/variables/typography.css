@@ -4,39 +4,83 @@
     --font-family-base: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     --font-family-heading: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     --font-family-mono: 'Roboto Mono', 'SF Mono', 'Fira Mono', 'Courier New', Courier, monospace;
+    
+    /* Optional Alternative Font Families - for easy swapping */
+    --font-family-serif: 'Georgia', 'Times New Roman', serif;
+    --font-family-display: 'Poppins', 'Roboto', system-ui, sans-serif;
+    --font-family-code: 'Fira Code', 'Roboto Mono', 'SF Mono', monospace;
 
+    /* Base Font Size - Adjust for responsive typography */
+    --font-size-base: 16px; /* Base size at desktop */
+    
+    /* Type Scale - Using a 1.25 (major third) ratio */
+    --type-scale-ratio: 1.25;
+    
     /* Font Sizes - Modular Scale */
-    --font-size-base: 16px;
-    --font-size-xs: 0.75rem;    /* 12px */
-    --font-size-sm: 0.875rem;   /* 14px */
-    --font-size-small: 0.875rem; /* 14px - for backward compatibility */
+    --font-size-xs: calc(var(--font-size-sm) / var(--type-scale-ratio));    /* 12px */
+    --font-size-sm: calc(var(--font-size-md) / var(--type-scale-ratio));   /* 14px */
+    --font-size-small: var(--font-size-sm); /* 14px - for backward compatibility */
     --font-size-md: 1rem;       /* 16px */
-    --font-size-normal: 1rem;   /* 16px - for backward compatibility */
-    --font-size-lg: 1.125rem;   /* 18px */
-    --font-size-xl: 1.25rem;    /* 20px */
-    --font-size-large: 1.25rem; /* 20px - for backward compatibility */
-    --font-size-2xl: 1.5rem;    /* 24px */
-    --font-size-3xl: 1.875rem;  /* 30px */
-    --font-size-4xl: 2.25rem;   /* 36px */
-    --font-size-5xl: 3rem;      /* 48px */
-    --font-size-6xl: 3.75rem;   /* 60px */
+    --font-size-normal: var(--font-size-md);   /* 16px - for backward compatibility */
+    --font-size-lg: calc(var(--font-size-md) * var(--type-scale-ratio));   /* 20px */
+    --font-size-xl: calc(var(--font-size-lg) * var(--type-scale-ratio));    /* 25px */
+    --font-size-large: var(--font-size-xl); /* 25px - for backward compatibility */
+    --font-size-2xl: calc(var(--font-size-xl) * var(--type-scale-ratio));    /* 31.25px */
+    --font-size-3xl: calc(var(--font-size-2xl) * var(--type-scale-ratio));  /* 39.06px */
+    --font-size-4xl: calc(var(--font-size-3xl) * var(--type-scale-ratio));   /* 48.83px */
+    --font-size-5xl: calc(var(--font-size-4xl) * var(--type-scale-ratio));      /* 61.04px */
+    --font-size-6xl: calc(var(--font-size-5xl) * var(--type-scale-ratio));   /* 76.29px */
+    
+    /* Fluid Typography Clamps - For responsive design without media queries */
+    --fluid-type-min-size: 16; /* Minimum font size in px */
+    --fluid-type-max-size: 18; /* Maximum font size in px */
+    --fluid-type-min-screen: 320; /* Minimum viewport width in px */
+    --fluid-type-max-screen: 1200; /* Maximum viewport width in px */
+    
+    --fluid-type-base: clamp(
+        calc(var(--fluid-type-min-size) / 16 * 1rem),
+        calc(var(--fluid-type-min-size) / 16 * 1rem + (var(--fluid-type-max-size) - var(--fluid-type-min-size)) * (100vw - (var(--fluid-type-min-screen) / 16 * 1rem)) / ((var(--fluid-type-max-screen) - var(--fluid-type-min-screen)) / 16 * 1rem)),
+        calc(var(--fluid-type-max-size) / 16 * 1rem)
+    );
 
-    /* Font Weights */
+    /* Font Weights - Extended */
+    --font-weight-thin: 100;
+    --font-weight-extra-light: 200;
     --font-weight-light: 300;
     --font-weight-normal: 400;
+    --font-weight-regular: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
+    --font-weight-extra-bold: 800;
+    --font-weight-black: 900;
 
-    /* Line Heights */
+    /* Line Heights - Extended */
+    --line-height-none: 1;
     --line-height-tight: 1.2;
+    --line-height-snug: 1.375;
     --line-height-normal: 1.5;
     --line-height-relaxed: 1.75;
+    --line-height-loose: 2;
 
-    /* Letter Spacing */
+    /* Letter Spacing - Extended */
+    --letter-spacing-tighter: -0.05em;
     --letter-spacing-tight: -0.025em;
     --letter-spacing-normal: 0;
     --letter-spacing-wide: 0.025em;
+    --letter-spacing-wider: 0.05em;
+    --letter-spacing-widest: 0.1em;
+
+    /* Text Decoration */
+    --text-decoration-none: none;
+    --text-decoration-underline: underline;
+    --text-decoration-line-through: line-through;
+    
+    /* Text Transform */
+    --text-transform-none: none;
+    --text-transform-capitalize: capitalize;
+    --text-transform-uppercase: uppercase;
+    --text-transform-lowercase: lowercase;
 
     /* Header Typography */
     --header-font-family: var(--font-family-heading);
@@ -51,4 +95,35 @@
     --nav-font-weight: var(--font-weight-medium);
     --nav-line-height: var(--line-height-tight);
     --nav-letter-spacing: var(--letter-spacing-normal);
+    
+    /* Heading Styles */
+    --h1-font-size: var(--font-size-4xl);
+    --h1-font-weight: var(--font-weight-bold);
+    --h1-line-height: var(--line-height-tight);
+    --h1-letter-spacing: var(--letter-spacing-tight);
+    
+    --h2-font-size: var(--font-size-3xl);
+    --h2-font-weight: var(--font-weight-bold);
+    --h2-line-height: var(--line-height-tight);
+    --h2-letter-spacing: var(--letter-spacing-tight);
+    
+    --h3-font-size: var(--font-size-2xl);
+    --h3-font-weight: var(--font-weight-semibold);
+    --h3-line-height: var(--line-height-tight);
+    --h3-letter-spacing: var(--letter-spacing-normal);
+    
+    --h4-font-size: var(--font-size-xl);
+    --h4-font-weight: var(--font-weight-semibold);
+    --h4-line-height: var(--line-height-snug);
+    --h4-letter-spacing: var(--letter-spacing-normal);
+    
+    --h5-font-size: var(--font-size-lg);
+    --h5-font-weight: var(--font-weight-medium);
+    --h5-line-height: var(--line-height-snug);
+    --h5-letter-spacing: var(--letter-spacing-normal);
+    
+    --h6-font-size: var(--font-size-md);
+    --h6-font-weight: var(--font-weight-medium);
+    --h6-line-height: var(--line-height-normal);
+    --h6-letter-spacing: var(--letter-spacing-normal);
 }
