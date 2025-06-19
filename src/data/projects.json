@@ -88,6 +88,28 @@
     "status": "production"
   },
   {
+    "title": "ColWrite",
+    "description": "AI-powered writing assistant leveraging ColPali embeddings for advanced RAG capabilities. Built with React+Vite frontend and seamless integration with Qdrant for vector storage, delivering context-aware writing suggestions.",
+    "descriptionMD": "**ColWrite: Context-Enhanced AI Writing Assistant**\n\nElevate your writing experience with ColWrite, a sophisticated AI assistant that understands context like never before. Harnessing the power of ColPali embeddings and retrieval-augmented generation, ColWrite delivers personalized writing assistance with remarkable precision.\n\n**Core Features:**\n*   **Advanced RAG System:** Utilizes **ColPali embeddings** for superior understanding of context and semantic relationships in your documents.\n*   **Intelligent Suggestions:** Provides contextually relevant writing recommendations, completions, and improvements based on your unique writing style and content.\n*   **Vector-Based Knowledge:** Leverages **Qdrant** for efficient vector storage and similarity search, ensuring fast and accurate retrieval of relevant information.\n*   **LLM Integration:** Powered by state-of-the-art language models through the **magic-assistant** framework for natural and helpful interactions.\n\n**Technology Stack:**\n*   **Frontend:** Modern and responsive interface built with **React + Vite** for optimal performance and development experience.\n*   **Embedding System:** Utilizes **ColPali** for primary embeddings, complemented by basic embedding techniques for enhanced retrieval.\n*   **Vector Database:** **Qdrant** for high-performance similarity search capabilities.\n*   **AI Framework:** Implements the **magic-assistant** library for seamless LLM integration and RAG workflows.\n\nColWrite represents the future of writing tools, where artificial intelligence enhances human creativity rather than replacing it, providing the perfect balance of assistance while keeping you in control of your unique voice.",
+    "url": "https://magic-arxiv.novus.chat/",
+    "image": "https://img.arz.ai/kIoBNtA5",
+    "apiUrl": "https://magic.arz.ai/docs",
+    "repoUrl": "https://github.com/Andres77872/magic-arxiv-writer",
+    "tags": [
+      "React",
+      "Vite",
+      "RAG",
+      "ColPali",
+      "Qdrant",
+      "LLM",
+      "Embeddings",
+      "magic-assistant",
+      "Writing",
+      "AI"
+    ],
+    "status": "production"
+  },
+  {
     "title": "Magic Slider",
     "description": "AI-powered slide creator that generates RevealJS presentations through LLM prompts. Integrates with talk.novus.chat backend API for intelligent content generation. Built with React + Vite, featuring RAG and agentic capabilities through magic-agents. Proof-of-concept for automated presentation creation.",
     "descriptionMD": "**Magic Slider: AI-Powered Presentation Creator**\n\nTransform your ideas into compelling presentations effortlessly with Magic Slider, an innovative **Proof-of-Concept (POC)** that leverages AI to generate professional slides from simple prompts.\n\n**Core Features:**\n*   **LLM-Driven Content Generation:** Simply describe your presentation topic, and let AI create structured, engaging slides for you.\n*   **RevealJS Integration:** Generates modern, interactive presentations using the powerful RevealJS framework.\n*   **Intelligent Backend:** Powered by the **talk.novus.chat API** for sophisticated content processing and generation.\n*   **Advanced AI Capabilities:** Incorporates **RAG (Retrieval-Augmented Generation)** and **agentic workflows** through the **magic-agents** framework.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for fast development and optimal performance.\n*   **AI Framework:** Utilizes **magic-agents** for sophisticated AI-driven content creation.\n*   **Presentation Engine:** **RevealJS** for creating beautiful, interactive slide presentations.\n\n**Current Status:**\n*   **Proof-of-Concept** demonstrating the potential of AI-assisted presentation creation.\n\nMagic Slider represents the future of presentation design, where creativity meets artificial intelligence to streamline content creation.",
