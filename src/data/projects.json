@@ -110,6 +110,26 @@
     "status": "production"
   },
   {
+    "title": "Magic Worlds",
+    "description": "Role-Play with AI designed to create characters, worlds, and adventures using artificial intelligence. Build and explore immersive stories with AI-generated content and interactive narratives.",
+    "descriptionMD": "**Magic Worlds: AI-Powered Role-Playing Experience**\n\nDive into limitless storytelling possibilities with Magic Worlds, an innovative platform that leverages AI to create rich, immersive role-playing experiences.\n\n**Core Features:**\n*   **Character Creation:** Design unique characters with AI assistance, developing detailed backstories and personalities.\n*   **World Building:** Craft intricate worlds, settings, and environments that respond to your creative input.\n*   **Adventure Generation:** Create engaging narratives and interactive adventures that adapt to player choices.\n*   **Collaborative Storytelling:** Work alongside AI to develop plots, dialogue, and scenarios that bring your stories to life.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for a responsive and immersive user experience.\n*   **AI Integration:** Powered by advanced language models through the **magic-assistant** framework.\n*   **Backend:** Utilizes the robust API from **magic.arz.ai** for intelligent content generation.\n\nMagic Worlds represents the intersection of traditional role-playing games and cutting-edge AI technology, offering an ever-expanding canvas for your imagination.",
+    "url": "https://magic-worlds.novus.chat/",
+    "apiUrl": "https://magic.arz.ai/docs#/Chat/completion_chat_openai_v1_completion_post",
+    "image": "https://img.arz.ai/lO8Bbe-p",
+    "repoUrl": "https://github.com/Andres77872/magic-worlds",
+    "tags": [
+      "React",
+      "Vite",
+      "Role-Playing",
+      "AI",
+      "Storytelling",
+      "magic-assistant",
+      "World Building",
+      "Adventure"
+    ],
+    "status": "production"
+  },
+  {
     "title": "Magic Slider",
     "description": "AI-powered slide creator that generates RevealJS presentations through LLM prompts. Integrates with talk.novus.chat backend API for intelligent content generation. Built with React + Vite, featuring RAG and agentic capabilities through magic-agents. Proof-of-concept for automated presentation creation.",
     "descriptionMD": "**Magic Slider: AI-Powered Presentation Creator**\n\nTransform your ideas into compelling presentations effortlessly with Magic Slider, an innovative **Proof-of-Concept (POC)** that leverages AI to generate professional slides from simple prompts.\n\n**Core Features:**\n*   **LLM-Driven Content Generation:** Simply describe your presentation topic, and let AI create structured, engaging slides for you.\n*   **RevealJS Integration:** Generates modern, interactive presentations using the powerful RevealJS framework.\n*   **Intelligent Backend:** Powered by the **talk.novus.chat API** for sophisticated content processing and generation.\n*   **Advanced AI Capabilities:** Incorporates **RAG (Retrieval-Augmented Generation)** and **agentic workflows** through the **magic-agents** framework.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for fast development and optimal performance.\n*   **AI Framework:** Utilizes **magic-agents** for sophisticated AI-driven content creation.\n*   **Presentation Engine:** **RevealJS** for creating beautiful, interactive slide presentations.\n\n**Current Status:**\n*   **Proof-of-Concept** demonstrating the potential of AI-assisted presentation creation.\n\nMagic Slider represents the future of presentation design, where creativity meets artificial intelligence to streamline content creation.",
