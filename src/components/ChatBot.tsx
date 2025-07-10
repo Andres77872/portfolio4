@@ -24,9 +24,11 @@ export default function ChatBot() {
   const [isLoading, setIsLoading] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [showHeyAnimation, setShowHeyAnimation] = useState(false);
+  const [showResetConfirmation, setShowResetConfirmation] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const chatWindowRef = useRef<HTMLDivElement>(null);
+  const resetConfirmationRef = useRef<HTMLDivElement>(null);
   
   const suggestedQueries: SuggestedQuery[] = [
     { text: "What AI technologies does Andres specialize in?", icon: "🤖", category: 'skills' },
@@ -55,6 +57,20 @@ export default function ChatBot() {
       };
     }
   }, [isOpen]);
+
+  // Handle clicks outside reset confirmation
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (resetConfirmationRef.current && !resetConfirmationRef.current.contains(event.target as Node)) {
+        setShowResetConfirmation(false);
+      }
+    };
+
+    if (showResetConfirmation) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showResetConfirmation]);
 
   // Create system context with portfolio information
   const getSystemContext = (): Message => {
@@ -127,10 +143,33 @@ Remember: You're representing Andres's professional portfolio, so maintain a pro
   const closeChatbot = () => {
     setIsOpen(false);
     setIsMinimized(false);
+    setShowResetConfirmation(false);
   };
 
-  const handleReset = () => {
+  const handleResetClick = () => {
+    setShowResetConfirmation(true);
+  };
+
+  const handleResetConfirm = () => {
     setMessages([]);
+    setShowResetConfirmation(false);
+    setInput('');
+    // Add a small delay to make the reset feel more intentional
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
+  };
+
+  const handleResetCancel = () => {
+    setShowResetConfirmation(false);
+  };
+
+  const handleBackToStart = () => {
+    setMessages([]);
+    setInput('');
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -272,6 +311,9 @@ You can also explore the portfolio sections directly by clicking the navigation 
       : "chatbot__window chatbot__window--open"
     : "chatbot__window chatbot__window--hidden";
 
+  // Check if there are any messages to show back to start button
+  const hasMessages = messages.length > 0;
+
   return (
     <div className="chatbot" aria-live="polite">
       <button
@@ -304,27 +346,52 @@ You can also explore the portfolio sections directly by clicking the navigation 
             <h3>Portfolio Assistant</h3>
           </div>
           <div className="chatbot__controls">
+            <div style={{ position: 'relative' }}>
+              <button
+                type="button"
+                className="chatbot__control-button chatbot__control-button--reset"
+                onClick={handleResetClick}
+                title="Reset conversation"
+                aria-label="Reset conversation"
+              >
+                <span aria-hidden="true">↻</span>
+              </button>
+              {showResetConfirmation && (
+                <div ref={resetConfirmationRef} className="chatbot__reset-confirmation">
+                  <div className="chatbot__reset-confirmation-text">
+                    Are you sure you want to reset the conversation? This will clear all messages and start fresh.
+                  </div>
+                  <div className="chatbot__reset-confirmation-actions">
+                    <button
+                      type="button"
+                      className="chatbot__reset-cancel-btn"
+                      onClick={handleResetCancel}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      className="chatbot__reset-confirm-btn"
+                      onClick={handleResetConfirm}
+                    >
+                      Reset
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
             <button
               type="button"
-              className="chatbot__control-button"
-              onClick={handleReset}
-              title="Reset conversation"
-              aria-label="Reset conversation"
-            >
-              <span aria-hidden="true">🔄</span>
-            </button>
-            <button
-              type="button"
-              className="chatbot__control-button"
+              className="chatbot__control-button chatbot__control-button--minimize"
               onClick={toggleChatbot}
-              title="Minimize"
-              aria-label="Minimize chat"
+              title={isMinimized ? "Expand" : "Minimize"}
+              aria-label={isMinimized ? "Expand chat" : "Minimize chat"}
             >
-              <span aria-hidden="true">—</span>
+              <span aria-hidden="true">{isMinimized ? '□' : '—'}</span>
             </button>
             <button
               type="button"
-              className="chatbot__control-button"
+              className="chatbot__control-button chatbot__control-button--close"
               onClick={closeChatbot}
               title="Close"
               aria-label="Close chat"
@@ -408,6 +475,18 @@ You can also explore the portfolio sections directly by clicking the navigation 
               )}
               <div ref={messagesEndRef} />
             </div>
+            
+            {hasMessages && (
+              <button
+                className="chatbot__back-to-start"
+                onClick={handleBackToStart}
+                title="Back to start"
+                aria-label="Go back to welcome screen"
+              >
+                <span className="chatbot__back-to-start-icon">←</span>
+                Back to start
+              </button>
+            )}
             
             <form className="chatbot__input" onSubmit={handleSubmit}>
               <input
