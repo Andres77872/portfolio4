@@ -1,16 +1,17 @@
-/* header.css - Modern styling for AI research/engineer portfolio header */
+/* header.css - Modern AI-themed header for Andres' portfolio */
 
 .header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: var(--z-index-header);
+  z-index: var(--z-index-high);
   background-color: var(--header-transparency);
   backdrop-filter: var(--backdrop-blur-md);
   -webkit-backdrop-filter: var(--backdrop-blur-md);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: var(--transition-all);
+  transition: var(--transition-colors), box-shadow var(--transition-duration-normal) var(--ease-in-out);
+  animation: headerSlideIn 0.8s var(--ease-out) forwards;
 }
 
 .header__content {
@@ -20,9 +21,10 @@
   padding: var(--space-sm) var(--space-lg);
   max-width: var(--container-max-width-xl);
   margin: 0 auto;
-  height: 70px;
+  min-height: 70px;
 }
 
+/* Logo Section */
 .header__logo {
   display: flex;
   align-items: center;
@@ -34,37 +36,56 @@
   align-items: center;
   text-decoration: none;
   color: var(--text-color);
-  transition: var(--transition-colors);
+  transition: var(--transition-transform);
+  position: relative;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+}
+
+.header__logo-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.header__logo-main {
+  display: flex;
+  align-items: baseline;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-lg);
-  letter-spacing: var(--letter-spacing-wide);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.header__logo-name {
+  color: var(--text-color);
   position: relative;
 }
 
-.header__logo-text {
-  position: relative;
+.header__logo-accent {
   background: var(--gradient-accent);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-family: var(--font-family-heading);
-  margin-right: var(--space-sm);
+  font-weight: var(--font-weight-extra-bold);
+  position: relative;
+  animation: pulseGlow 2s ease-in-out infinite;
 }
 
-/* Add a small accent dot after the logo */
-.header__logo-text::after {
-  content: "";
-  position: absolute;
-  right: -10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  background-color: var(--accent-color);
-  border-radius: 50%;
+.header__logo-subtitle {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-color-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-widest);
+  margin-top: -2px;
+  font-family: var(--font-family-mono);
 }
 
-.header__links {
+/* Actions Section */
+.header__actions {
   display: flex;
   align-items: center;
   gap: var(--space-md);
@@ -78,32 +99,35 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   text-decoration: none;
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--border-radius-small);
-  background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: var(--backdrop-blur-sm);
-  -webkit-backdrop-filter: var(--backdrop-blur-sm);
-  transition: var(--transition-all);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: var(--font-family-mono);
 }
 
 .header__github-link:hover {
-  background-color: var(--accent-color);
   color: var(--text-color);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+  border-color: var(--accent-color);
 }
 
-/* AI-inspired glow effect on hover */
-.header__github-link:hover {
-  box-shadow: 0 0 15px var(--accent-color-muted);
+.header__github-icon {
+  font-size: var(--font-size-md);
+  transition: var(--transition-transform);
 }
 
-/* Animation for header - subtle fade in */
-@keyframes headerFadeIn {
+
+.header__github-text {
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+/* Animations */
+@keyframes headerSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
@@ -111,39 +135,123 @@
   }
 }
 
-.header {
-  animation: headerFadeIn 0.6s var(--ease-out) forwards;
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
-  .header__content {
-    padding: var(--space-xs) var(--space-md);
-    height: 60px;
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
   }
-  
-  .header__logo-text {
-    font-size: var(--font-size-md);
-  }
-  
-  .header__github-link span {
-    display: none;
-  }
-  
-  .header__github-link::before {
-    content: "GH";
-    font-weight: var(--font-weight-bold);
+  50% {
+    opacity: 0.8;
+    text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
   }
 }
 
-/* Scroll behavior - make header more compact on scroll */
+/* Scroll behavior */
 .header--scrolled {
-  box-shadow: var(--shadow-md);
-  height: 60px;
+  box-shadow: var(--shadow-lg);
+  background-color: rgba(26, 26, 26, 0.98);
 }
 
 .header--scrolled .header__content {
-  height: 60px;
+  min-height: 60px;
   padding-top: var(--space-xs);
   padding-bottom: var(--space-xs);
 }
+
+.header--scrolled .header__logo-main {
+  font-size: var(--font-size-lg);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .header__content {
+    padding: var(--space-sm) var(--space-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .header__content {
+    padding: var(--space-xs) var(--space-md);
+    min-height: 60px;
+  }
+
+  .header__logo-main {
+    font-size: var(--font-size-lg);
+  }
+
+  .header__github-text {
+    display: none;
+  }
+
+  .header__github-link {
+    padding: var(--space-xs) var(--space-sm);
+    min-width: 40px;
+    justify-content: center;
+  }
+
+  .header__actions {
+    gap: var(--space-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .header__content {
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .header__logo-main {
+    font-size: var(--font-size-md);
+  }
+
+  .header__logo-subtitle {
+    font-size: 10px;
+  }
+
+  .header__github-link {
+    padding: var(--space-xs);
+    min-width: 35px;
+  }
+
+  .header__github-icon {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .header {
+    animation: none;
+  }
+  
+  .header__logo-accent {
+    animation: none;
+  }
+  
+  .header__github-link::before {
+    display: none;
+  }
+}
+
+/* Focus states for keyboard navigation */
+.header__logo-link:focus-visible,
+.header__github-link:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .header {
+    border-bottom: 2px solid var(--text-color);
+  }
+  
+  .header__logo-accent {
+    background: none;
+    color: var(--accent-color);
+  }
+  
+  .header__github-link {
+    border: 2px solid var(--accent-color);
+  }
+}
+
