@@ -116,5 +116,6 @@
     --z-index-low: 10;
     --z-index-medium: 100;
     --z-index-high: 1000;
+    --z-index-chatbot: 999;
     --z-index-highest: 10000;
 }

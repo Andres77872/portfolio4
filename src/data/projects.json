@@ -151,6 +151,26 @@
     "status": "production"
   },
   {
+    "title": "Magic Auth",
+    "description": "Enterprise-grade 3-tier authentication system with Root/Admin/Consumer user types and complete RBAC capabilities. Multi-project support with hierarchical access control and advanced security features.",
+    "descriptionMD": "**Magic Auth: Enterprise 3-Tier Authentication System**\n\nA comprehensive authentication platform designed for enterprise-grade access control with sophisticated user management and multi-project capabilities.\n\n**3-Tier User Architecture:**\n*   **ROOT USERS:** Unrestricted global access and system administration\n*   **ADMIN USERS:** Multi-project administration with complete project isolation\n*   **CONSUMER USERS:** RBAC-based access through user groups and permissions\n\n**Core Features:**\n*   **Advanced Authentication:** JWT-based sessions with HTTP-only cookie support and Bearer token fallback\n*   **Complete RBAC Management:** Granular permissions, role assignments, and real-time validation\n*   **Multi-Project Support:** Project isolation with hierarchical access control\n*   **Enterprise Security:** UUID-based identification, audit trails, and multi-layer security\n*   **Production Ready:** Scalable design with Redis caching and performance optimization\n\n**Technology Stack:**\n*   **Backend:** High-performance API built with **FastAPI** and **MySQL** database\n*   **Frontend:** Modern interface developed with **React + Vite**\n*   **Security:** JWT tokens, secure cookies, and comprehensive access control\n\nMagic Auth provides the foundation for complex organizational structures requiring sophisticated access management and enterprise-level security.",
+    "url": "https://auth-ui.arz.ai/",
+    "apiUrl": "https://auth-v2.arz.ai/",
+    "image": "https://img.arz.ai/0whA6FF1",
+    "repoUrl": "https://github.com/Andres77872/magic-auth-dashboard",
+    "tags": [
+      "FastAPI",
+      "MySQL",
+      "React",
+      "Vite",
+      "Authentication",
+      "RBAC",
+      "JWT",
+      "Multi-Project"
+    ],
+    "status": "production"
+  },
+  {
     "title": "magic-llm",
     "description": "LLM wrapper unifying providers like Anthropic, Cohere, AWS Bedrock, OpenAI, and any OpenAI compatible provider into a single OpenAI schema-based output format.",
     "descriptionMD": "**magic-llm: Unified LLM Integration Framework**\n\n`magic-llm` is a powerful Python library designed to simplify interactions with a multitude of Large Language Model (LLM) providers. It acts as a versatile wrapper, abstracting the complexities of different APIs.\n\n**Key Goals & Features:**\n*   **Provider Agnostic:** Supports major LLM providers including **Anthropic, Cohere, AWS Bedrock, OpenAI**, and any **OpenAI-compatible** service.\n*   **Standardized Output:** Unifies the output from various providers into a **single, consistent schema based on OpenAI's format**. This dramatically reduces the effort required to switch between or use multiple LLMs.\n*   **Simplified Development:** Allows developers to write code once and interact with different LLMs without significant modifications.\n\n**Core Dependencies:**\n*   **`boto3`**: For AWS Bedrock integration.\n*   **`httpx` / `aiohttp`**: For efficient asynchronous and synchronous HTTP requests to LLM APIs.\n\n`magic-llm` streamlines the development of LLM-powered applications by providing a consistent and easy-to-use interface across various providers.",
