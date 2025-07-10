@@ -77,7 +77,7 @@ export default function ChatBot() {
     const about = aboutData?.[0];
     const skills = about?.skills?.map(skill => `${skill.category}: ${skill.items.join(', ')}`).join('\n') || '';
     const projectSummary = projectsData.map(project => 
-      `- ${project.title}: ${project.description} (${project.tags?.join(', ')})`
+      `- ${project.title}: ${project.descriptionMD} (${project.tags?.join(', ')}) image: ${project.image}`
     ).join('\n');
 
     return {
