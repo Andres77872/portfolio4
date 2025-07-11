@@ -19,12 +19,9 @@
     /* Font Sizes - Modular Scale */
     --font-size-xs: calc(var(--font-size-sm) / var(--type-scale-ratio));    /* 12px */
     --font-size-sm: calc(var(--font-size-md) / var(--type-scale-ratio));   /* 14px */
-    --font-size-small: var(--font-size-sm); /* 14px - for backward compatibility */
     --font-size-md: 1rem;       /* 16px */
-    --font-size-normal: var(--font-size-md);   /* 16px - for backward compatibility */
     --font-size-lg: calc(var(--font-size-md) * var(--type-scale-ratio));   /* 20px */
     --font-size-xl: calc(var(--font-size-lg) * var(--type-scale-ratio));    /* 25px */
-    --font-size-large: var(--font-size-xl); /* 25px - for backward compatibility */
     --font-size-2xl: calc(var(--font-size-xl) * var(--type-scale-ratio));    /* 31.25px */
     --font-size-3xl: calc(var(--font-size-2xl) * var(--type-scale-ratio));  /* 39.06px */
     --font-size-4xl: calc(var(--font-size-3xl) * var(--type-scale-ratio));   /* 48.83px */

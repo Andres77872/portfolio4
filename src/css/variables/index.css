@@ -8,6 +8,7 @@
 @import './responsive.css';
 @import './utilities.css';
 @import './animations.css';
+@import './components.css';
 
 /* Global styles that were in the original variables.css */
 *::-webkit-scrollbar {
@@ -21,7 +22,7 @@
 
 *::-webkit-scrollbar-thumb {
     background-color: var(--background-color-hover); /* Handle color */
-    border-radius: var(--border-radius-small); /* Rounded corners for the handle */
+    border-radius: var(--radius-sm); /* Rounded corners for the handle */
     border: 3px solid var(--background-color-tertiary); /* Optional: Creates a margin effect around the thumb */
 }
 
@@ -201,7 +202,7 @@ li {
 /* Form element defaults */
 input, textarea, select {
     font-family: var(--font-family-base);
-    font-size: var(--font-size-normal);
+    font-size: var(--font-size-md);
     color: var(--text-color);
     background-color: var(--background-color-secondary);
     border: var(--border-input);

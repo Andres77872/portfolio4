@@ -1,4 +1,4 @@
-/* header.css - Modern AI-themed header for Andres' portfolio */
+/* header.css - Ultra-modern AI-themed header with glassmorphism */
 
 .header {
   position: fixed;
@@ -6,29 +6,33 @@
   left: 0;
   width: 100%;
   z-index: var(--z-index-high);
-  background-color: var(--header-transparency);
-  backdrop-filter: var(--backdrop-blur-md);
-  -webkit-backdrop-filter: var(--backdrop-blur-md);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: var(--transition-colors), box-shadow var(--transition-duration-normal) var(--ease-in-out);
-  animation: headerSlideIn 0.8s var(--ease-out) forwards;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: headerSlideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .header__content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-sm) var(--space-lg);
+  padding: 0 clamp(1rem, 5vw, 3rem);
   max-width: var(--container-max-width-xl);
   margin: 0 auto;
-  min-height: 70px;
+  min-height: 80px;
+  position: relative;
+  width: 100%;
 }
 
-/* Logo Section */
+/* Logo Section - Modern Design */
 .header__logo {
   display: flex;
   align-items: center;
   z-index: 11;
+  position: relative;
 }
 
 .header__logo-link {
@@ -36,10 +40,35 @@
   align-items: center;
   text-decoration: none;
   color: var(--text-color);
-  transition: var(--transition-transform);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.header__logo-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.header__logo-link:hover::before {
+  left: 100%;
+}
+
+.header__logo-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+  border-color: rgba(99, 102, 241, 0.5);
 }
 
 .header__logo-content {
@@ -47,91 +76,143 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
+  position: relative;
+  z-index: 2;
 }
 
 .header__logo-main {
   display: flex;
   align-items: baseline;
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--letter-spacing-tight);
+  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
 }
 
 .header__logo-name {
-  color: var(--text-color);
+  color: #f8fafc;
   position: relative;
+  font-weight: 600;
 }
 
 .header__logo-accent {
-  background: var(--gradient-accent);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-weight: var(--font-weight-extra-bold);
+  font-weight: 800;
   position: relative;
-  animation: pulseGlow 2s ease-in-out infinite;
+  animation: gradientShift 3s ease-in-out infinite;
+  background-size: 200% 200%;
 }
 
 .header__logo-subtitle {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-color-secondary);
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: #94a3b8;
   text-transform: uppercase;
-  letter-spacing: var(--letter-spacing-widest);
+  letter-spacing: 0.15em;
   margin-top: -2px;
-  font-family: var(--font-family-mono);
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  opacity: 0.9;
 }
 
-/* Actions Section */
+/* Actions Section - Modern Design */
 .header__actions {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: 1rem;
+  position: relative;
 }
 
 .header__github-link {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
-  color: var(--text-color);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  gap: 0.5rem;
+  color: #f8fafc;
+  font-size: 0.875rem;
+  font-weight: 500;
   text-decoration: none;
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  font-family: var(--font-family-mono);
+  padding: 0.75rem 1.25rem;
+  border-radius: 50px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  font-family: 'Inter', system-ui, sans-serif;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.header__github-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.header__github-link:hover::before {
+  left: 100%;
 }
 
 .header__github-link:hover {
-  color: var(--text-color);
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
-  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
+  border-color: rgba(99, 102, 241, 0.6);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
 }
 
 .header__github-icon {
-  font-size: var(--font-size-md);
-  transition: var(--transition-transform);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
 }
 
+.header__github-icon svg {
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header__github-link:hover .header__github-icon {
+  transform: rotate(15deg) scale(1.1);
+}
 
 .header__github-text {
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--letter-spacing-wide);
+  font-weight: 600;
+  letter-spacing: 0.025em;
   text-transform: uppercase;
+  position: relative;
+  z-index: 2;
 }
 
-/* Animations */
+/* Modern Animations */
 @keyframes headerSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-30px);
+    backdrop-filter: blur(0px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+    backdrop-filter: blur(20px);
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
   }
 }
 
@@ -146,37 +227,57 @@
   }
 }
 
-/* Scroll behavior */
+/* Enhanced Scroll Behavior */
 .header--scrolled {
-  box-shadow: var(--shadow-lg);
-  background-color: rgba(26, 26, 26, 0.98);
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(25px);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .header--scrolled .header__content {
-  min-height: 60px;
-  padding-top: var(--space-xs);
-  padding-bottom: var(--space-xs);
+  min-height: 70px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .header--scrolled .header__logo-main {
-  font-size: var(--font-size-lg);
+  font-size: 1.5rem;
 }
 
-/* Responsive Design */
+.header--scrolled .header__logo-link {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.header--scrolled .header__github-link {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+/* Enhanced Responsive Design */
 @media (max-width: 1024px) {
   .header__content {
-    padding: var(--space-sm) var(--space-md);
+    padding: 0 clamp(1rem, 4vw, 2rem);
+  }
+  
+  .header__logo-main {
+    font-size: 1.5rem;
   }
 }
 
 @media (max-width: 768px) {
   .header__content {
-    padding: var(--space-xs) var(--space-md);
-    min-height: 60px;
+    padding: 0 1.5rem;
+    min-height: 70px;
   }
 
   .header__logo-main {
-    font-size: var(--font-size-lg);
+    font-size: 1.375rem;
+  }
+
+  .header__logo-link {
+    padding: 0.625rem 0.875rem;
   }
 
   .header__github-text {
@@ -184,36 +285,42 @@
   }
 
   .header__github-link {
-    padding: var(--space-xs) var(--space-sm);
-    min-width: 40px;
+    padding: 0.75rem;
+    min-width: 48px;
     justify-content: center;
+    border-radius: 50%;
   }
 
   .header__actions {
-    gap: var(--space-sm);
+    gap: 0.75rem;
   }
 }
 
 @media (max-width: 480px) {
   .header__content {
-    padding: var(--space-xs) var(--space-sm);
+    padding: 0 1rem;
+    min-height: 65px;
   }
 
   .header__logo-main {
-    font-size: var(--font-size-md);
+    font-size: 1.25rem;
   }
 
   .header__logo-subtitle {
-    font-size: 10px;
+    font-size: 0.5rem;
+  }
+
+  .header__logo-link {
+    padding: 0.5rem 0.75rem;
   }
 
   .header__github-link {
-    padding: var(--space-xs);
-    min-width: 35px;
+    padding: 0.625rem;
+    min-width: 44px;
   }
 
   .header__github-icon {
-    font-size: var(--font-size-sm);
+    font-size: 1rem;
   }
 }
 

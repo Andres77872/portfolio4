@@ -65,7 +65,7 @@ a:hover {
 
 /* Buttons and other interactive elements */
 button {
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-sm);
     border: var(--button-border);
     padding: var(--button-padding-vertical) var(--button-padding-horizontal);
     font-size: var(--button-font-size);
@@ -85,7 +85,7 @@ button:hover {
 
 button:focus-visible {
     outline: var(--focus-outline);
-    outline-offset: var(--padding-small);
+    outline-offset: var(--padding-xs);
 }
 
 /* Scrollbar improvements (for modern browsers) */

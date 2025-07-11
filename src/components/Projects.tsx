@@ -77,24 +77,20 @@ export default function Projects() {
                 {filteredProjects.map((project, index) => (
                     <div 
                         key={index} 
-                        className="projects__card"
+                        className={project.url ? 'projects__card--live' : 'projects__card--repo'}
                         onClick={() => openProjectModal(project)}
                     >
                         {project.url && (
                             <div className="projects__live">Live</div>
+                        )}
+                        {project.status === 'repo' && !project.url && (
+                            <div className="projects__repo">Repo</div>
                         )}
                         {project.image && (
                             <img src={project.image} alt={project.title} />
                         )}
                         <h3>
                             {project.title}
-                            {project.status && (
-                                <span
-                                    className={`projects__status projects__status--${project.status}`}
-                                >
-                                    {project.status}
-                                </span>
-                            )}
                         </h3>
                         <p>{project.description.substring(0, 150)}...</p>
                         {project.tags && (
@@ -172,13 +168,6 @@ export default function Projects() {
 
                         <h2 className="project-modal__title">
                             {selectedProject.title}
-                            {selectedProject.status && (
-                                <span
-                                    className={`projects__status projects__status--${selectedProject.status}`}
-                                >
-                                    {selectedProject.status}
-                                </span>
-                            )}
                         </h2>
 
                         <div className="project-modal__description">

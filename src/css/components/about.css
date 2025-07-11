@@ -76,7 +76,7 @@
 }
 
 .about__paragraph-wrapper {
-  animation: fadeInUp 0.8s var(--ease-out) calc(0.4s + var(--delay, 0s)) both;
+  animation: fadeInUp 0.8s var(--ease-out) calc(0.4s + var(--animation-delay-lg, 0s)) both;
 }
 
 .about__description {
@@ -112,7 +112,7 @@
   padding: var(--space-lg);
   backdrop-filter: blur(10px);
   transition: all 0.3s var(--ease-out);
-  animation: fadeInUp 0.8s var(--ease-out) calc(0.6s + var(--delay, 0s)) both;
+  animation: fadeInUp 0.8s var(--ease-out) calc(0.6s + var(--animation-delay-lg, 0s)) both;
 }
 
 .about__highlight-card:hover {
@@ -173,7 +173,7 @@
   padding: var(--space-xl);
   transition: all 0.3s var(--ease-out);
   cursor: pointer;
-  animation: fadeInUp 0.8s var(--ease-out) calc(1s + var(--delay, 0s)) both;
+  animation: fadeInUp 0.8s var(--ease-out) calc(1s + var(--animation-delay-lg, 0s)) both;
 }
 
 .about__skill-group:hover,
@@ -204,7 +204,7 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--border-radius-full);
+  border-radius: var(--border-radius-large);
   min-width: 24px;
   text-align: center;
 }
@@ -224,7 +224,7 @@
   font-weight: var(--font-weight-medium);
   border: 1px solid rgba(255, 255, 255, 0.15);
   transition: all 0.3s var(--ease-out);
-  animation: slideInFromBottom 0.5s var(--ease-out) var(--delay, 0s) both;
+  animation: slideInFromBottom 0.5s var(--ease-out) var(--animation-delay-lg, 0s) both;
 }
 
 .about__skill-group:hover .about__skill-item,

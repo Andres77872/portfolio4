@@ -114,10 +114,7 @@ Remember: You're representing Andres's professional portfolio, so maintain a pro
     };
   };
 
-  // Scroll to bottom of messages
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  // Auto-scroll disabled - users can manually scroll to read messages during generation
 
   // Focus input field when chat opens
   useEffect(() => {

@@ -23,11 +23,9 @@
     /* Padding Variables - Using the spacing scale */
     --padding-xxs: var(--space-xxs);
     --padding-xs: var(--space-xs);
-    --padding-small: var(--space-xs); /* For backward compatibility */
     --padding-sm: var(--space-sm);
-    --padding-medium: var(--space-md); /* For backward compatibility */
+    --padding-md: var(--space-md);
     --padding-lg: var(--space-lg);
-    --padding-large: var(--space-lg); /* For backward compatibility */
     --padding-xl: var(--space-xl);
     --padding-2xl: var(--space-2xl);
     --padding-3xl: var(--space-3xl);
@@ -36,11 +34,9 @@
     /* Margin Variables - Using the spacing scale */
     --margin-xxs: var(--space-xxs);
     --margin-xs: var(--space-xs);
-    --margin-small: var(--space-xs); /* For backward compatibility */
     --margin-sm: var(--space-sm);
-    --margin-medium: var(--space-md); /* For backward compatibility */
+    --margin-md: var(--space-md);
     --margin-lg: var(--space-lg);
-    --margin-large: var(--space-lg); /* For backward compatibility */
     --margin-xl: var(--space-xl);
     --margin-2xl: var(--space-2xl);
     --margin-3xl: var(--space-3xl);
@@ -49,11 +45,9 @@
     /* Gap Variables - Using the spacing scale */
     --gap-xxs: var(--space-xxs);
     --gap-xs: var(--space-xs);
-    --gap-small: var(--space-xs); /* For backward compatibility */
     --gap-sm: var(--space-sm);
-    --gap-medium: var(--space-md); /* For backward compatibility */
+    --gap-md: var(--space-md);
     --gap-lg: var(--space-lg);
-    --gap-large: var(--space-lg); /* For backward compatibility */
     --gap-xl: var(--space-xl);
     --gap-2xl: var(--space-2xl);
     --gap-3xl: var(--space-3xl);
@@ -82,6 +76,13 @@
     --container-padding-x: var(--space-md);
     --container-padding-y: var(--space-lg);
     --container-padding: var(--container-padding-y) var(--container-padding-x);
+    
+    /* Container Max Widths */
+    --container-max-width-sm: 640px;
+    --container-max-width-md: 768px;
+    --container-max-width-lg: 1024px;
+    --container-max-width-xl: 1280px;
+    --container-max-width-2xl: 1536px;
     
     /* Section Spacing */
     --section-spacing-sm: var(--space-2xl);
@@ -112,10 +113,15 @@
     
     /* Z-index Scale */
     --z-index-negative: -1;
-    --z-index-base: 0;
+    --z-index-base: 1;
     --z-index-low: 10;
     --z-index-medium: 100;
-    --z-index-high: 1000;
+    --z-index-header: 100;
+    --z-index-nav: 110;
+    --z-index-dropdown: 120;
+    --z-index-modal: 500;
     --z-index-chatbot: 999;
+    --z-index-tooltip: 1000;
+    --z-index-high: 1000;
     --z-index-highest: 10000;
 }

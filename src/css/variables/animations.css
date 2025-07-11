@@ -8,17 +8,29 @@
   --animation-rubber: cubic-bezier(0.075, 0.82, 0.165, 1);
   --animation-swing: cubic-bezier(0.25, 0.1, 0.25, 1);
   
+  /* Animation durations - additional to what's in effects.css */
+  --animation-duration-xs: 100ms;
+  --animation-duration-sm: 200ms;
+  --animation-duration-slower: 1.5s;
+  
+  /* Animation delays */
+  --animation-delay-xs: 50ms;
+  --animation-delay-sm: 100ms;
+  --animation-delay-md: 200ms;
+  --animation-delay-lg: 300ms;
+  --animation-delay-xl: 500ms;
+  
   /* Advanced animations presets */
-  --animation-preset-fade-in: var(--animation-duration-normal) var(--animation-ease-out) 0s 1 normal forwards running fadeIn;
-  --animation-preset-fade-out: var(--animation-duration-normal) var(--animation-ease-in) 0s 1 normal forwards running fadeOut;
-  --animation-preset-slide-in-up: var(--animation-duration-normal) var(--animation-ease-out-back) 0s 1 normal forwards running slideInUp;
-  --animation-preset-slide-in-down: var(--animation-duration-normal) var(--animation-ease-out-back) 0s 1 normal forwards running slideInDown;
-  --animation-preset-slide-in-left: var(--animation-duration-normal) var(--animation-ease-out-back) 0s 1 normal forwards running slideInLeft;
-  --animation-preset-slide-in-right: var(--animation-duration-normal) var(--animation-ease-out-back) 0s 1 normal forwards running slideInRight;
-  --animation-preset-zoom-in: var(--animation-duration-normal) var(--animation-ease-out-back) 0s 1 normal forwards running zoomIn;
-  --animation-preset-zoom-out: var(--animation-duration-normal) var(--animation-ease-in-back) 0s 1 normal forwards running zoomOut;
+  --animation-preset-fade-in: var(--animation-duration-normal) var(--ease-out) 0s 1 normal forwards running fadeIn;
+  --animation-preset-fade-out: var(--animation-duration-normal) var(--ease-in) 0s 1 normal forwards running fadeOut;
+  --animation-preset-slide-in-up: var(--animation-duration-normal) var(--ease-out-back) 0s 1 normal forwards running slideInUp;
+  --animation-preset-slide-in-down: var(--animation-duration-normal) var(--ease-out-back) 0s 1 normal forwards running slideInDown;
+  --animation-preset-slide-in-left: var(--animation-duration-normal) var(--ease-out-back) 0s 1 normal forwards running slideInLeft;
+  --animation-preset-slide-in-right: var(--animation-duration-normal) var(--ease-out-back) 0s 1 normal forwards running slideInRight;
+  --animation-preset-zoom-in: var(--animation-duration-normal) var(--ease-out-back) 0s 1 normal forwards running zoomIn;
+  --animation-preset-zoom-out: var(--animation-duration-normal) var(--ease-in) 0s 1 normal forwards running zoomOut;
   --animation-preset-bounce: var(--animation-duration-slow) var(--animation-bounce) 0s infinite normal none running bounce;
-  --animation-preset-pulse: var(--animation-duration-slow) var(--animation-ease) 0s infinite normal none running pulse;
+  --animation-preset-pulse: var(--animation-duration-slow) var(--ease-in-out) 0s infinite normal none running pulse;
   --animation-preset-spin: var(--animation-duration-slow) linear 0s infinite normal none running spin;
   --animation-preset-shimmer: var(--animation-duration-slow) linear 0s infinite normal none running shimmer;
 }
