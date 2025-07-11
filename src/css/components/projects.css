@@ -7,6 +7,14 @@
   overflow: hidden;
 }
 
+.projects__container {
+  max-width: var(--container-max-width-xl);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  position: relative;
+  z-index: 2;
+}
+
 /* Create tech-inspired background pattern */
 .projects::before {
   content: "";
@@ -31,13 +39,16 @@
   color: var(--text-color);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-wide);
+  text-align: center;
+  width: 100%;
 }
 
 .projects h2::after {
   content: '';
   position: absolute;
   bottom: -8px;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 60px;
   height: 3px;
   background: var(--accent-color);

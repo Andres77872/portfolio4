@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import './App.css';
 
 import { Header, Hero, About, Projects, Contact, Footer, ChatBot } from './components';

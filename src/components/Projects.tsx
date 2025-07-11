@@ -51,29 +51,30 @@ export default function Projects() {
 
     return (
         <section id="projects" className="section projects">
-            <h2>My Projects</h2>
+            <div className="projects__container">
+                <h2>My Projects</h2>
 
-            <div className="projects__filters">
-                <input
-                    type="text"
-                    placeholder="Search projects..."
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
-                />
-                <select
-                    value={selectedTag}
-                    onChange={e => setSelectedTag(e.target.value)}
-                >
-                    <option value="">All Tags</option>
-                    {allTags.map(tag => (
-                        <option key={tag} value={tag}>
-                            {tag}
-                        </option>
-                    ))}
-                </select>
-            </div>
+                <div className="projects__filters">
+                    <input
+                        type="text"
+                        placeholder="Search projects..."
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
+                    />
+                    <select
+                        value={selectedTag}
+                        onChange={e => setSelectedTag(e.target.value)}
+                    >
+                        <option value="">All Tags</option>
+                        {allTags.map(tag => (
+                            <option key={tag} value={tag}>
+                                {tag}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-            <div className="projects__cards">
+                <div className="projects__cards">
                 {filteredProjects.map((project, index) => (
                     <div 
                         key={index} 
@@ -147,6 +148,7 @@ export default function Projects() {
                         </div>
                     </div>
                 ))}
+            </div>
             </div>
 
             {/* Project Modal */}
