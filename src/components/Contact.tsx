@@ -11,7 +11,7 @@ const contactLinks = [
   {
     name: "LinkedIn",
     label: "Connect on LinkedIn", 
-    href: "https://linkedin.com/in/jose-andres-arizmendi-sanchez-81b086217",
+    href: "https://www.linkedin.com/in/arz-ai/",
     icon: "💼",
     description: "Let's connect professionally"
   },

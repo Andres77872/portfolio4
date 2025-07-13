@@ -19,7 +19,7 @@ export default function Footer() {
               <h4>Connect</h4>
               <ul>
                 <li><a href="mailto:andres@arz.ai">Email</a></li>
-                <li><a href="https://linkedin.com/in/jose-andres-arizmendi-sanchez-81b086217" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+                <li><a href="https://www.linkedin.com/in/arz-ai/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
                 <li><a href="https://github.com/Andres77872" target="_blank" rel="noopener noreferrer">GitHub</a></li>
               </ul>
             </div>

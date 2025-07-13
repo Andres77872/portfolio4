@@ -97,7 +97,7 @@ ${projectSummary}
 
 CONTACT INFORMATION:
 - Email: andres@arz.ai
-- LinkedIn: https://linkedin.com/in/jose-andres-arizmendi-sanchez-81b086217
+- LinkedIn: https://www.linkedin.com/in/arz-ai/
 - GitHub: https://github.com/Andres77872
 
 INSTRUCTIONS:
