@@ -1,25 +1,10 @@
-import { useEffect } from 'react';
+// Portfolio App - Main Component
 import './App.css';
 
 import { Header, Hero, About, Projects, Contact, Footer, ChatBot } from './components';
 
 function App() {
-  // Simple header scroll behavior without complex throttling
-  useEffect(() => {
-    const handleScroll = () => {
-      const header = document.querySelector('.header');
-      if (header) {
-        if (window.scrollY > 100) {
-          header.classList.add('header--scrolled');
-        } else {
-          header.classList.remove('header--scrolled');
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // No scroll behavior - keeping original header style
 
   return (
     <div className="App">

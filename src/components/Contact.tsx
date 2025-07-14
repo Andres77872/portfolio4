@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Section from './common/Section';
 
 const contactLinks = [
   {
@@ -27,22 +28,16 @@ const contactLinks = [
 export default function Contact() {
   const [hoveredLink, setHoveredLink] = useState<number | null>(null);
 
-  return (
-    <section id="contact" className="section contact">
-      <div className="contact__container">
-        <div className="contact__header">
-          <h2 className="contact__section-title">
-            Let's Connect
-            <span className="contact__title-accent">.</span>
-          </h2>
-          <div className="contact__title-underline"></div>
-          <p className="contact__description">
-            Ready to build something amazing together? I'm always open to discussing new opportunities, 
-            innovative projects, and collaborations in AI and machine learning.
-          </p>
-        </div>
+  const description = "Ready to build something amazing together? I'm always open to discussing new opportunities, innovative projects, and collaborations in AI and machine learning.";
 
-        <div className="contact__content">
+  return (
+    <Section 
+      id="contact" 
+      className="contact" 
+      title="Let's Connect"
+      description={description}
+    >
+      <div className="contact__content">
           <div className="contact__text">
             <div className="contact__cta">
               <h3>Get in Touch</h3>
@@ -50,20 +45,20 @@ export default function Contact() {
                 Whether you're looking to develop AI solutions, need consulting on machine learning projects, 
                 or just want to discuss the latest in AI research, I'd love to hear from you.
               </p>
-              <div className="contact__features">
-                <div className="contact__feature">
+              <ul className="contact__features">
+                <li className="contact__feature">
                   <span className="contact__feature-icon">⚡</span>
                   <span>Quick Response</span>
-                </div>
-                <div className="contact__feature">
+                </li>
+                <li className="contact__feature">
                   <span className="contact__feature-icon">🎯</span>
                   <span>Focused Solutions</span>
-                </div>
-                <div className="contact__feature">
+                </li>
+                <li className="contact__feature">
                   <span className="contact__feature-icon">🤝</span>
                   <span>Collaborative Approach</span>
-                </div>
-              </div>
+                </li>
+              </ul>
             </div>
           </div>
 
@@ -105,7 +100,6 @@ export default function Contact() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+    </Section>
   );
 }

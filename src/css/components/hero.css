@@ -8,28 +8,10 @@
   align-items: center;
   position: relative;
   padding: var(--space-xl) var(--space-lg);
-  background: linear-gradient(
-    135deg,
-    var(--background-color-website) 0%,
-    var(--background-color-primary) 50%,
-    var(--background-color-website) 100%
-  );
   overflow: hidden;
 }
 
-.hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
-  pointer-events: none;
-}
+/* Background moved to body */
 
 .hero__content {
   display: grid;

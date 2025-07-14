@@ -1,0 +1,108 @@
+/* ProjectLinkButtons.css - Styling for project link buttons */
+
+.project-link-buttons {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin: var(--space-md) ;
+}
+
+/* Base button styles */
+.project-link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: var(--border-radius-small);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.project-link-buttons a:hover {
+  color: white;
+}
+
+
+/* GitHub button with dark theme */
+.project-link-button--github {
+  background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.project-link-button--github:hover {
+  background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* API button with blue theme */
+.project-link-button--api {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+}
+
+.project-link-button--api:hover {
+  background: linear-gradient(135deg, #45a8eb 0%, #3990c9 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+}
+
+/* Live Site button with green theme */
+.project-link-button--live {
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  box-shadow: 0 2px 4px rgba(46, 204, 113, 0.3);
+}
+
+.project-link-button--live:hover {
+  background: linear-gradient(135deg, #3edc81 0%, #37be70 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(46, 204, 113, 0.4);
+}
+
+/* Button icon styling */
+.project-link-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Active state for all buttons */
+.project-link-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Focus state for accessibility */
+.project-link-button:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .project-link-button {
+    padding: 6px 10px;
+    font-size: calc(var(--font-size-sm) - 1px);
+  }
+}
+
+/* Compact mode for smaller containers */
+.project-link-buttons--compact .project-link-button {
+  padding: 5px 8px;
+  font-size: calc(var(--font-size-sm) - 2px);
+}
+
+/* Remove animation for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .project-link-button {
+    transition: none;
+  }
+  
+  .project-link-button:hover {
+    transform: none;
+  }
+}

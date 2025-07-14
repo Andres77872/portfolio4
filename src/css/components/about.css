@@ -1,65 +1,5 @@
 /* about.css - Enhanced About Section with Modern Design */
-
-.about {
-  padding: var(--space-5xl) 0;
-  background: linear-gradient(
-    180deg,
-    var(--background-color-website) 0%,
-    var(--background-color-primary) 50%,
-    var(--background-color-website) 100%
-  );
-  position: relative;
-  overflow: hidden;
-}
-
-.about::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle at 70% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.03) 0%, transparent 50%);
-  pointer-events: none;
-}
-
-.about__container {
-  max-width: var(--container-max-width-xl);
-  margin: 0 auto;
-  padding: 0 var(--space-lg);
-  position: relative;
-  z-index: 2;
-}
-
-.about__header {
-  text-align: center;
-  margin-bottom: var(--space-4xl);
-  animation: fadeInUp 0.8s var(--ease-out) 0.2s both;
-}
-
-.about__section-title {
-  font-size: clamp(2.5rem, 4vw, 3.5rem);
-  font-weight: var(--font-weight-extra-bold);
-  margin-bottom: var(--space-sm);
-  color: var(--text-color);
-  position: relative;
-}
-
-.about__title-accent {
-  color: var(--accent-color);
-  font-size: 1.2em;
-}
-
-.about__title-underline {
-  width: 60px;
-  height: 4px;
-  background: linear-gradient(135deg, var(--accent-color), var(--indigo-400));
-  margin: var(--space-md) auto 0;
-  border-radius: 2px;
-  animation: scaleIn 0.6s var(--ease-out) 0.8s both;
-}
+/* Note: Common section styles moved to Section.css */
 
 .about__content {
   display: grid;
@@ -172,12 +112,10 @@
   border-radius: var(--border-radius-medium);
   padding: var(--space-xl);
   transition: all 0.3s var(--ease-out);
-  cursor: pointer;
   animation: fadeInUp 0.8s var(--ease-out) calc(1s + var(--animation-delay-lg, 0s)) both;
 }
 
-.about__skill-group:hover,
-.about__skill-group--active {
+.about__skill-group:hover {
   transform: translateY(-5px);
   border-color: rgba(99, 102, 241, 0.3);
   background: rgba(99, 102, 241, 0.05);
@@ -212,23 +150,26 @@
 .about__skill-list {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
 }
 
 .about__skill-item {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text-color-secondary);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--border-radius-small);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--border-radius-medium);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   border: 1px solid rgba(255, 255, 255, 0.15);
   transition: all 0.3s var(--ease-out);
-  animation: slideInFromBottom 0.5s var(--ease-out) var(--animation-delay-lg, 0s) both;
+  animation: slideInFromBottom 0.5s var(--ease-out) calc(0.2s * var(--index, 0)) both;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.about__skill-group:hover .about__skill-item,
-.about__skill-group--active .about__skill-item {
+.about__skill-item:hover {
   background: rgba(99, 102, 241, 0.2);
   border-color: rgba(99, 102, 241, 0.4);
   color: var(--text-color);
@@ -274,28 +215,7 @@
   font-weight: var(--font-weight-medium);
 }
 
-/* Keyframe Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scaleX(0);
-  }
-  to {
-    opacity: 1;
-    transform: scaleX(1);
-  }
-}
+/* Note: Common keyframe animations moved to Section.css */
 
 @keyframes slideInFromBottom {
   from {
@@ -310,14 +230,6 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .about {
-    padding: var(--space-4xl) 0;
-  }
-
-  .about__container {
-    padding: 0 var(--space-md);
-  }
-
   .about__content {
     grid-template-columns: 1fr;
     gap: var(--space-3xl);
@@ -347,10 +259,6 @@
 }
 
 @media (max-width: 480px) {
-  .about__section-title {
-    font-size: 2rem;
-  }
-
   .about__highlight-card,
   .about__skill-group,
   .about__stat {

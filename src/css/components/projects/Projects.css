@@ -1,0 +1,28 @@
+/* Projects.css - Modern styling for AI research/engineer portfolio projects section */
+
+/* Projects.css - Modern styling for AI research/engineer portfolio projects section */
+/* Note: Common section styles moved to Section.css */
+
+/* Projects grid */
+.projects__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-lg);
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .projects__cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .projects__tag::before,
+  .projects__links a::before {
+    transition: none !important;
+  }
+}

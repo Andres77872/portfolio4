@@ -1,0 +1,365 @@
+/* ProjectFilters.css - Styling for project filter components */
+
+/* Filters section */
+.projects__filters {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-lg);
+  gap: var(--space-lg);
+  position: relative;
+  z-index: 1;
+}
+
+/* Search wrapper for centering */
+.projects__search-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.projects__filters select {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--border-radius-small);
+  background-color: var(--background-color-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  font-size: var(--font-size-sm);
+  flex: 1;
+  max-width: 100%;
+  transition: var(--transition-all);
+}
+
+.projects__filters select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  outline: none;
+}
+
+.projects__search::placeholder {
+  color: var(--text-color-placeholder);
+}
+
+/* Search container with icon and input styling */
+.projects__search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  background-color: rgba(99, 102, 241, 0.08);
+  border-radius: 50px; /* More rounded appearance */
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  transition: var(--transition-all);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.projects__search-container:focus-within {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.35);
+  background-color: rgba(99, 102, 241, 0.12);
+}
+
+.projects__search-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: var(--space-lg); /* More padding for better alignment with rounded container */
+  color: var(--accent-color);
+  opacity: 0.8;
+}
+
+.projects__search {
+  min-width: 240px;
+  background: transparent;
+  border: none;
+  padding: var(--space-sm) var(--space-xs);
+  padding-left: var(--space-sm); /* Adjusted padding for better alignment */
+  color: var(--text-color);
+  font-size: var(--font-size-sm);
+  flex: 1;
+  caret-color: var(--accent-color);
+}
+
+.projects__search:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+.projects__search-clear {
+  background: transparent;
+  border: none;
+  color: var(--text-color-placeholder);
+  padding: 0 var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  height: 100%;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  border-top-right-radius: 50px; /* Match container's border radius */
+  border-bottom-right-radius: 50px; /* Match container's border radius */
+}
+
+.projects__search-clear:hover {
+  opacity: 1;
+  color: var(--text-color);
+  background-color: rgba(255, 255, 255, 0.05); /* Subtle background on hover */
+}
+
+/* Filter tags container */
+.projects__filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  width: 100%;
+  justify-content: center;
+}
+
+/* Project links styling */
+.projects__filter-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-xs);
+  width: 100%;
+}
+
+.projects__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transform: translateY(0);
+}
+
+/* GitHub link styling */
+.projects__link--github {
+  background: linear-gradient(135deg, #333333 0%, #24292e 100%);
+  color: #ffffff;
+}
+
+.projects__link--github:hover {
+  background: linear-gradient(135deg, #3a3a3a 0%, #2b3137 100%);
+  box-shadow: 0 4px 12px rgba(36, 41, 46, 0.4);
+  transform: translateY(-2px);
+}
+
+/* API link styling */
+.projects__link--api {
+  background: linear-gradient(135deg, #3949ab 0%, #1e88e5 100%);
+  color: #ffffff;
+}
+
+.projects__link--api:hover {
+  background: linear-gradient(135deg, #4252b5 0%, #2196f3 100%);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Live site link styling */
+.projects__link--live {
+  background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+  color: #ffffff;
+}
+
+.projects__link--live:hover {
+  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+  transform: translateY(-2px);
+}
+
+.projects__link svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Filter status indicator */
+.projects__filter-status {
+  display: flex;
+  align-items: center;
+  margin-right: var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--text-color-secondary);
+  gap: var(--space-xs);
+}
+
+.projects__filter-all-tags {
+  color: var(--accent-color);
+  font-weight: var(--font-weight-medium);
+  position: relative;
+  padding-right: var(--space-xs);
+  margin-right: var(--space-xs);
+}
+
+.projects__filter-all-tags::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--accent-color);
+  animation: pulseUnderline 2s infinite;
+}
+
+@keyframes pulseUnderline {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Filter tag buttons */
+.projects__filter-tag {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: 6px var(--space-md);
+  border-radius: 20px;
+  background-color: var(--background-color-secondary);
+  color: var(--text-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Selected tag style with animated border */
+.projects__filter-tag--selected {
+  background-color: rgba(99, 102, 241, 0.15);
+  color: var(--accent-color-secondary);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+/* Create animated border effect */
+.projects__filter-tag--selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 20px;
+  padding: 2px;
+  background: linear-gradient(
+    45deg,
+    #6366f1,
+    #8b5cf6,
+    #d946ef,
+    #8b5cf6,
+    #6366f1
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  background-size: 400%;
+  animation: animatedBorder 3s linear infinite;
+}
+
+/* Hover effect */
+.projects__filter-tag:hover:not(.projects__filter-tag--selected) {
+  background-color: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
+}
+
+/* Animation keyframes for the border */
+@keyframes animatedBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Clear all button styles */
+.projects__filter-clear-all {
+  background: transparent;
+  border: none;
+  color: var(--accent-color);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: 2px var(--space-xs);
+  margin-left: var(--space-xs);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  border-radius: var(--border-radius-small);
+  display: flex;
+  align-items: center;
+}
+
+.projects__filter-clear-all:hover {
+  background-color: rgba(99, 102, 241, 0.08);
+  transform: translateY(-1px);
+}
+
+.projects__filter-clear-all:active {
+  transform: translateY(0px);
+}
+
+.projects__filter-clear-all::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--accent-color);
+  transform: scaleX(0.7);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+  opacity: 0.5;
+}
+
+.projects__filter-clear-all:hover::after {
+  transform: scaleX(1);
+  opacity: 0.8;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .projects__filters {
+    gap: var(--space-md);
+  }
+  
+  .projects__search-container {
+    max-width: 100%;
+  }
+  
+  .projects__filter-tags {
+    justify-content: flex-start;
+  }
+  
+  .projects__filter-links {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .projects__link {
+    width: 100%;
+    max-width: 200px;
+  }
+}

@@ -7,11 +7,11 @@
     "apiUrl": "https://api.findit.moe/",
     "image": "https://img.arz.ai/0RgBiDTt",
     "tags": [
-      "React",
-      "FastAPI",
+      "REACT",
+      "FASTAPI",
       "NN",
-      "openclip",
-      "qdrant"
+      "OPENCLIP",
+      "QDRANT"
     ],
     "status": "production"
   },
@@ -23,13 +23,13 @@
     "apiUrl": "https://magic.arz.ai/",
     "image": "https://img.arz.ai/0GSBN8FV",
     "tags": [
-      "FastAPI",
+      "FASTAPI",
       "LLM",
-      "Node Graph",
-      "Agents",
+      "NODE GRAPH",
+      "AGENTS",
       "JSON",
-      "OpenAI",
-      "magic-llm"
+      "OPENAI",
+      "MAGIC-LLM"
     ],
     "status": "production"
   },
@@ -41,10 +41,10 @@
     "apiUrl": "https://shr.arz.ai/",
     "image": "https://img.arz.ai/gHIAqEJR",
     "tags": [
-      "FastAPI",
-      "React",
-      "File Sharing",
-      "Encryption"
+      "FASTAPI",
+      "REACT",
+      "FILE SHARING",
+      "ENCRYPTION"
     ],
     "status": "production"
   },
@@ -57,12 +57,11 @@
     "apiUrl": "https://api.findit.moe/docs#/General%20anime%20image%20search",
     "repoUrl": "https://github.com/Andres77872/spyder.findit.moe",
     "tags": [
-      "React",
-      "Three.js",
-      "react-force-graph-3d",
-      "Reverse Image Search",
-      "Graph Visualization",
-      "Vector Embeddings"
+      "REACT",
+      "THREE.JS",
+      "REACT-FORCE-GRAPH-3D",
+      "VECTOR EMBEDDINGS",
+      "GRAPH VISUALIZATION"
     ],
     "status": "production"
   },
@@ -75,14 +74,10 @@
     "repoUrl": "https://github.com/Andres77872/magic-reports",
     "apiUrl": "https://llm.arz.ai/docs#/data%20sources/colpali_rag_colpali_arxiv_post",
     "tags": [
-      "POC",
       "RAG",
-      "Arxiv",
-      "Streamlit",
-      "magic-llm",
-      "Colpali",
-      "Information Retrieval",
-      "AI",
+      "STREAMLIT",
+      "MAGIC-LLM",
+      "COLPALI",
       "LLM"
     ],
     "status": "production"
@@ -96,16 +91,14 @@
     "apiUrl": "https://magic.arz.ai/docs",
     "repoUrl": "https://github.com/Andres77872/magic-arxiv-writer",
     "tags": [
-      "React",
-      "Vite",
+      "REACT",
+      "VITE",
       "RAG",
-      "ColPali",
-      "Qdrant",
+      "COLPALI",
+      "QDRANT",
       "LLM",
-      "Embeddings",
-      "magic-assistant",
-      "Writing",
-      "AI"
+      "EMBEDDINGS",
+      "MAGIC-ASSISTANT"
     ],
     "status": "production"
   },
@@ -118,14 +111,9 @@
     "image": "https://img.arz.ai/lO8Bbe-p",
     "repoUrl": "https://github.com/Andres77872/magic-worlds",
     "tags": [
-      "React",
-      "Vite",
-      "Role-Playing",
-      "AI",
-      "Storytelling",
-      "magic-assistant",
-      "World Building",
-      "Adventure"
+      "REACT",
+      "VITE",
+      "MAGIC-ASSISTANT"
     ],
     "status": "production"
   },
@@ -138,15 +126,12 @@
     "apiUrl": "https://magic.arz.ai/docs#/Chat/completion_chat_openai_v1_completion_post",
     "repoUrl": "https://github.com/Andres77872/magic-slider",
     "tags": [
-      "POC",
-      "React",
-      "Vite",
-      "RevealJS",
+      "REACT",
+      "VITE",
+      "REVEALJS",
       "LLM",
       "RAG",
-      "magic-agents",
-      "Presentation",
-      "AI"
+      "MAGIC-AGENTS"
     ],
     "status": "production"
   },
@@ -159,14 +144,13 @@
     "image": "https://img.arz.ai/0whA6FF1",
     "repoUrl": "https://github.com/Andres77872/magic-auth-dashboard",
     "tags": [
-      "FastAPI",
-      "MySQL",
-      "React",
-      "Vite",
-      "Authentication",
+      "FASTAPI",
+      "MYSQL",
+      "REACT",
+      "VITE",
+      "AUTHENTICATION",
       "RBAC",
-      "JWT",
-      "Multi-Project"
+      "JWT"
     ],
     "status": "production"
   },
@@ -178,14 +162,14 @@
     "image": "https://img.arz.ai/5n3AU6bp",
     "tags": [
       "LLM",
-      "Wrapper",
-      "OpenAI",
-      "Anthropic",
-      "Cohere",
-      "AWS Bedrock",
-      "boto3",
-      "httpx",
-      "aiohttp"
+      "WRAPPER",
+      "OPENAI",
+      "ANTHROPIC",
+      "COHERE",
+      "AWS BEDROCK",
+      "BOTO3",
+      "HTTPX",
+      "AIOHTTP"
     ],
     "status": "repo"
   },
@@ -196,13 +180,13 @@
     "repoUrl": "https://github.com/Andres77872/magic-agents",
     "image": "https://img.arz.ai/pfgAs1_B",
     "tags": [
-      "Graph Framework",
+      "GRAPH FRAMEWORK",
       "LLM",
-      "ComfyUI",
-      "magic-llm",
-      "NetworkX",
-      "Jinja2",
-      "Agents"
+      "COMFYUI",
+      "MAGIC-LLM",
+      "NETWORKX",
+      "JINJA2",
+      "AGENTS"
     ],
     "status": "repo"
   }
