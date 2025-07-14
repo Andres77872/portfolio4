@@ -33,7 +33,8 @@ export default function Projects() {
     };
 
     const allTags = useMemo(() => {
-        const tags = projects.flatMap(p => p.tags || []);
+        // Convert all tags to uppercase to avoid duplications due to case sensitivity
+        const tags = projects.flatMap(p => p.tags?.map(tag => tag.toUpperCase()) || []);
         return Array.from(new Set(tags)).sort();
     }, [projects]);
 
@@ -43,7 +44,7 @@ export default function Projects() {
                 p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 p.description.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesTag = selectedTag
-                ? p.tags?.includes(selectedTag)
+                ? p.tags?.some(tag => tag.toUpperCase() === selectedTag)
                 : true;
             return matchesSearch && matchesTag;
         });
@@ -63,7 +64,7 @@ export default function Projects() {
                     />
                     <select
                         value={selectedTag}
-                        onChange={e => setSelectedTag(e.target.value)}
+                        onChange={e => setSelectedTag(e.target.value.toUpperCase())}
                     >
                         <option value="">All Tags</option>
                         {allTags.map(tag => (
