@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Section from './common/Section';
 
 const contactLinks = [
   {
@@ -27,21 +28,16 @@ const contactLinks = [
 export default function Contact() {
   const [hoveredLink, setHoveredLink] = useState<number | null>(null);
 
-  return (
-    <section id="contact" className="section contact">
-      <div className="contact__container">
-        <div className="contact__header">
-          <h2 className="contact__section-title">
-            Let's Connect
-          </h2>
-          <div className="contact__title-underline"></div>
-          <p className="contact__description">
-            Ready to build something amazing together? I'm always open to discussing new opportunities, 
-            innovative projects, and collaborations in AI and machine learning.
-          </p>
-        </div>
+  const description = "Ready to build something amazing together? I'm always open to discussing new opportunities, innovative projects, and collaborations in AI and machine learning.";
 
-        <div className="contact__content">
+  return (
+    <Section 
+      id="contact" 
+      className="contact" 
+      title="Let's Connect"
+      description={description}
+    >
+      <div className="contact__content">
           <div className="contact__text">
             <div className="contact__cta">
               <h3>Get in Touch</h3>
@@ -104,7 +100,6 @@ export default function Contact() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+    </Section>
   );
 }

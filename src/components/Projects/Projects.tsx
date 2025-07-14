@@ -4,6 +4,7 @@ import { Project } from './types';
 import ProjectCard from './ProjectCard';
 import ProjectFilters from './ProjectFilters';
 import ProjectModal from './ProjectModal';
+import Section from '../common/Section';
 import '../../css/components/projects/Projects.css';
 
 const Projects: React.FC = () => {
@@ -66,30 +67,26 @@ const Projects: React.FC = () => {
     }, [projects, searchTerm, selectedTags]);
 
     return (
-        <section id="projects" className="section projects">
-            <div className="projects__container">
-                <h2>My Projects</h2>
-                
-                <ProjectFilters 
-                    searchTerm={searchTerm}
-                    selectedTags={selectedTags}
-                    allTags={allTags}
-                    onSearchChange={setSearchTerm}
-                    onTagToggle={handleTagClick}
-                    onClearAllTags={clearAllTags}
-                />
+        <Section id="projects" className="projects" title="My Projects">
+            <ProjectFilters 
+                searchTerm={searchTerm}
+                selectedTags={selectedTags}
+                allTags={allTags}
+                onSearchChange={setSearchTerm}
+                onTagToggle={handleTagClick}
+                onClearAllTags={clearAllTags}
+            />
 
-                <div className="projects__cards">
-                    {filteredProjects.map((project, index) => (
-                        <ProjectCard
-                            key={index}
-                            project={project}
-                            onCardClick={openProjectModal}
-                            onTagClick={handleTagClick}
-                            selectedTags={selectedTags}
-                        />
-                    ))}
-                </div>
+            <div className="projects__cards">
+                {filteredProjects.map((project, index) => (
+                    <ProjectCard
+                        key={index}
+                        project={project}
+                        onCardClick={openProjectModal}
+                        onTagClick={handleTagClick}
+                        selectedTags={selectedTags}
+                    />
+                ))}
             </div>
 
             {selectedProject && (
@@ -100,7 +97,7 @@ const Projects: React.FC = () => {
                     selectedTags={selectedTags}
                 />
             )}
-        </section>
+        </Section>
     );
 };
 

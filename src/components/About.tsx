@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import aboutData from '../data/about.json';
+import Section from './common/Section';
 
 interface Skill {
   category: string;
@@ -48,98 +49,93 @@ export default function About() {
   }, []);
 
   return (
-    <section id="about" className="section about">
-      <div className="about__container">
-        <div className="about__header">
-          <h2 className="about__section-title">
-            About Me
-          </h2>
-          <div className="about__title-underline"></div>
-        </div>
-
-        <div className="about__content">
-          <div className="about__text">
-            {data.description.map((paragraph, index) => (
-              <div key={index} className="about__paragraph-wrapper">
-                <p className="about__description">
-                  {paragraph}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="about__highlights">
-            <div className="about__highlight-card">
-              <div className="about__highlight-icon">🚀</div>
-              <h3>Innovation Focus</h3>
-              <p>Transforming cutting-edge AI research into real-world applications</p>
-            </div>
-            <div className="about__highlight-card">
-              <div className="about__highlight-icon">🔬</div>
-              <h3>Research & Development</h3>
-              <p>Bridging the gap between academic research and production systems</p>
-            </div>
-            <div className="about__highlight-card">
-              <div className="about__highlight-icon">⚡</div>
-              <h3>End-to-End Solutions</h3>
-              <p>From concept to deployment, creating comprehensive AI ecosystems</p>
-            </div>
-          </div>
-        </div>
-
-        {data.skills && data.skills.length > 0 && (
-          <div className="about__skills-section">
-            <div className="about__skills-header">
-              <h3 className="about__section-title">
-                Technical Expertise
-              </h3>
-              <p className="about__skills-subtitle">
-                Technologies and frameworks I work with
+    <Section 
+      id="about" 
+      className="about" 
+      title="About Me"
+    >
+      <div className="about__content">
+        <div className="about__text">
+          {data.description.map((paragraph, index) => (
+            <div key={index} className="about__paragraph-wrapper">
+              <p className="about__description">
+                {paragraph}
               </p>
             </div>
-            
-            <div className="about__skills">
-              {data.skills.map((skillGroup, index) => (
-                <div 
-                  key={index} 
-                  className="about__skill-group"
-                >
-                  <div className="about__skill-header">
-                    <h4 className="about__skill-category">{skillGroup.category}</h4>
-                    <div className="about__skill-count">{skillGroup.items.length}</div>
-                  </div>
-                  <div className="about__skill-list">
-                    {skillGroup.items.map((skill, skillIndex) => (
-                      <span 
-                        key={skillIndex} 
-                        className="about__skill-item"
-                        style={{ '--index': skillIndex } as React.CSSProperties}
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+          ))}
+        </div>
 
-        <div className="about__stats">
-          <div className="about__stat">
-            <div className="about__stat-number">3+</div>
-            <div className="about__stat-label">Years Experience</div>
+        <div className="about__highlights">
+          <div className="about__highlight-card">
+            <div className="about__highlight-icon">🚀</div>
+            <h3>Innovation Focus</h3>
+            <p>Transforming cutting-edge AI research into real-world applications</p>
           </div>
-          <div className="about__stat">
-            <div className="about__stat-number">10+</div>
-            <div className="about__stat-label">AI Projects</div>
+          <div className="about__highlight-card">
+            <div className="about__highlight-icon">🔬</div>
+            <h3>Research & Development</h3>
+            <p>Bridging the gap between academic research and production systems</p>
           </div>
-          <div className="about__stat">
-            <div className="about__stat-number">5+</div>
-            <div className="about__stat-label">Technologies</div>
+          <div className="about__highlight-card">
+            <div className="about__highlight-icon">⚡</div>
+            <h3>End-to-End Solutions</h3>
+            <p>From concept to deployment, creating comprehensive AI ecosystems</p>
           </div>
         </div>
       </div>
-    </section>
+
+      {data.skills && data.skills.length > 0 && (
+        <div className="about__skills-section">
+          <div className="about__skills-header">
+            <h3 className="about__section-title">
+              Technical Expertise
+            </h3>
+            <p className="about__skills-subtitle">
+              Technologies and frameworks I work with
+            </p>
+          </div>
+          
+          <div className="about__skills">
+            {data.skills.map((skillGroup, index) => (
+              <div 
+                key={index} 
+                className="about__skill-group"
+              >
+                <div className="about__skill-header">
+                  <h4 className="about__skill-category">{skillGroup.category}</h4>
+                  <div className="about__skill-count">{skillGroup.items.length}</div>
+                </div>
+                <div className="about__skill-list">
+                  {skillGroup.items.map((skill, skillIndex) => (
+                    <span 
+                      key={skillIndex} 
+                      className="about__skill-item"
+                      style={{ '--index': skillIndex } as React.CSSProperties}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="about__stats">
+        <div className="about__stat">
+          <div className="about__stat-number">3+</div>
+          <div className="about__stat-label">Years Experience</div>
+        </div>
+        <div className="about__stat">
+          <div className="about__stat-number">10+</div>
+          <div className="about__stat-label">AI Projects</div>
+        </div>
+        <div className="about__stat">
+          <div className="about__stat-number">5+</div>
+          <div className="about__stat-label">Technologies</div>
+        </div>
+      </div>
+    </Section>
   );
 }

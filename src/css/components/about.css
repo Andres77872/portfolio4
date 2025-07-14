@@ -1,44 +1,5 @@
 /* about.css - Enhanced About Section with Modern Design */
-
-.about {
-  padding: var(--space-5xl) 0;
-  /* Using body background now */
-  position: relative;
-  overflow: hidden;
-}
-
-/* Removed ::before pseudo-element to use only the body's ::before */
-
-.about__container {
-  max-width: var(--container-max-width-xl);
-  margin: 0 auto;
-  padding: 0 var(--space-lg);
-  position: relative;
-  z-index: 2;
-}
-
-.about__header {
-  text-align: center;
-  margin-bottom: var(--space-4xl);
-  animation: fadeInUp 0.8s var(--ease-out) 0.2s both;
-}
-
-.about__section-title {
-  font-size: clamp(2.5rem, 4vw, 3.5rem);
-  font-weight: var(--font-weight-extra-bold);
-  margin-bottom: var(--space-sm);
-  color: var(--text-color);
-  position: relative;
-}
-
-.about__title-underline {
-  width: 60px;
-  height: 4px;
-  background: linear-gradient(135deg, var(--accent-color), var(--indigo-400));
-  margin: var(--space-md) auto 0;
-  border-radius: 2px;
-  animation: scaleIn 0.6s var(--ease-out) 0.8s both;
-}
+/* Note: Common section styles moved to Section.css */
 
 .about__content {
   display: grid;
@@ -254,28 +215,7 @@
   font-weight: var(--font-weight-medium);
 }
 
-/* Keyframe Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scaleX(0);
-  }
-  to {
-    opacity: 1;
-    transform: scaleX(1);
-  }
-}
+/* Note: Common keyframe animations moved to Section.css */
 
 @keyframes slideInFromBottom {
   from {
@@ -290,14 +230,6 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .about {
-    padding: var(--space-4xl) 0;
-  }
-
-  .about__container {
-    padding: 0 var(--space-md);
-  }
-
   .about__content {
     grid-template-columns: 1fr;
     gap: var(--space-3xl);
@@ -327,10 +259,6 @@
 }
 
 @media (max-width: 480px) {
-  .about__section-title {
-    font-size: 2rem;
-  }
-
   .about__highlight-card,
   .about__skill-group,
   .about__stat {
