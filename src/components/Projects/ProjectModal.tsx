@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import ProjectLinkButtons from './ProjectLinkButtons';
 import '../../css/components/projects/ProjectModal.css';
-// Importing from local types file
-import { Project } from './types.ts';
+import { Project } from './types';
 
 interface ProjectModalProps {
     project: Project;
@@ -60,35 +60,11 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                     </div>
                 )}
 
-                <div className="projects__links project-modal__links">
-                    {project.url && (
-                        <a
-                            href={project.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Live Site
-                        </a>
-                    )}
-                    {project.apiUrl && (
-                        <a
-                            href={project.apiUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            API
-                        </a>
-                    )}
-                    {project.repoUrl && (
-                        <a
-                            href={project.repoUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            GitHub
-                        </a>
-                    )}
-                </div>
+                <ProjectLinkButtons
+                    repoUrl={project.repoUrl}
+                    apiUrl={project.apiUrl}
+                    url={project.url}
+                />
             </div>
         </div>
     );

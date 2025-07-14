@@ -127,8 +127,7 @@
   margin-bottom: var(--space-md);
 }
 
-.project-modal__tags,
-.project-modal__links {
+.project-modal__tags {
   margin-top: var(--space-md);
   padding-top: var(--space-md);
   border-top: 1px solid rgba(255, 255, 255, 0.05);

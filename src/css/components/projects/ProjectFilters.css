@@ -119,6 +119,74 @@
   justify-content: center;
 }
 
+/* Project links styling */
+.projects__filter-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-xs);
+  width: 100%;
+}
+
+.projects__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transform: translateY(0);
+}
+
+/* GitHub link styling */
+.projects__link--github {
+  background: linear-gradient(135deg, #333333 0%, #24292e 100%);
+  color: #ffffff;
+}
+
+.projects__link--github:hover {
+  background: linear-gradient(135deg, #3a3a3a 0%, #2b3137 100%);
+  box-shadow: 0 4px 12px rgba(36, 41, 46, 0.4);
+  transform: translateY(-2px);
+}
+
+/* API link styling */
+.projects__link--api {
+  background: linear-gradient(135deg, #3949ab 0%, #1e88e5 100%);
+  color: #ffffff;
+}
+
+.projects__link--api:hover {
+  background: linear-gradient(135deg, #4252b5 0%, #2196f3 100%);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Live site link styling */
+.projects__link--live {
+  background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+  color: #ffffff;
+}
+
+.projects__link--live:hover {
+  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+  transform: translateY(-2px);
+}
+
+.projects__link svg {
+  width: 18px;
+  height: 18px;
+}
+
 /* Filter status indicator */
 .projects__filter-status {
   display: flex;
@@ -282,5 +350,16 @@
   
   .projects__filter-tags {
     justify-content: flex-start;
+  }
+  
+  .projects__filter-links {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .projects__link {
+    width: 100%;
+    max-width: 200px;
   }
 }

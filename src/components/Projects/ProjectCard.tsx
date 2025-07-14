@@ -1,7 +1,7 @@
 import React from 'react';
+import { Project } from './types';
+import ProjectLinkButtons from './ProjectLinkButtons';
 import '../../css/components/projects/ProjectCard.css';
-// Importing from local types file
-import { Project } from './types.ts';
 
 interface ProjectCardProps {
     project: Project;
@@ -51,38 +51,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick, onTagCl
                     ))}
                 </div>
             )}
-            <div className="projects__links">
-                {project.url && (
-                    <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()} // Prevent card click
-                    >
-                        Live Site
-                    </a>
-                )}
-                {project.apiUrl && (
-                    <a
-                        href={project.apiUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()} // Prevent card click
-                    >
-                        API
-                    </a>
-                )}
-                {project.repoUrl && (
-                    <a
-                        href={project.repoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()} // Prevent card click
-                    >
-                        GitHub
-                    </a>
-                )}
-            </div>
+            <ProjectLinkButtons 
+                repoUrl={project.repoUrl} 
+                apiUrl={project.apiUrl} 
+                url={project.url} 
+                stopPropagation={true} 
+            />
         </div>
     );
 };
