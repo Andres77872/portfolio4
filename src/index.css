@@ -108,30 +108,6 @@ a:hover {
     color: var(--accent-color-hover);
 }
 
-/* Buttons and other interactive elements */
-button {
-    border-radius: var(--radius-sm);
-    border: var(--button-border);
-    padding: var(--button-padding-vertical) var(--button-padding-horizontal);
-    font-size: var(--button-font-size);
-    font-weight: var(--button-font-weight);
-    font-family: inherit;
-    color: var(--button-text-color);
-    background-color: var(--button-background-color);
-    cursor: pointer;
-    box-shadow: var(--button-box-shadow-hover);
-    transition: background-color var(--transition-standard), transform var(--transition-standard);
-}
-
-button:hover {
-    background-color: var(--button-background-color-hover);
-    transform: translateY(-2px);
-}
-
-button:focus-visible {
-    outline: var(--focus-outline);
-    outline-offset: var(--padding-xs);
-}
 
 /* Scrollbar improvements (for modern browsers) */
 ::-webkit-scrollbar {
