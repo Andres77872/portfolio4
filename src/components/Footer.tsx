@@ -7,11 +7,14 @@ export default function Footer() {
         <div className="footer__content">
           <div className="footer__brand">
             <div className="footer__logo">
-              <span className="footer__logo-text">Andres Arizmendi</span>
+              <div className="footer__logo-main">
+                <span className="footer__logo-name">arizmendi</span>
+                <span className="footer__logo-accent">.io</span>
+              </div>
+              <p className="footer__tagline">
+                Building the future with Artificial Intelligence
+              </p>
             </div>
-            <p className="footer__tagline">
-              Building the future with Artificial Intelligence
-            </p>
           </div>
 
           <div className="footer__links">

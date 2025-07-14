@@ -5,11 +5,11 @@
   top: 0;
   left: 0;
   width: 100%;
-  z-index: var(--z-index-high);
-  background: rgba(15, 23, 42, 0.8);
+  z-index: var(--z-index-header);
+  background: var(--background-color-primary);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  border-bottom: 1px solid var(--border-color);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   animation: headerSlideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -19,10 +19,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 clamp(1rem, 5vw, 3rem);
+  padding: 0 var(--padding-lg);
   max-width: var(--container-max-width-xl);
   margin: 0 auto;
-  min-height: 80px;
+  min-height: var(--header-height);
   position: relative;
   width: 100%;
 }
@@ -31,7 +31,7 @@
 .header__logo {
   display: flex;
   align-items: center;
-  z-index: 11;
+  z-index: var(--z-index-nav);
   position: relative;
 }
 
@@ -42,10 +42,10 @@
   color: var(--text-color);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  padding: 0.75rem 1rem;
+  padding: var(--padding-sm) var(--padding-md);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color-header);
   backdrop-filter: blur(10px);
   overflow: hidden;
 }
@@ -91,30 +91,30 @@
 }
 
 .header__logo-name {
-  color: #f8fafc;
+  color: var(--text-color);
   position: relative;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 .header__logo-accent {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--indigo-600) 50%, var(--blue-500) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-weight: 800;
+  font-weight: var(--font-weight-extra-bold);
   position: relative;
   animation: gradientShift 3s ease-in-out infinite;
   background-size: 200% 200%;
 }
 
 .header__logo-subtitle {
-  font-size: 0.625rem;
-  font-weight: 500;
-  color: #94a3b8;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-color-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: var(--letter-spacing-widest);
   margin-top: -2px;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-family: var(--font-family-mono);
   opacity: 0.9;
 }
 
@@ -129,16 +129,16 @@
 .header__github-link {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: #f8fafc;
-  font-size: 0.875rem;
-  font-weight: 500;
+  gap: var(--space-xs);
+  color: var(--text-color);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   text-decoration: none;
-  padding: 0.75rem 1.25rem;
+  padding: var(--padding-sm) var(--padding-md);
   border-radius: 50px;
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  font-family: 'Inter', system-ui, sans-serif;
+  border: 1px solid var(--accent-color-muted);
+  font-family: var(--font-family-base);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -163,7 +163,7 @@
 .header__github-link:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
-  border-color: rgba(99, 102, 241, 0.6);
+  border-color: var(--accent-color);
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
 }
 
@@ -186,8 +186,8 @@
 }
 
 .header__github-text {
-  font-weight: 600;
-  letter-spacing: 0.025em;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
   position: relative;
   z-index: 2;
@@ -227,33 +227,7 @@
   }
 }
 
-/* Enhanced Scroll Behavior */
-.header--scrolled {
-  background: rgba(15, 23, 42, 0.95);
-  backdrop-filter: blur(25px);
-  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.2);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
-}
-
-.header--scrolled .header__content {
-  min-height: 70px;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-
-.header--scrolled .header__logo-main {
-  font-size: 1.5rem;
-}
-
-.header--scrolled .header__logo-link {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.header--scrolled .header__github-link {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
-  border-color: rgba(99, 102, 241, 0.4);
-}
+/* Header styling is kept consistent while scrolling - no scroll-specific styles */
 
 /* Enhanced Responsive Design */
 @media (max-width: 1024px) {

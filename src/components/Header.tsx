@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import Navbar from './Navbar';
 
 export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
-  const [isScrolled, setIsScrolled] = useState(false);
 
   // Update CSS variable with header height
   useEffect(() => {
@@ -26,25 +25,8 @@ export default function Header() {
     };
   }, []);
 
-  // Handle scroll behavior
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      setIsScrolled(scrollTop > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    
-    // Initial check
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
   return (
-    <header className={`header ${isScrolled ? 'header--scrolled' : ''}`} ref={headerRef}>
+    <header className="header" ref={headerRef}>
       <div className="header__content">
         <div className="header__logo">
           <a href="#" className="header__logo-link">
