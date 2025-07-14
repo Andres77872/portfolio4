@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import aboutData from '../data/about.json';
 
 interface Skill {
@@ -34,7 +34,7 @@ const defaultData: AboutData = {
 };
 
 export default function About() {
-  const [activeSkillCategory, setActiveSkillCategory] = useState<number | null>(null);
+  // No longer need state for active skill category since we removed hover interaction
   
   const data = useMemo(() => {
     try {
@@ -102,11 +102,7 @@ export default function About() {
               {data.skills.map((skillGroup, index) => (
                 <div 
                   key={index} 
-                  className={`about__skill-group ${
-                    activeSkillCategory === index ? 'about__skill-group--active' : ''
-                  }`}
-                  onMouseEnter={() => setActiveSkillCategory(index)}
-                  onMouseLeave={() => setActiveSkillCategory(null)}
+                  className="about__skill-group"
                 >
                   <div className="about__skill-header">
                     <h4 className="about__skill-category">{skillGroup.category}</h4>
@@ -117,7 +113,7 @@ export default function About() {
                       <span 
                         key={skillIndex} 
                         className="about__skill-item"
-                        style={{ '--delay': `${skillIndex * 0.1}s` } as React.CSSProperties}
+                        style={{ '--index': skillIndex } as React.CSSProperties}
                       >
                         {skill}
                       </span>
