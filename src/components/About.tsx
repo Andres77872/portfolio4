@@ -53,7 +53,6 @@ export default function About() {
         <div className="about__header">
           <h2 className="about__section-title">
             About Me
-            <span className="about__title-accent">.</span>
           </h2>
           <div className="about__title-underline"></div>
         </div>
@@ -93,7 +92,6 @@ export default function About() {
             <div className="about__skills-header">
               <h3 className="about__section-title">
                 Technical Expertise
-                <span className="about__title-accent">.</span>
               </h3>
               <p className="about__skills-subtitle">
                 Technologies and frameworks I work with

@@ -51,7 +51,7 @@ export default function Header() {
             <div className="header__logo-content">
               <div className="header__logo-main">
                 <span className="header__logo-name">arizmendi</span>
-                <span className="header__logo-accent">.ai</span>
+                <span className="header__logo-accent">.io</span>
               </div>
               <div className="header__logo-subtitle">AI Developer</div>
             </div>

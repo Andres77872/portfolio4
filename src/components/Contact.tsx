@@ -33,7 +33,6 @@ export default function Contact() {
         <div className="contact__header">
           <h2 className="contact__section-title">
             Let's Connect
-            <span className="contact__title-accent">.</span>
           </h2>
           <div className="contact__title-underline"></div>
           <p className="contact__description">

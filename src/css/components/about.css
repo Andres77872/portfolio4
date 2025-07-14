@@ -31,11 +31,6 @@
   position: relative;
 }
 
-.about__title-accent {
-  color: var(--accent-color);
-  font-size: 1.2em;
-}
-
 .about__title-underline {
   width: 60px;
   height: 4px;
