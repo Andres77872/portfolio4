@@ -2,7 +2,7 @@
 
 .projects {
   padding: var(--space-xl) 0 calc(var(--space-xl) * 2);
-  background-color: var(--background-color-primary);
+  /* Using body background now */
   position: relative;
   overflow: hidden;
 }
@@ -15,21 +15,7 @@
   z-index: 2;
 }
 
-/* Create tech-inspired background pattern */
-.projects::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255, 255, 255, 0.02) 50px, rgba(255, 255, 255, 0.02) 51px),
-    repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255, 255, 255, 0.02) 50px, rgba(255, 255, 255, 0.02) 51px);
-  z-index: 0;
-  opacity: 0.3;
-  pointer-events: none;
-}
+/* Removed ::before pseudo-element to use only the body's ::before */
 
 .projects h2 {
   font-size: var(--h2-font-size);
