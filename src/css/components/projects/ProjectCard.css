@@ -245,6 +245,7 @@
   transition: var(--transition-all);
   position: relative;
   overflow: hidden;
+  cursor: pointer; /* Add pointer cursor to indicate clickable */
 }
 
 .projects__tag::before {

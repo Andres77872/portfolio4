@@ -8,7 +8,6 @@ interface ProjectModalProps {
     project: Project;
     isOpen: boolean;
     onClose: () => void;
-    onTagClick: (tag: string) => void;
     selectedTag: string;
 }
 
@@ -16,7 +15,6 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
     project, 
     isOpen, 
     onClose,
-    onTagClick,
     selectedTag
 }) => {
     if (!isOpen) return null;
@@ -54,11 +52,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                                     selectedTag === tag
                                         ? 'projects__tag--active'
                                         : ''
-                                }`}
-                                onClick={() => {
-                                    onTagClick(tag);
-                                    onClose();
-                                }}
+                                } projects__tag--modal`}
                             >
                                 {tag}
                             </span>

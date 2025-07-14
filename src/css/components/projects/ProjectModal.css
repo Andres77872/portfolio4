@@ -134,6 +134,13 @@
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Disable pointer cursor and hover effects for modal tags */
+.projects__tag--modal {
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
 /* Animation keyframes */
 @keyframes fadeIn {
   from {

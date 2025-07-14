@@ -67,6 +67,7 @@ const Projects: React.FC = () => {
                             key={index}
                             project={project}
                             onCardClick={openProjectModal}
+                            onTagClick={handleTagClick}
                         />
                     ))}
                 </div>
@@ -77,7 +78,6 @@ const Projects: React.FC = () => {
                     project={selectedProject}
                     isOpen={isModalOpen}
                     onClose={closeProjectModal}
-                    onTagClick={handleTagClick}
                     selectedTag={selectedTag}
                 />
             )}

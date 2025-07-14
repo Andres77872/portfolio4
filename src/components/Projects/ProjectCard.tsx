@@ -6,11 +6,17 @@ import { Project } from './types.ts';
 interface ProjectCardProps {
     project: Project;
     onCardClick: (project: Project) => void;
+    onTagClick: (tag: string) => void;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick, onTagClick }) => {
     const handleCardClick = () => {
         onCardClick(project);
+    };
+    
+    const handleTagClick = (tag: string, e: React.MouseEvent) => {
+        e.stopPropagation(); // Prevent card click when tag is clicked
+        onTagClick(tag);
     };
     
     return (
@@ -37,6 +43,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick }) => {
                         <span
                             key={tag}
                             className="projects__tag"
+                            onClick={(e) => handleTagClick(tag, e)}
                         >
                             {tag}
                         </span>
