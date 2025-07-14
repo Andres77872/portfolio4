@@ -1,0 +1,62 @@
+/* ProjectFilters.css - Styling for project filter components */
+
+/* Filters section */
+.projects__filters {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.projects__filters input,
+.projects__filters select {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--border-radius-small);
+  background-color: var(--background-color-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  font-size: var(--font-size-sm);
+  flex: 1;
+  max-width: 100%;
+  transition: var(--transition-all);
+}
+
+.projects__filters input:focus,
+.projects__filters select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  outline: none;
+}
+
+.projects__filters input::placeholder {
+  color: var(--text-color-placeholder);
+}
+
+.projects__search {
+  min-width: 200px;
+}
+
+.projects__tag-select {
+  min-width: 150px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%239ca3af'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  padding-right: var(--space-xl);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .projects__filters {
+    flex-direction: column;
+  }
+  
+  .projects__filters input,
+  .projects__filters select {
+    width: 100%;
+  }
+}

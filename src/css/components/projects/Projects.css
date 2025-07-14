@@ -1,0 +1,68 @@
+/* Projects.css - Modern styling for AI research/engineer portfolio projects section */
+
+/* Base Projects section styling */
+.projects {
+  padding: var(--space-xl) 0 calc(var(--space-xl) * 2);
+  position: relative;
+  overflow: hidden;
+}
+
+.projects__container {
+  max-width: var(--container-max-width-xl);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  position: relative;
+  z-index: 2;
+}
+
+.projects h2 {
+  font-size: var(--h2-font-size);
+  margin-bottom: var(--space-xl);
+  position: relative;
+  display: inline-block;
+  color: var(--text-color);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-align: center;
+  width: 100%;
+}
+
+.projects h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--accent-color);
+  border-radius: var(--border-radius-small);
+}
+
+/* Projects grid */
+.projects__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-lg);
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .projects {
+    padding: calc(var(--space-xl) + 20px) var(--space-md) var(--space-xl);
+  }
+  
+  .projects__cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .projects__tag::before,
+  .projects__links a::before {
+    transition: none !important;
+  }
+}
