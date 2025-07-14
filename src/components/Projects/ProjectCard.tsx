@@ -19,10 +19,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick }) => {
             onClick={handleCardClick}
         >
             {project.url && (
-                <div className="projects__live">Live</div>
+                <div className="projects__live">Live Project</div>
             )}
             {project.status === 'repo' && !project.url && (
-                <div className="projects__repo">Repo</div>
+                <div className="projects__repo">GitHub Repo</div>
             )}
             {project.image && (
                 <img src={project.image} alt={project.title} />
