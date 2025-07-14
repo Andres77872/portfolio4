@@ -80,6 +80,7 @@ const Projects: React.FC = () => {
                             project={project}
                             onCardClick={openProjectModal}
                             onTagClick={handleTagClick}
+                            selectedTags={selectedTags}
                         />
                     ))}
                 </div>

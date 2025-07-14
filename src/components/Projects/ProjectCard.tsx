@@ -7,9 +7,10 @@ interface ProjectCardProps {
     project: Project;
     onCardClick: (project: Project) => void;
     onTagClick: (tag: string) => void;
+    selectedTags: string[];
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick, onTagClick }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick, onTagClick, selectedTags }) => {
     const handleCardClick = () => {
         onCardClick(project);
     };
@@ -21,7 +22,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick, onTagCl
     
     return (
         <div 
-            className={project.url ? 'projects__card--live' : 'projects__card--repo'}
+            className={`${project.url ? 'projects__card--live' : 'projects__card--repo'} ${project.tags?.some(tag => selectedTags.includes(tag.toUpperCase())) ? 'projects__card--selected' : ''}`}
             onClick={handleCardClick}
         >
             {project.url && (
@@ -42,7 +43,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick, onTagCl
                     {project.tags.map((tag: string) => (
                         <span
                             key={tag}
-                            className="projects__tag"
+                            className={`projects__tag ${selectedTags.includes(tag.toUpperCase()) ? 'projects__tag--selected' : ''}`}
                             onClick={(e) => handleTagClick(tag, e)}
                         >
                             {tag}
