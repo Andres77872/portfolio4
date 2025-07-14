@@ -36,6 +36,11 @@ const Projects: React.FC = () => {
             return [...prev, tagUpper];
         });
     };
+    
+    // Function to clear all selected tags
+    const clearAllTags = () => {
+        setSelectedTags([]);
+    };
 
     // Get all unique tags
     const allTags = useMemo(() => {
@@ -71,6 +76,7 @@ const Projects: React.FC = () => {
                     allTags={allTags}
                     onSearchChange={setSearchTerm}
                     onTagToggle={handleTagClick}
+                    onClearAllTags={clearAllTags}
                 />
 
                 <div className="projects__cards">

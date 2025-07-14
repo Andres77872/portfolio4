@@ -7,6 +7,7 @@ interface ProjectFiltersProps {
     allTags: string[];
     onSearchChange: (value: string) => void;
     onTagToggle: (tag: string) => void;
+    onClearAllTags: () => void;
 }
 
 const ProjectFilters: React.FC<ProjectFiltersProps> = ({
@@ -14,7 +15,8 @@ const ProjectFilters: React.FC<ProjectFiltersProps> = ({
     selectedTags,
     allTags,
     onSearchChange,
-    onTagToggle
+    onTagToggle,
+    onClearAllTags
 }) => {
     return (
         <div className="projects__filters">
@@ -54,7 +56,16 @@ const ProjectFilters: React.FC<ProjectFiltersProps> = ({
                     {selectedTags.length === 0 ? (
                         <span className="projects__filter-all-tags">All Tags</span>
                     ) : (
-                        <span>{selectedTags.length} selected</span>
+                        <>
+                            <span>{selectedTags.length} selected</span>
+                            <button 
+                                className="projects__filter-clear-all" 
+                                onClick={onClearAllTags}
+                                aria-label="Clear all selected tags"
+                            >
+                                Clear all
+                            </button>
+                        </>
                     )}
                 </div>
                 
