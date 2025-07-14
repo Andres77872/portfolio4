@@ -1,8 +1,6 @@
 /* App container */
 .App {
-  max-width: 1200px;
   margin: 0 auto;
-  padding: var(--padding-md);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
