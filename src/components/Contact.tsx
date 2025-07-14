@@ -49,20 +49,20 @@ export default function Contact() {
                 Whether you're looking to develop AI solutions, need consulting on machine learning projects, 
                 or just want to discuss the latest in AI research, I'd love to hear from you.
               </p>
-              <div className="contact__features">
-                <div className="contact__feature">
+              <ul className="contact__features">
+                <li className="contact__feature">
                   <span className="contact__feature-icon">⚡</span>
                   <span>Quick Response</span>
-                </div>
-                <div className="contact__feature">
+                </li>
+                <li className="contact__feature">
                   <span className="contact__feature-icon">🎯</span>
                   <span>Focused Solutions</span>
-                </div>
-                <div className="contact__feature">
+                </li>
+                <li className="contact__feature">
                   <span className="contact__feature-icon">🤝</span>
                   <span>Collaborative Approach</span>
-                </div>
-              </div>
+                </li>
+              </ul>
             </div>
           </div>
 
