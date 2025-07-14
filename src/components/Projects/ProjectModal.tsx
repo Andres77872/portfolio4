@@ -8,14 +8,14 @@ interface ProjectModalProps {
     project: Project;
     isOpen: boolean;
     onClose: () => void;
-    selectedTag: string;
+    selectedTags: string[];
 }
 
 const ProjectModal: React.FC<ProjectModalProps> = ({ 
     project, 
     isOpen, 
     onClose,
-    selectedTag
+    selectedTags
 }) => {
     if (!isOpen) return null;
 
@@ -49,7 +49,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                             <span
                                 key={tag}
                                 className={`projects__tag ${
-                                    selectedTag === tag
+                                    selectedTags.includes(tag.toUpperCase())
                                         ? 'projects__tag--active'
                                         : ''
                                 } projects__tag--modal`}

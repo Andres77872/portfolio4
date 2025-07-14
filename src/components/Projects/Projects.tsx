@@ -9,7 +9,7 @@ import '../../css/components/projects/Projects.css';
 const Projects: React.FC = () => {
     const projects = projectsData as Project[];
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedTag, setSelectedTag] = useState('');
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -25,7 +25,16 @@ const Projects: React.FC = () => {
     };
 
     const handleTagClick = (tag: string) => {
-        setSelectedTag(tag.toUpperCase());
+        // Toggle tag selection
+        const tagUpper = tag.toUpperCase();
+        setSelectedTags(prev => {
+            // If tag is already selected, remove it
+            if (prev.includes(tagUpper)) {
+                return prev.filter(t => t !== tagUpper);
+            }
+            // Otherwise add it to selection
+            return [...prev, tagUpper];
+        });
     };
 
     // Get all unique tags
@@ -35,18 +44,21 @@ const Projects: React.FC = () => {
         return Array.from(new Set(tags)).sort();
     }, [projects]);
 
-    // Filter projects based on search term and selected tag
+    // Filter projects based on search term and selected tags
     const filteredProjects = useMemo(() => {
         return projects.filter(p => {
             const matchesSearch =
                 p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 p.description.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesTag = selectedTag
-                ? p.tags?.some(tag => tag.toUpperCase() === selectedTag)
-                : true;
-            return matchesSearch && matchesTag;
+                
+            // If no tags are selected, show all projects
+            const matchesTags = selectedTags.length === 0
+                ? true
+                : p.tags?.some(tag => selectedTags.includes(tag.toUpperCase()));
+                
+            return matchesSearch && matchesTags;
         });
-    }, [projects, searchTerm, selectedTag]);
+    }, [projects, searchTerm, selectedTags]);
 
     return (
         <section id="projects" className="section projects">
@@ -55,10 +67,10 @@ const Projects: React.FC = () => {
                 
                 <ProjectFilters 
                     searchTerm={searchTerm}
-                    selectedTag={selectedTag}
+                    selectedTags={selectedTags}
                     allTags={allTags}
                     onSearchChange={setSearchTerm}
-                    onTagChange={(tag) => setSelectedTag(tag.toUpperCase())}
+                    onTagToggle={handleTagClick}
                 />
 
                 <div className="projects__cards">
@@ -78,7 +90,7 @@ const Projects: React.FC = () => {
                     project={selectedProject}
                     isOpen={isModalOpen}
                     onClose={closeProjectModal}
-                    selectedTag={selectedTag}
+                    selectedTags={selectedTags}
                 />
             )}
         </section>
