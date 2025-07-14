@@ -1,7 +1,5 @@
 import React from 'react';
 import '../../css/components/projects/ProjectLinkButtons.css';
-// Ensure JSX is recognized
-/** @jsx React.createElement */
 
 interface ProjectLinkButtonsProps {
     repoUrl?: string;
