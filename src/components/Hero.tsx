@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import NeuralNexus from '../games/neural-nexus/NeuralNexus';
 
 const roles = [
   "AI Developer",
@@ -84,19 +85,8 @@ export default function Hero() {
         </div>
         
         <div className="hero__visual">
-          <div className="hero__avatar">
-            <div className="hero__avatar-inner">
-              <div className="hero__tech-orbit hero__tech-orbit--1">
-                <span className="hero__tech-icon">🤖</span>
-              </div>
-              <div className="hero__tech-orbit hero__tech-orbit--2">
-                <span className="hero__tech-icon">⚡</span>
-              </div>
-              <div className="hero__tech-orbit hero__tech-orbit--3">
-                <span className="hero__tech-icon">🧠</span>
-              </div>
-              <div className="hero__avatar-glow"></div>
-            </div>
+          <div className="hero__ai-container">
+            <NeuralNexus className="hero__ai-canvas" />
           </div>
         </div>
       </div>

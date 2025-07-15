@@ -192,80 +192,21 @@
   animation: slideInFromRight 0.8s var(--ease-out) 0.4s both;
 }
 
-.hero__avatar {
+.hero__ai-container {
   position: relative;
-  width: 300px;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.hero__avatar-inner {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  background: linear-gradient(135deg, var(--accent-color), var(--indigo-400));
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 4rem;
-  animation: float 3s ease-in-out infinite;
-}
-
-.hero__avatar-glow {
-  position: absolute;
-  top: -20px;
-  left: -20px;
-  right: -20px;
-  bottom: -20px;
-  background: linear-gradient(135deg, var(--accent-color), var(--indigo-400));
-  border-radius: 50%;
-  opacity: 0.3;
-  filter: blur(20px);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.hero__tech-orbit {
-  position: absolute;
+  border-radius: var(--radius-lg);
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(99, 102, 241, 0.3);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow: hidden;
+  box-shadow: 
+    0 0 50px rgba(99, 102, 241, 0.2),
+    inset 0 0 20px rgba(99, 102, 241, 0.1);
 }
 
-.hero__tech-orbit--1 {
-  width: 260px;
-  height: 260px;
-  animation: rotate 20s linear infinite;
-}
-
-.hero__tech-orbit--2 {
-  width: 320px;
-  height: 320px;
-  animation: rotate 25s linear infinite reverse;
-}
-
-.hero__tech-orbit--3 {
-  width: 380px;
-  height: 380px;
-  animation: rotate 30s linear infinite;
-}
-
-.hero__tech-icon {
-  position: absolute;
-  top: -15px;
-  font-size: 1.5rem;
-  background: var(--background-color-primary);
-  border: 2px solid var(--accent-color);
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* AI Canvas */
+.hero__ai-canvas {
+  border-radius: var(--radius-lg);
 }
 
 .hero__scroll-indicator {
@@ -376,6 +317,16 @@
   }
 }
 
+/* AI Specific Animations */
+@keyframes statusPulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .hero {
@@ -397,30 +348,14 @@
     order: 1;
   }
 
-  .hero__avatar {
-    width: 200px;
-    height: 200px;
+  .hero__ai-container {
+    width: 350px;
   }
 
-  .hero__avatar-inner {
-    width: 150px;
-    height: 150px;
-    font-size: 3rem;
-  }
-
-  .hero__tech-orbit--1 {
-    width: 180px;
-    height: 180px;
-  }
-
-  .hero__tech-orbit--2 {
-    width: 220px;
-    height: 220px;
-  }
-
-  .hero__tech-orbit--3 {
-    width: 260px;
-    height: 260px;
+  .hero__ai-label {
+    top: var(--space-sm);
+    right: var(--space-sm);
+    font-size: var(--font-size-xs);
   }
 
   .hero__actions {
@@ -451,5 +386,19 @@
 
   .hero__description {
     font-size: var(--font-size-md);
+  }
+
+  .hero__ai-container {
+    width: 280px;
+  }
+
+  .hero__ai-label {
+    font-size: 10px;
+    padding: var(--space-xxs) var(--space-xs);
+  }
+
+  .hero__ai-label-text,
+  .hero__ai-label-status {
+    font-size: 10px;
   }
 } 
