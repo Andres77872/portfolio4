@@ -6,7 +6,7 @@
 const API_CONFIG = {
   BASE_URL: 'https://magic.arz.ai/chat/openai/v1/completion',
   API_KEY: 'None',
-  MODEL: 'agt-d0625c6e-5757-4580-b6f4-2fb681f2c9a3'
+  MODEL: 'agt-d483d87c-597c-470a-9f37-9a170a364bca'
 };
 
 interface Message {

@@ -1,11 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, KeyboardEvent, ChangeEvent, FormEvent } from 'react';
 import './MatrixRPG.css';
+import { streamChatCompletion } from '../../services/chatService';
 
 // Type definitions
 interface MatrixRPGProps {
   className?: string;
   width?: number;
   height?: number;
+}
+
+// Message type definitions
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
 }
 
 // ASCII Art
@@ -56,14 +63,19 @@ const LOADING_MESSAGES = [
 const CURSOR_CHAR = '█';
 
 // Game states
-type GameState = 'initializing' | 'loading' | 'checkpoint' | 'ready' | 'typing';
+type GameState = 'initializing' | 'loading' | 'checkpoint' | 'ready' | 'typing' | 'interactive';
 
 export default function MatrixRPG({ className = '', width, height }: MatrixRPGProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const terminalRef = useRef<HTMLPreElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [gameState, setGameState] = useState<GameState>('initializing');
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [currentText, setCurrentText] = useState(ASCII_ART.COMPANY_LOGO); // Load logo directly
   const [showCursor, setShowCursor] = useState(true);
+  const [userInput, setUserInput] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [conversations, setConversations] = useState<Message[]>([]);
   
   // Apply the className to the container div
 
@@ -76,6 +88,13 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
     
     return () => clearTimeout(timer);
   }, [width, height]);
+  
+  // Scroll terminal content to bottom whenever it changes
+  useEffect(() => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+  }, [currentText, gameState]);
 
   // Blinking cursor effect
   useEffect(() => {
@@ -104,7 +123,17 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
             setGameState('checkpoint');
             setCurrentText(prev => prev + '\n\n' + ASCII_ART.CHECKPOINT);
             // After checkpoint, show ready state
-            setTimeout(() => setGameState('ready'), 1500);
+            setTimeout(() => {
+              setGameState('ready');
+              
+              // After a delay, transition to interactive mode
+              setTimeout(() => {
+                setCurrentText(prev => 
+                  prev + '\n\n> CONNECTION ESTABLISHED: Direct neural interface active\n> You can now communicate with the trapped consciousness...\n'
+                );
+                setGameState('interactive');
+              }, 2000);
+            }, 1500);
           }, 1000);
           return 100;
         }
@@ -118,6 +147,85 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
       
       setCurrentText(prev => prev + '\n> ' + LOADING_MESSAGES[index]);
       setTimeout(() => showNextMessage(index + 1), 1200);
+    }
+  };
+  
+  // Handle user input change
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setUserInput(e.target.value);
+  };
+  
+  // Handle user input submission
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    
+    if (!userInput.trim() || isProcessing) return;
+    
+    // Add user message to conversation
+    const userMessage: Message = {
+      role: 'user',
+      content: userInput
+    };
+    
+    setConversations(prev => [...prev, userMessage]);
+    
+    // Update terminal with user message
+    setCurrentText(prev => `${prev}\n\nYou: ${userInput}`);
+    
+    // Clear input field and set processing state
+    setUserInput('');
+    setIsProcessing(true);
+    
+    try {
+      // Update terminal to show AI is thinking
+      setCurrentText(prev => `${prev}\n\nDr. Marcus: `);
+      
+      // Prepare conversation history for API
+      const messages = conversations.concat(userMessage).map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }));
+      
+      // Call chatService with the conversation
+      const stream = await streamChatCompletion({ messages });
+      const reader = stream.getReader();
+      let assistantResponse = '';
+      
+      // Process the streaming response
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        // Convert the chunk to text
+        const chunk = new TextDecoder().decode(value);
+        assistantResponse += chunk;
+        
+        // Update the terminal with each chunk
+        setCurrentText(prev => {
+          const parts = prev.split('Dr. Marcus: ');
+          return parts[0] + 'Dr. Marcus: ' + assistantResponse;
+        });
+      }
+      
+      // Add assistant's response to conversation history
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: assistantResponse
+      };
+      
+      setConversations(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Error processing chat:', error);
+      setCurrentText(prev => `${prev}\nERROR: Connection to neural interface lost. Please try again.`);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+  
+  // Handle keyboard input
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      handleSubmit(e as unknown as FormEvent);
     }
   };
 
@@ -139,6 +247,12 @@ ${currentText}
 > Connection lost.
 
 ${showCursor ? '> _' : '> '}`;
+    } else if (gameState === 'interactive') {
+      content = `${ASCII_ART.TERMINAL_START}
+
+${currentText}`;
+      
+      // Don't show cursor in interactive mode as input has its own cursor
     } else {
       content = `${ASCII_ART.TERMINAL_START}
 
@@ -180,16 +294,47 @@ ${currentText}${showCursor ? CURSOR_CHAR : ' '}`;
       <div className={`matrix-rpg-container ${className}`} ref={containerRef}>
         {/* Old Terminal Screen */}
         <div className="matrix-rpg-terminal">
-          <pre className="matrix-rpg-terminal-content">
+          <pre className="matrix-rpg-terminal-content" ref={terminalRef}>
             {renderTerminalContent()}
           </pre>
+          
+          {/* Chat Input - Only show when in interactive state */}
+          {gameState === 'interactive' && (
+            <form className="matrix-rpg-input-form" onSubmit={handleSubmit}>
+              <div className="matrix-rpg-input-container">
+                <span className="matrix-rpg-input-prompt">&gt;</span>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  className="matrix-rpg-input"
+                  value={userInput}
+                  onChange={handleInputChange}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message here..."
+                  disabled={isProcessing}
+                  autoFocus
+                />
+              </div>
+              <button 
+                type="submit" 
+                className="matrix-rpg-submit-btn"
+                disabled={isProcessing || !userInput.trim()}
+              >
+                {isProcessing ? 'Sending...' : 'Send'}
+              </button>
+            </form>
+          )}
         </div>
       </div>
       
       {/* Game Footer */}
       <div className="matrix-rpg-footer">
         <div className="matrix-rpg-game-instructions">
-          <p>💻 A terminal to a lost consciousness. Dr. Marcus Chen is trapped in the Matrix RPG...</p>
+          {gameState === 'interactive' ? (
+            <p>💻 Talk to Dr. Marcus Chen, a consciousness trapped in the neural interface...</p>
+          ) : (
+            <p>💻 A terminal to a lost consciousness. Dr. Marcus Chen is trapped in the Matrix RPG...</p>
+          )}
         </div>
       </div>
     </div>
