@@ -44,7 +44,15 @@ const GAME_SETTINGS = {
   ATTRACTION_FORCE: 0.015,  // Force of attraction
   REPULSION_FORCE: 0.08,    // Force of repulsion (stronger to prevent touching)
   REJECTION_RANGE: 200,     // Distance beyond which nodes are rejected
-  REJECTION_FORCE: 0.005    // Force of rejection when too far
+  REJECTION_FORCE: 0.005,   // Force of rejection when too far
+  RANDOM_MOVEMENT: 0.0015,  // Force of random movement
+  EDGE_REPULSION: 0.002,    // Base force to maximize edge distances
+  EDGE_MIN_DISTANCE: 50,    // Distance at which max repulsion is applied
+  EDGE_MAX_DISTANCE: 200,   // Distance at which min repulsion is applied
+  OUTSIDE_BOOST: 2.5,       // Boost factor for separation when outside cursor areas
+  MAX_VELOCITY: 0.6,        // Maximum velocity for nodes
+  MIN_VELOCITY: 0.05,       // Minimum velocity for nodes
+  VELOCITY_DECAY: 0.98      // Velocity decay factor for smooth movement
 };
 
 export default function NeuralNexus({ className = '', width, height }: AICanvasProps) {
@@ -224,6 +232,94 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
 
       // Update nodes with game physics
       nodesRef.current.forEach((node, i) => {
+        // Apply random movement forces for slow, natural movement
+        node.vx += (Math.random() - 0.5) * GAME_SETTINGS.RANDOM_MOVEMENT;
+        node.vy += (Math.random() - 0.5) * GAME_SETTINGS.RANDOM_MOVEMENT;
+        node.vz += (Math.random() - 0.5) * GAME_SETTINGS.RANDOM_MOVEMENT * 0.5;
+        
+        // Calculate if node is inside any cursor area
+        const distToCursor = mouseX >= 0 && mouseY >= 0 ? 
+          Math.sqrt((mouseX - node.x) * (mouseX - node.x) + (mouseY - node.y) * (mouseY - node.y)) : 
+          Infinity;
+        const insideCursorArea = distToCursor <= GAME_SETTINGS.ATTRACTION_RANGE;
+        
+        // Edge distance maximization - but only if outside cursor areas
+        if (!insideCursorArea) {
+          // Apply stronger separation when outside cursor areas
+          const outsideBoostFactor = GAME_SETTINGS.OUTSIDE_BOOST;
+          
+          nodesRef.current.forEach((otherNode, j) => {
+            // Skip self
+            if (i === j) return;
+            
+            // Check if these nodes are connected
+            const isConnected = node.connections.includes(j) || otherNode.connections.includes(i);
+            
+            if (isConnected) {
+              // Calculate direction vector between nodes
+              const dx = otherNode.x - node.x;
+              const dy = otherNode.y - node.y;
+              const dz = otherNode.z - node.z;
+              
+              // Calculate distance between nodes
+              const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+              
+              if (distance > 0) {
+                // Dynamic repulsion - stronger when close, weaker when far apart
+                // Clamp distance between min and max values for stable behavior
+                const clampedDistance = Math.max(
+                  GAME_SETTINGS.EDGE_MIN_DISTANCE,
+                  Math.min(distance, GAME_SETTINGS.EDGE_MAX_DISTANCE)
+                );
+                
+                // Calculate factor: 1.0 at min distance, approaching 0 at max distance
+                const distanceFactor = 1.0 - (
+                  (clampedDistance - GAME_SETTINGS.EDGE_MIN_DISTANCE) / 
+                  (GAME_SETTINGS.EDGE_MAX_DISTANCE - GAME_SETTINGS.EDGE_MIN_DISTANCE)
+                );
+                
+                // Apply repulsion force that's inversely proportional to distance
+                const force = GAME_SETTINGS.EDGE_REPULSION * 
+                              distanceFactor * 
+                              outsideBoostFactor;
+                
+                // Apply repulsion force
+                node.vx -= (dx / distance) * force;
+                node.vy -= (dy / distance) * force;
+                node.vz -= (dz / distance) * force;
+              }
+            }
+          });
+        }
+        
+        // Apply additional repulsion from all nodes (connected or not) when outside cursor area
+        // This helps maintain overall separation
+        if (!insideCursorArea) {
+          nodesRef.current.forEach((otherNode, j) => {
+            // Skip self
+            if (i === j) return;
+            
+            // Calculate direction vector between nodes
+            const dx = otherNode.x - node.x;
+            const dy = otherNode.y - node.y;
+            const dz = otherNode.z - node.z;
+            
+            // Calculate distance between nodes
+            const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+            
+            // Only apply repulsion if nodes are relatively close
+            if (distance > 0 && distance < GAME_SETTINGS.EDGE_MAX_DISTANCE * 0.7) {
+              // Weak general repulsion to maintain overall separation
+              const force = (GAME_SETTINGS.EDGE_REPULSION * 0.3) / Math.max(1, distance * 0.2);
+              
+              node.vx -= (dx / distance) * force;
+              node.vy -= (dy / distance) * force;
+              node.vz -= (dz / distance) * force;
+            }
+          });
+        }
+        
+        // Handle mouse interaction
         const dx = mouseX - node.x;
         const dy = mouseY - node.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -253,11 +349,34 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
         } else {
           node.activity = Math.max(0, node.activity - 0.01);
         }
-
-        // Update position
+        
+        // Apply velocity decay for smoother motion
+        node.vx *= GAME_SETTINGS.VELOCITY_DECAY;
+        node.vy *= GAME_SETTINGS.VELOCITY_DECAY;
+        node.vz *= GAME_SETTINGS.VELOCITY_DECAY;
+        
+        // Clamp velocity to prevent excessive speed
+        const speed = Math.sqrt(node.vx * node.vx + node.vy * node.vy + node.vz * node.vz);
+        if (speed > GAME_SETTINGS.MAX_VELOCITY) {
+          const ratio = GAME_SETTINGS.MAX_VELOCITY / speed;
+          node.vx *= ratio;
+          node.vy *= ratio;
+          node.vz *= ratio;
+        } else if (speed < GAME_SETTINGS.MIN_VELOCITY) {
+          // Ensure minimum movement
+          const ratio = GAME_SETTINGS.MIN_VELOCITY / Math.max(0.01, speed);
+          node.vx *= ratio;
+          node.vy *= ratio;
+          node.vz *= ratio;
+        }
+        
+        // Update node position
         node.x += node.vx;
         node.y += node.vy;
         node.z += node.vz;
+        
+        // Update pulse
+        node.pulse = Math.sin(time * 0.005 + i) * 0.5 + 0.5;
         
         // Bounce off edges
         if (node.x < node.radius || node.x > canvas.offsetWidth - node.radius) {
@@ -268,15 +387,10 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
           node.vy *= -0.8;
           node.y = Math.max(node.radius, Math.min(canvas.offsetHeight - node.radius, node.y));
         }
-        if (node.z < 0 || node.z > 100) node.vz *= -0.8;
-        
-        // Apply friction
-        node.vx *= 0.95;
-        node.vy *= 0.95;
-        node.vz *= 0.98;
-        
-        // Update pulse
-        node.pulse = Math.sin(time * 0.005 + i) * 0.5 + 0.5;
+        if (node.z < 0 || node.z > 100) {
+          node.vz *= -0.8;
+          node.z = Math.max(0, Math.min(100, node.z));
+        }
       });
 
       // Draw connections (simplified for gameplay)
