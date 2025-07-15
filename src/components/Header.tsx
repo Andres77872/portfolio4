@@ -63,7 +63,7 @@ export default function Header() {
 
         <div className="header__actions">
           <a 
-            href="https://github.com/Andres77872/portfolio4" 
+            href="https://github.com/Andres77872"
             target="_blank" 
             rel="noopener noreferrer"
             className="header__github-link"

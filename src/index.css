@@ -120,7 +120,7 @@ a:hover {
 
 ::-webkit-scrollbar-thumb {
     background-color: var(--accent-color);
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-sm);
 }
 
 /* Responsive Media Queries */
