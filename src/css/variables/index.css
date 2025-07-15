@@ -195,10 +195,6 @@ ul, ol {
     margin-bottom: var(--space-md);
 }
 
-li {
-    margin-bottom: var(--space-xs);
-}
-
 /* Form element defaults */
 input, textarea, select {
     font-family: var(--font-family-base);
