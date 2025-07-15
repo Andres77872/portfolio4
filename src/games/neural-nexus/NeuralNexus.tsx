@@ -426,33 +426,33 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
   };
 
   return (
-    <div className="ai-canvas-game">
+    <div className="neural-nexus-game">
       {/* Game Header - Outside Canvas */}
-      <div className="ai-canvas-header">
-        <div className="ai-canvas-hud">
-          <div className="score-display">
-            <span className="score-label">Score</span>
-            <span className="score-value">{score}</span>
+      <div className="neural-nexus-header">
+        <div className="neural-nexus-hud">
+          <div className="neural-nexus-score-display">
+            <span className="neural-nexus-score-label">Score</span>
+            <span className="neural-nexus-score-value">{score}</span>
           </div>
-          <div className="high-score-display">
-            <span className="score-label">Best</span>
-            <span className="score-value">{highScore}</span>
+          <div className="neural-nexus-high-score-display">
+            <span className="neural-nexus-score-label">Best</span>
+            <span className="neural-nexus-score-value">{highScore}</span>
           </div>
-          <div className="game-time">
-            <span className="score-label">Time</span>
-            <span className="score-value">{Math.floor(gameTime / 60)}s</span>
+          <div className="neural-nexus-game-time">
+            <span className="neural-nexus-score-label">Time</span>
+            <span className="neural-nexus-score-value">{Math.floor(gameTime / 60)}s</span>
           </div>
-          <button className="reset-button" onClick={resetGame}>
+          <button className="neural-nexus-reset-button" onClick={resetGame}>
             Reset
           </button>
         </div>
       </div>
       
       {/* Game Canvas - Clean Area */}
-      <div className="ai-canvas-container">
+      <div className="neural-nexus-container">
         <canvas
           ref={canvasRef}
-          className={`ai-canvas ${className}`}
+          className={`neural-nexus-canvas ${className}`}
           style={{
             width: width || '100%',
             height: height || '100%',
@@ -462,8 +462,8 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
       </div>
       
       {/* Game Footer - Outside Canvas */}
-      <div className="ai-canvas-footer">
-        <div className="game-instructions">
+      <div className="neural-nexus-footer">
+        <div className="neural-nexus-game-instructions">
           {!isGameActive ? (
             <p>🎯 Move your cursor to attract nodes and earn points! Keep them close but don't let them touch you!</p>
           ) : (

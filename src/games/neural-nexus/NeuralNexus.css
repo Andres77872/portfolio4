@@ -1,6 +1,6 @@
-/* AICanvas.css - Interactive AI Neural Network Canvas Game Styles */
+/* NeuralNexus.css - Interactive AI Neural Network Canvas Game Styles */
 
-.ai-canvas-game {
+.neural-nexus-game {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -15,12 +15,12 @@
   overflow: hidden;
 }
 
-.ai-canvas-header {
+.neural-nexus-header {
   flex-shrink: 0;
   width: 100%;
 }
 
-.ai-canvas-container {
+.neural-nexus-container {
   flex: 1;
   position: relative;
   border-radius: var(--radius-lg);
@@ -32,7 +32,7 @@
   width: 100%;
 }
 
-.ai-canvas {
+.neural-nexus-canvas {
   border-radius: var(--radius-lg);
   background: transparent;
   display: block;
@@ -41,13 +41,13 @@
   object-fit: contain;
 }
 
-.ai-canvas-footer {
+.neural-nexus-footer {
   flex-shrink: 0;
   width: 100%;
 }
 
 /* Game HUD (Heads-Up Display) - Now outside canvas */
-.ai-canvas-hud {
+.neural-nexus-hud {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -62,9 +62,9 @@
   box-sizing: border-box;
 }
 
-.score-display,
-.high-score-display,
-.game-time {
+.neural-nexus-score-display,
+.neural-nexus-high-score-display,
+.neural-nexus-game-time {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -72,7 +72,7 @@
   min-width: 0;
 }
 
-.score-label {
+.neural-nexus-score-label {
   font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
@@ -81,7 +81,7 @@
   white-space: nowrap;
 }
 
-.score-value {
+.neural-nexus-score-value {
   font-size: 1.25rem;
   font-weight: 700;
   color: #ffffff;
@@ -90,12 +90,12 @@
   white-space: nowrap;
 }
 
-.high-score-display .score-value {
+.neural-nexus-high-score-display .neural-nexus-score-value {
   color: #fbbf24;
   text-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
 }
 
-.reset-button {
+.neural-nexus-reset-button {
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(168, 85, 247, 0.9) 100%);
   border: 1px solid rgba(99, 102, 241, 0.6);
   color: white;
@@ -111,18 +111,18 @@
   flex-shrink: 0;
 }
 
-.reset-button:hover {
+.neural-nexus-reset-button:hover {
   background: linear-gradient(135deg, rgba(99, 102, 241, 1) 0%, rgba(168, 85, 247, 1) 100%);
   transform: translateY(-1px);
   box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
 }
 
-.reset-button:active {
+.neural-nexus-reset-button:active {
   transform: translateY(0);
 }
 
 /* Game Instructions - Now outside canvas */
-.game-instructions {
+.neural-nexus-game-instructions {
   text-align: center;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(15px);
@@ -134,7 +134,7 @@
   box-sizing: border-box;
 }
 
-.game-instructions p {
+.neural-nexus-game-instructions p {
   margin: 0;
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.85rem;
@@ -161,85 +161,85 @@
   }
 }
 
-.ai-canvas-container:hover .ai-canvas {
+.neural-nexus-container:hover .neural-nexus-canvas {
   animation: aiPulse 3s ease-in-out infinite;
 }
 
-.score-value {
+.neural-nexus-score-value {
   transition: all 0.3s ease;
 }
 
-.ai-canvas-hud {
+.neural-nexus-hud {
   animation: hudGlow 4s ease-in-out infinite;
 }
 
 /* Responsive design */
 @media (max-width: 1024px) {
-  .ai-canvas-game {
+  .neural-nexus-game {
     padding: 0.6rem;
     gap: 0.6rem;
   }
   
-  .ai-canvas-container {
+  .neural-nexus-container {
     max-height: calc(100vh - 180px);
   }
 }
 
 @media (max-width: 768px) {
-  .ai-canvas-game {
+  .neural-nexus-game {
     padding: 0.5rem;
     gap: 0.5rem;
     max-height: 100vh;
   }
   
-  .ai-canvas-hud {
+  .neural-nexus-hud {
     flex-wrap: wrap;
     gap: 0.75rem;
     padding: 0.6rem 0.8rem;
     justify-content: center;
   }
   
-  .ai-canvas-hud > div {
+  .neural-nexus-hud > div {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
   }
   
-  .score-display,
-  .high-score-display,
-  .game-time {
+  .neural-nexus-score-display,
+  .neural-nexus-high-score-display,
+  .neural-nexus-game-time {
     flex-direction: row;
     gap: 0.4rem;
   }
   
-  .score-label {
+  .neural-nexus-score-label {
     font-size: 0.65rem;
   }
   
-  .score-value {
+  .neural-nexus-score-value {
     font-size: 1.1rem;
   }
   
-  .game-instructions {
+  .neural-nexus-game-instructions {
     padding: 0.6rem 0.8rem;
   }
   
-  .game-instructions p {
+  .neural-nexus-game-instructions p {
     font-size: 0.75rem;
   }
   
-  .reset-button {
+  .neural-nexus-reset-button {
     padding: 0.5rem 1rem;
     font-size: 0.75rem;
   }
   
-  .ai-canvas-container {
+  .neural-nexus-container {
     min-height: 250px;
     max-height: calc(100vh - 160px);
   }
   
-  .ai-canvas {
+  .neural-nexus-canvas {
     /* Reduce quality on mobile for better performance */
     image-rendering: optimizeSpeed;
     image-rendering: -moz-crisp-edges;
@@ -249,78 +249,78 @@
 }
 
 @media (max-width: 640px) {
-  .ai-canvas-game {
+  .neural-nexus-game {
     padding: 0.4rem;
     gap: 0.4rem;
   }
   
-  .ai-canvas-hud {
+  .neural-nexus-hud {
     flex-direction: column;
     gap: 0.6rem;
     padding: 0.5rem 0.6rem;
   }
   
-  .ai-canvas-hud > div:not(.reset-button) {
+  .neural-nexus-hud > div:not(.neural-nexus-reset-button) {
     width: 100%;
     justify-content: space-between;
     padding: 0 0.5rem;
   }
   
-  .score-label {
+  .neural-nexus-score-label {
     font-size: 0.6rem;
   }
   
-  .score-value {
+  .neural-nexus-score-value {
     font-size: 1rem;
   }
   
-  .reset-button {
+  .neural-nexus-reset-button {
     padding: 0.45rem 0.8rem;
     font-size: 0.7rem;
     width: 100%;
     max-width: 200px;
   }
   
-  .game-instructions p {
+  .neural-nexus-game-instructions p {
     font-size: 0.7rem;
     line-height: 1.3;
   }
   
-  .ai-canvas-container {
+  .neural-nexus-container {
     min-height: 200px;
     max-height: calc(100vh - 140px);
   }
 }
 
 @media (max-width: 480px) {
-  .ai-canvas-game {
+  .neural-nexus-game {
     padding: 0.3rem;
     gap: 0.3rem;
   }
   
-  .ai-canvas-hud {
+  .neural-nexus-hud {
     padding: 0.4rem 0.5rem;
     gap: 0.5rem;
   }
   
-  .score-label {
+  .neural-nexus-score-label {
     font-size: 0.55rem;
   }
   
-  .score-value {
+  .neural-nexus-score-value {
     font-size: 0.9rem;
   }
   
-  .reset-button {
+  .neural-nexus-reset-button {
     padding: 0.4rem 0.7rem;
     font-size: 0.65rem;
   }
   
-  .game-instructions p {
+  .neural-nexus-game-instructions p {
     font-size: 0.65rem;
   }
   
-  .ai-canvas-container {
+  .neural-nexus-container {
     min-height: 180px;
     max-height: calc(100vh - 120px);
   }
@@ -328,29 +328,29 @@
 
 /* Extra small devices */
 @media (max-width: 360px) {
-  .ai-canvas-game {
+  .neural-nexus-game {
     padding: 0.25rem;
     gap: 0.25rem;
   }
   
-  .score-label {
+  .neural-nexus-score-label {
     font-size: 0.5rem;
   }
   
-  .score-value {
+  .neural-nexus-score-value {
     font-size: 0.8rem;
   }
   
-  .reset-button {
+  .neural-nexus-reset-button {
     padding: 0.3rem 0.6rem;
     font-size: 0.6rem;
   }
   
-  .game-instructions p {
+  .neural-nexus-game-instructions p {
     font-size: 0.6rem;
   }
   
-  .ai-canvas-container {
+  .neural-nexus-container {
     min-height: 160px;
     max-height: calc(100vh - 100px);
   }
@@ -358,20 +358,20 @@
 
 /* Landscape orientation on mobile */
 @media (max-height: 600px) and (orientation: landscape) {
-  .ai-canvas-game {
+  .neural-nexus-game {
     gap: 0.3rem;
     padding: 0.3rem;
   }
   
-  .ai-canvas-hud {
+  .neural-nexus-hud {
     padding: 0.4rem 0.6rem;
   }
   
-  .game-instructions {
+  .neural-nexus-game-instructions {
     padding: 0.4rem 0.6rem;
   }
   
-  .ai-canvas-container {
+  .neural-nexus-container {
     min-height: 150px;
     max-height: calc(100vh - 80px);
   }
@@ -379,51 +379,51 @@
 
 /* Accessibility and motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  .ai-canvas {
+  .neural-nexus-canvas {
     animation: none !important;
   }
   
-  .ai-canvas-container:hover .ai-canvas {
+  .neural-nexus-container:hover .neural-nexus-canvas {
     animation: none !important;
   }
   
-  .score-value {
+  .neural-nexus-score-value {
     animation: none !important;
     transition: none;
   }
   
-  .reset-button {
+  .neural-nexus-reset-button {
     transition: none;
   }
   
-  .ai-canvas-hud {
+  .neural-nexus-hud {
     animation: none !important;
   }
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-  .ai-canvas-hud {
+  .neural-nexus-hud {
     background: rgba(0, 0, 0, 0.95);
     border-color: rgba(255, 255, 255, 0.8);
   }
   
-  .game-instructions {
+  .neural-nexus-game-instructions {
     background: rgba(0, 0, 0, 0.95);
     border-color: rgba(255, 255, 255, 0.8);
   }
   
-  .reset-button {
+  .neural-nexus-reset-button {
     background: #000;
     border-color: #fff;
     color: #fff;
   }
   
-  .ai-canvas-game {
+  .neural-nexus-game {
     border-color: rgba(255, 255, 255, 0.5);
   }
   
-  .ai-canvas-container {
+  .neural-nexus-container {
     border-color: rgba(255, 255, 255, 0.5);
   }
 } 
