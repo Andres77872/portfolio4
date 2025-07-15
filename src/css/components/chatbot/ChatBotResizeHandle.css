@@ -1,0 +1,93 @@
+/* ChatBotResizeHandle.css - Resize handle for chatbot window */
+
+.cb-resize-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  cursor: nw-resize;
+  background: transparent;
+  z-index: 1001;
+  border-radius: 0 0 var(--radius-sm) 0;
+  transition: all 0.2s ease;
+}
+
+.cb-resize-handle::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 12px;
+  height: 12px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--text-color-secondary),
+    var(--text-color-secondary) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  border-radius: 2px;
+  opacity: 0.3;
+  transition: all 0.2s ease;
+}
+
+.cb-resize-handle:hover::before {
+  opacity: 0.8;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--accent-color),
+    var(--accent-color) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.cb-resize-handle:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.2));
+}
+
+.cb-resize-handle:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .cb-resize-handle {
+    width: 20px;
+    height: 20px;
+  }
+
+  .cb-resize-handle::before {
+    top: 4px;
+    left: 4px;
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .cb-resize-handle::before {
+    opacity: 0.6;
+  }
+  
+  .cb-resize-handle:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .cb-resize-handle {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .cb-resize-handle::before {
+    top: 8px;
+    left: 8px;
+    opacity: 0.6;
+  }
+} 

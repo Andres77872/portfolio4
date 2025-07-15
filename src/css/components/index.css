@@ -5,6 +5,7 @@
 @import './hero.css';
 @import './navbar.css';
 @import './about.css';
+@import './projects/index.css';
 @import './contact.css';
 @import './footer.css';
-@import './chatbot.css';
+@import './chatbot/index.css';

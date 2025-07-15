@@ -32,8 +32,8 @@ export default function Footer() {
           <div className="footer__brand">
             <div className="footer__logo">
               <div className="footer__logo-main">
-                <span className="footer__logo-name">arizmendi</span>
-                <span className="footer__logo-accent">.io</span>
+                <span className="footer__logo-name">arz</span>
+                <span className="footer__logo-accent">.ai</span>
               </div>
               <p className="footer__tagline">
                 Building the future with Artificial Intelligence

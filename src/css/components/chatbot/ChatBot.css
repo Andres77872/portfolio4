@@ -1,0 +1,40 @@
+/* ChatBot.css - Main container for the chatbot system */
+
+.cb-container {
+  position: fixed;
+  bottom: var(--space-md);
+  right: var(--space-md);
+  z-index: var(--z-index-chatbot, 999);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--font-family-base);
+}
+
+/* Ensure proper stacking context */
+.cb-container * {
+  box-sizing: border-box;
+}
+
+/* Global styles when resizing */
+body.cb-resizing {
+  user-select: none !important;
+  cursor: nw-resize !important;
+}
+
+/* Container responsive adjustments */
+@media (max-width: 768px) {
+  .cb-container {
+    bottom: var(--space-sm);
+    right: var(--space-sm);
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .cb-container * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+} 

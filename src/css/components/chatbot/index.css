@@ -1,0 +1,10 @@
+/* chatbot/index.css - Import all chatbot component styles */
+
+@import './ChatBot.css';
+@import './ChatBotToggle.css';
+@import './ChatBotWindow.css';
+@import './ChatBotHeader.css';
+@import './ChatBotWelcome.css';
+@import './ChatBotMessages.css';
+@import './ChatBotInput.css';
+@import './ChatBotResizeHandle.css'; 
