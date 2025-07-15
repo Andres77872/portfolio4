@@ -209,6 +209,56 @@
   border-radius: var(--radius-lg);
 }
 
+/* Game Switcher */
+.hero__game-switcher {
+  display: flex;
+  gap: var(--space-xs);
+  justify-content: center;
+  padding: var(--space-xxs) var(--space-xs);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  border-radius: var(--radius-md);
+  margin: 0 var(--space-md);
+}
+
+.hero__game-pagination {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.hero__game-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  padding: 0;
+}
+
+.hero__game-dot:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.2);
+}
+
+.hero__game-dot--active {
+  background-color: var(--accent-color);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+  transform: scale(1.2);
+}
+
+.hero__game-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xxs) var(--space-sm);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
 .hero__scroll-indicator {
   position: absolute;
   bottom: var(--space-lg);
@@ -350,6 +400,7 @@
 
   .hero__ai-container {
     width: 350px;
+    position: relative;
   }
 
   .hero__ai-label {
@@ -390,6 +441,21 @@
 
   .hero__ai-container {
     width: 280px;
+  }
+  
+  .hero__game-dot {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .hero__game-title {
+    font-size: var(--font-size-xs);
+    padding: 2px 8px;
+  }
+  
+  .hero__game-switcher {
+    bottom: var(--space-xs);
+    gap: 4px;
   }
 
   .hero__ai-label {

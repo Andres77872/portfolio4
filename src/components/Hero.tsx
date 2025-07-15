@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NeuralNexus from '../games/neural-nexus/NeuralNexus';
+import MatrixRPG from '../games/matrix-rpg/MatrixRPG';
 
 const roles = [
   "AI Developer",
@@ -11,6 +12,13 @@ const roles = [
 export default function Hero() {
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [currentGameIndex, setCurrentGameIndex] = useState(0);
+  
+  // Available minigames
+  const games = [
+    { component: NeuralNexus, name: "Neural Nexus" },
+    { component: MatrixRPG, name: "Matrix RPG" }
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -86,7 +94,27 @@ export default function Hero() {
         
         <div className="hero__visual">
           <div className="hero__ai-container">
-            <NeuralNexus className="hero__ai-canvas" />
+            {/* Render current game */}
+            {React.createElement(games[currentGameIndex].component, {
+              className: "hero__ai-canvas"
+            })}
+            
+            {/* Game switcher */}
+            <div className="hero__game-switcher">
+              <div className="hero__game-pagination">
+                {games.map((game, index) => (
+                  <button 
+                    key={game.name}
+                    className={`hero__game-dot ${index === currentGameIndex ? 'hero__game-dot--active' : ''}`}
+                    onClick={() => setCurrentGameIndex(index)}
+                    aria-label={`Switch to ${game.name}`}
+                  />
+                ))}
+              </div>
+              <div className="hero__game-title">
+                {games[currentGameIndex].name}
+              </div>
+            </div>
           </div>
         </div>
       </div>
