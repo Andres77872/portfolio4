@@ -6,4 +6,3 @@ export { default as Projects } from './Projects/index';
 export { default as Contact } from './Contact';
 export { default as Footer } from './Footer';
 export { default as ChatBot } from './ChatBot/index';
-export { default as NeuralNexus } from '../games/neural-nexus/NeuralNexus';
