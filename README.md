@@ -1,50 +1,68 @@
-# React + TypeScript + Vite
+# Portfolio 4
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, interactive portfolio built with React, TypeScript, and Vite, featuring an AI-powered chatbot assistant.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Interactive AI Assistant**: Portfolio chatbot with streaming responses and image optimization
+- **Modern UI/UX**: Clean, responsive design with smooth animations
+- **Performance Optimized**: Memoized components and efficient image loading
+- **TypeScript**: Full type safety throughout the application
+- **Responsive**: Mobile-first design that works on all devices
 
-## Expanding the ESLint configuration
+## ChatBot Performance Optimizations
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+The chatbot system has been optimized to prevent image re-fetching and improve overall performance:
 
-- Configure the top-level `parserOptions` property like this:
+### Image Handling Optimizations
+- **Optimized Image Component**: Custom `OptimizedImage` component with lazy loading, error handling, and proper caching
+- **Loading States**: Visual feedback during image loading with fallback for failed loads
+- **Lazy Loading**: Images load only when needed using `loading="lazy"` and `decoding="async"`
+- **Browser Caching**: Proper image attributes to leverage browser caching mechanisms
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### React Performance Optimizations
+- **Memoized Components**: `React.memo()` applied to prevent unnecessary re-renders
+- **Stable Keys**: Timestamp-based keys for message lists to prevent React reconciliation issues
+- **Memoized Functions**: All event handlers and computations use `useCallback()` and `useMemo()`
+- **System Context Caching**: Portfolio data is memoized to prevent recreation on every render
+
+### Component Architecture
+- **Separated Concerns**: Individual memoized components for each message type
+- **ReactMarkdown Optimization**: Component configuration memoized to prevent recreation
+- **Image Link Detection**: Automatic detection and optimization of image links in markdown
+
+### Key Benefits
+- ✅ **No More Image Re-fetching**: Images are loaded once and cached properly
+- ✅ **Improved Rendering Performance**: Reduced unnecessary component re-renders
+- ✅ **Better User Experience**: Faster loading and smoother interactions
+- ✅ **Memory Efficiency**: Reduced memory usage through proper component lifecycle management
+
+## Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Tech Stack
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- **React 18** with TypeScript
+- **Vite** for fast development and building
+- **CSS Variables** for consistent theming
+- **React Markdown** for rich text rendering
+- **AI Chat Integration** with streaming responses
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Development
+
+The project uses modern development practices:
+- ESLint for code quality
+- TypeScript for type safety
+- CSS custom properties for theming
+- Component-based architecture
+- Performance monitoring and optimization

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { streamChatCompletion } from '../../services/chatService';
 import aboutData from '../../data/about.json';
 import projectsData from '../../data/projects.json';
@@ -14,7 +14,6 @@ import {
   ChatBotProps, 
   Message, 
   SuggestedQuery, 
-  ChatBotDimensions, 
   ChatBotState 
 } from './types';
 
@@ -37,17 +36,16 @@ const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
 
   // Refs
   const inputRef = useRef<HTMLInputElement>(null);
-  const chatWindowRef = useRef<HTMLDivElement>(null);
 
-  // Suggested queries configuration
-  const suggestedQueries: SuggestedQuery[] = [
+  // Memoize suggested queries configuration to prevent recreation
+  const suggestedQueries: SuggestedQuery[] = useMemo(() => [
     { text: "What AI technologies does Andres specialize in?", icon: "🤖", category: 'skills' },
     { text: "Tell me about the FindIT project", icon: "🔍", category: 'projects' },
     { text: "Explain Novus Talk and magic-agents", icon: "🕸️", category: 'projects' },
     { text: "How can I contact Andres?", icon: "📧", category: 'contact' },
     { text: "What makes this portfolio unique?", icon: "✨", category: 'general' },
     { text: "Show me projects using LLMs", icon: "🧠", category: 'projects' }
-  ];
+  ], []);
 
   // Show "hey!" animation periodically when chatbot is closed
   useEffect(() => {
@@ -77,8 +75,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
     }
   }, [state.isOpen, state.isMinimized]);
 
-  // Create system context with portfolio information
-  const getSystemContext = (): Message => {
+  // Memoize system context to prevent recreation on every render
+  const systemContext = useMemo((): Message => {
     const about = aboutData?.[0];
     const skills = about?.skills?.map(skill => `${skill.category}: ${skill.items.join(', ')}`).join('\n') || '';
     const projectSummary = projectsData.map(project => 
@@ -117,10 +115,10 @@ INSTRUCTIONS:
 
 Remember: You're representing Andres's professional portfolio, so maintain a professional yet approachable tone.`
     };
-  };
+  }, [aboutData, projectsData]);
 
-  // Toggle chatbot state
-  const toggleChatbot = () => {
+  // Memoize toggle chatbot function to prevent recreation
+  const toggleChatbot = useCallback(() => {
     setState(prev => {
       if (prev.isOpen && !prev.isMinimized) {
         return { ...prev, isMinimized: true };
@@ -135,70 +133,70 @@ Remember: You're representing Andres's professional portfolio, so maintain a pro
         };
       }
     });
-  };
+  }, []);
 
-  // Close chatbot
-  const closeChatbot = () => {
+  // Memoize close chatbot function
+  const closeChatbot = useCallback(() => {
     setState(prev => ({
       ...prev,
       isOpen: false,
       isMinimized: false,
       showResetConfirmation: false
     }));
-  };
+  }, []);
 
-  // Handle reset confirmation
-  const handleResetClick = () => {
+  // Memoize reset handlers
+  const handleResetClick = useCallback(() => {
     setState(prev => ({ ...prev, showResetConfirmation: true }));
-  };
+  }, []);
 
-  const handleResetConfirm = () => {
+  const handleResetConfirm = useCallback(() => {
     setMessages([]);
     setState(prev => ({ ...prev, showResetConfirmation: false }));
     setInput('');
     setTimeout(() => {
       inputRef.current?.focus();
     }, 100);
-  };
+  }, []);
 
-  const handleResetCancel = () => {
+  const handleResetCancel = useCallback(() => {
     setState(prev => ({ ...prev, showResetConfirmation: false }));
-  };
+  }, []);
 
-  // Handle back to start
-  const handleBackToStart = () => {
+  // Memoize back to start handler
+  const handleBackToStart = useCallback(() => {
     setMessages([]);
     setInput('');
     setTimeout(() => {
       inputRef.current?.focus();
     }, 100);
-  };
+  }, []);
 
-  // Handle input changes
-  const handleInputChange = (value: string) => {
+  // Memoize input change handler
+  const handleInputChange = useCallback((value: string) => {
     setInput(value);
-  };
+  }, []);
 
-  // Handle suggested query selection
-  const handleSuggestedQuery = (query: string) => {
+  // Memoize suggested query handler
+  const handleSuggestedQuery = useCallback((query: string) => {
     setInput(query);
     setTimeout(() => {
       handleSubmit(new Event('submit') as unknown as React.FormEvent);
     }, 100);
-  };
+  }, []);
 
-  // Handle section scrolling
-  const scrollToSection = (sectionId: string) => {
+  // Memoize section scrolling handler
+  const scrollToSection = useCallback((sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
       // Auto-minimize chatbot when navigating
       setState(prev => ({ ...prev, isMinimized: true }));
     }
-  };
+  }, []);
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle form submission with optimized error handling
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
@@ -210,7 +208,6 @@ Remember: You're representing Andres's professional portfolio, so maintain a pro
 
     try {
       // Include system context with each request
-      const systemContext = getSystemContext();
       const messagesWithContext = [systemContext, ...messages, userMessage];
 
       // Call the OpenAI-compatible API with streaming
@@ -223,8 +220,15 @@ Remember: You're representing Andres's professional portfolio, so maintain a pro
       const decoder = new TextDecoder();
       let assistantMessage = '';
 
-      // Add empty assistant message
-      setMessages((prev) => [...prev, { role: 'assistant', content: '', timestamp: new Date() }]);
+      // Create stable timestamp for the streaming message to prevent re-renders
+      const assistantTimestamp = new Date();
+
+      // Add empty assistant message with stable timestamp
+      setMessages((prev) => [...prev, { 
+        role: 'assistant', 
+        content: '', 
+        timestamp: assistantTimestamp 
+      }]);
 
       while (true) {
         const { done, value } = await reader.read();
@@ -233,13 +237,15 @@ Remember: You're representing Andres's professional portfolio, so maintain a pro
         const chunk = decoder.decode(value);
         assistantMessage += chunk;
 
-        // Update the last message (assistant's message)
+        // Update the last message content only (keeping same timestamp for stable key)
         setMessages((prev) => {
           const newMessages = [...prev];
+          const lastMessage = newMessages[newMessages.length - 1];
           newMessages[newMessages.length - 1] = {
-            role: 'assistant',
+            ...lastMessage,
             content: assistantMessage,
-            timestamp: new Date()
+            // Keep the same timestamp to maintain stable React key
+            timestamp: assistantTimestamp
           };
           return newMessages;
         });
@@ -264,10 +270,10 @@ You can also explore the portfolio sections directly by clicking the navigation 
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [input, messages, systemContext]);
 
-  // Handle resize functionality
-  const handleResizeStart = (e: React.MouseEvent) => {
+  // Memoize resize functionality
+  const handleResizeStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
@@ -310,7 +316,7 @@ You can also explore the portfolio sections directly by clicking the navigation 
     
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-  };
+  }, [state.dimensions]);
 
   // Check if there are any messages to show back to start button
   const hasMessages = messages.length > 0;
@@ -371,4 +377,4 @@ You can also explore the portfolio sections directly by clicking the navigation 
   );
 };
 
-export default ChatBot; 
+export default React.memo(ChatBot); 

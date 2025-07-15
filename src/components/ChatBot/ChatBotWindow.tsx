@@ -8,9 +8,6 @@ const ChatBotWindow: React.FC<ChatBotWindowProps> = ({
   isMinimized,
   dimensions,
   isResizing,
-  onClose,
-  onMinimize,
-  onResetConfirm,
   onResizeStart,
   children
 }) => {
