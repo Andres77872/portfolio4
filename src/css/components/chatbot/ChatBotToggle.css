@@ -1,62 +1,82 @@
 /* ChatBotToggle.css - Modern toggle button for AI portfolio assistant */
 
 .cb-toggle {
+  /* Size and layout using design system */
   width: 56px;
   height: 56px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
+  
+  /* Colors using design system */
   background: linear-gradient(135deg, var(--accent-color), var(--accent-color-hover));
-  border: none;
-  color: white;
+  border: var(--border-width-thin) solid var(--accent-color-secondary);
+  color: var(--color-brighter);
+  
+  /* Typography using design system */
   font-size: var(--font-size-xl);
+  font-family: var(--font-family-base);
+  
+  /* Layout */
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
+  
+  /* Effects using design system */
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition-all);
+  
+  /* Position */
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  z-index: var(--z-index-chatbot);
+  
+  /* Overflow for effects */
   overflow: visible;
-  z-index: 2;
-  animation: cb-subtle-breath 4s ease-in-out infinite;
+  
+  /* Subtle breathing animation */
+  animation: cb-subtle-breath var(--animation-duration-slow) var(--ease-in-out) infinite;
 }
 
-/* Subtle breathing animation for the toggle button */
+/* Breathing animation using design system timing */
 @keyframes cb-subtle-breath {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+    box-shadow: var(--shadow-lg);
   }
   50% {
     transform: scale(1.02);
-    box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
+    box-shadow: var(--shadow-xl);
   }
 }
 
 /* Professional attention animation when showing "hey" */
 .cb-toggle--hey {
-  animation: cb-professional-attention 2s ease-in-out infinite, cb-subtle-breath 4s ease-in-out infinite;
+  animation: 
+    cb-professional-attention var(--animation-duration-slow) var(--ease-in-out) infinite,
+    cb-subtle-breath var(--animation-duration-slow) var(--ease-in-out) infinite;
 }
 
 @keyframes cb-professional-attention {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+    box-shadow: var(--shadow-lg);
   }
   25% {
     transform: scale(1.05);
-    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+    box-shadow: var(--shadow-xl);
   }
   50% {
     transform: scale(1.08);
-    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.6);
+    box-shadow: var(--shadow-2xl);
   }
   75% {
     transform: scale(1.05);
-    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+    box-shadow: var(--shadow-xl);
   }
 }
 
-/* Elegant shimmer effect */
+/* Elegant shimmer effect using design system */
 .cb-toggle::before {
   content: '';
   position: absolute;
@@ -64,30 +84,45 @@
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  border-radius: 50%;
+  background: linear-gradient(
+    45deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.1), 
+    transparent
+  );
+  border-radius: var(--radius-full);
   animation: cb-elegant-shimmer 3s linear infinite;
   z-index: -1;
 }
 
 @keyframes cb-elegant-shimmer {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
+/* Hover state using design system */
 .cb-toggle:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+  transform: translateY(-2px) scale(var(--hover-scale));
+  box-shadow: var(--shadow-2xl);
   background: linear-gradient(135deg, var(--accent-color-hover), var(--accent-color));
 }
 
+/* Active state using design system */
+.cb-toggle:active {
+  transform: translateY(-1px) scale(var(--active-scale));
+  box-shadow: var(--shadow-lg);
+}
+
+/* Focus state using design system */
 .cb-toggle:focus-visible {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Active state when chatbot is open */
+.cb-toggle--active {
+  background: linear-gradient(135deg, var(--accent-color-secondary), var(--accent-color-muted));
+  box-shadow: var(--shadow-md);
 }
 
 .cb-toggle__icon {
@@ -96,47 +131,61 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  line-height: 1;
+  line-height: var(--line-height-none);
+  font-weight: var(--font-weight-medium);
 }
 
-/* Elegant speech bubble */
+/* Elegant speech bubble using design system */
 .cb-toggle__hey-bubble {
   position: absolute;
-  bottom: 70px;
-  right: -10px;
-  background: linear-gradient(135deg, #ffffff, #f8fafc);
-  color: var(--gray-800);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: 18px;
+  bottom: calc(100% + var(--space-sm));
+  right: calc(-1 * var(--space-xs));
+  
+  /* Colors using design system */
+  background: linear-gradient(135deg, var(--background-color-primary), var(--background-color-secondary));
+  color: var(--text-color);
+  border: var(--border-width-thin) solid var(--border-color-lighter);
+  
+  /* Typography using design system */
+  font-family: var(--font-family-base);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
+  
+  /* Layout using design system */
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
   white-space: nowrap;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
-  animation: cb-elegant-bubble-appear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  z-index: 10;
-  border: 1px solid rgba(99, 102, 241, 0.1);
+  
+  /* Effects using design system */
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: var(--glass-effect);
+  -webkit-backdrop-filter: var(--glass-effect);
+  
+  /* Animation */
+  animation: cb-elegant-bubble-appear var(--transition-duration-slow) var(--ease-out-back) forwards;
+  z-index: calc(var(--z-index-chatbot) + 1);
 }
 
 .cb-toggle__hey-bubble-arrow {
   position: absolute;
   top: 100%;
-  right: 20px;
+  right: var(--space-lg);
   width: 0;
   height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid #ffffff;
+  border-left: var(--space-sm) solid transparent;
+  border-right: var(--space-sm) solid transparent;
+  border-top: var(--space-sm) solid var(--background-color-primary);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 @keyframes cb-elegant-bubble-appear {
   0% {
     opacity: 0;
-    transform: translateY(15px) scale(0.8);
+    transform: translateY(var(--space-md)) scale(0.8);
   }
   60% {
     opacity: 1;
-    transform: translateY(-5px) scale(1.02);
+    transform: translateY(calc(-1 * var(--space-xs))) scale(1.02);
   }
   100% {
     opacity: 1;
@@ -144,71 +193,121 @@
   }
 }
 
+/* Minimized indicator using design system */
 .cb-toggle__minimized-indicator {
   position: absolute;
-  right: 70px;
+  right: calc(100% + var(--space-sm));
   top: 50%;
   transform: translateY(-50%);
+  
+  /* Colors using design system */
   background: linear-gradient(135deg, var(--background-color-primary), var(--background-color-secondary));
   color: var(--text-color);
-  padding: var(--space-xs) var(--space-md);
-  border-radius: 16px;
+  border: var(--border-width-thin) solid var(--border-color-lighter);
+  
+  /* Typography using design system */
+  font-family: var(--font-family-base);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
+  
+  /* Layout using design system */
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-lg);
   white-space: nowrap;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  
+  /* Effects using design system */
+  box-shadow: var(--shadow-md);
+  backdrop-filter: var(--glass-effect);
+  -webkit-backdrop-filter: var(--glass-effect);
+  
+  /* Animation */
+  animation: fadeIn var(--transition-duration-normal) var(--ease-out) forwards;
 }
 
-/* Mobile responsiveness */
+/* Responsive design using design system breakpoints */
 @media (max-width: 768px) {
   .cb-toggle {
     width: 50px;
     height: 50px;
+    bottom: var(--space-md);
+    right: var(--space-md);
     font-size: var(--font-size-lg);
   }
 
   .cb-toggle__hey-bubble {
-    right: -5px;
+    right: calc(-1 * var(--space-xxs));
     font-size: var(--font-size-xs);
     padding: var(--space-xs) var(--space-sm);
   }
 
   .cb-toggle__minimized-indicator {
-    right: 60px;
+    right: calc(100% + var(--space-xs));
     font-size: var(--font-size-xs);
     padding: var(--space-xxs) var(--space-sm);
   }
 }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
+@media (max-width: 480px) {
   .cb-toggle {
-    border: 2px solid var(--text-color);
+    width: 48px;
+    height: 48px;
+    bottom: var(--space-sm);
+    right: var(--space-sm);
+    font-size: var(--font-size-md);
   }
-  
+
   .cb-toggle__hey-bubble {
-    border: 2px solid var(--gray-800);
+    font-size: var(--font-size-xs);
+    padding: var(--space-xxs) var(--space-xs);
+  }
+
+  .cb-toggle__minimized-indicator {
+    font-size: var(--font-size-xs);
+    padding: var(--space-xxs) var(--space-xs);
   }
 }
 
-/* Reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
+/* High contrast mode support using design system */
+@media (prefers-contrast: high) {
   .cb-toggle {
+    border: var(--border-width-medium) solid var(--text-color);
+    background: var(--accent-color);
+  }
+  
+  .cb-toggle__hey-bubble,
+  .cb-toggle__minimized-indicator {
+    border: var(--border-width-medium) solid var(--border-color);
+    background: var(--background-color-primary);
+  }
+}
+
+/* Reduced motion preferences using design system */
+@media (prefers-reduced-motion: reduce) {
+  .cb-toggle,
+  .cb-toggle--hey,
+  .cb-toggle::before,
+  .cb-toggle__hey-bubble,
+  .cb-toggle__minimized-indicator {
     animation: none !important;
   }
   
-  .cb-toggle--hey {
-    animation: none !important;
+  .cb-toggle {
+    transition: var(--transition-duration-fast) var(--ease-linear);
   }
-  
-  .cb-toggle::before {
-    animation: none !important;
+}
+
+/* Dark mode optimizations (if implementing theme switching) */
+@media (prefers-color-scheme: dark) {
+  .cb-toggle__hey-bubble,
+  .cb-toggle__minimized-indicator {
+    background: linear-gradient(135deg, var(--background-color-secondary), var(--background-color-tertiary));
+    border-color: var(--border-color);
   }
-  
-  .cb-toggle__hey-bubble {
-    animation: none !important;
+}
+
+/* Print styles */
+@media print {
+  .cb-toggle {
+    display: none !important;
   }
 } 
