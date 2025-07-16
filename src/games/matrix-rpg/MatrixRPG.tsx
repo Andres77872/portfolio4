@@ -1,19 +1,10 @@
 import { useEffect, useRef, useState, KeyboardEvent, ChangeEvent, FormEvent } from 'react';
 import './MatrixRPG.css';
 import { streamChatCompletion } from '../../services/chatService';
-
-// Type definitions
-interface MatrixRPGProps {
-  className?: string;
-  width?: number;
-  height?: number;
-}
-
-// Message type definitions
-interface Message {
-  role: 'user' | 'assistant';
-  content: string;
-}
+import { GameState, Message, MatrixRPGProps } from './types';
+import MatrixRPGHeader from './MatrixRPGHeader';
+import MatrixRPGFooter from './MatrixRPGFooter';
+import MatrixRPGTerminal from './MatrixRPGTerminal';
 
 // ASCII Art
 const ASCII_ART = {
@@ -62,13 +53,8 @@ const LOADING_MESSAGES = [
 // Terminal special characters
 const CURSOR_CHAR = '█';
 
-// Game states
-type GameState = 'initializing' | 'loading' | 'checkpoint' | 'ready' | 'typing' | 'interactive';
-
 export default function MatrixRPG({ className = '', width, height }: MatrixRPGProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<HTMLPreElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const [gameState, setGameState] = useState<GameState>('initializing');
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [currentText, setCurrentText] = useState(ASCII_ART.COMPANY_LOGO); // Load logo directly
@@ -323,76 +309,22 @@ ${currentText}${showCursor ? CURSOR_CHAR : ' '}`;
 
   return (
     <div className="matrix-rpg-game">
-      {/* Game Header */}
-      <div className="matrix-rpg-header">
-        <div className="matrix-rpg-hud">
-          <div className="matrix-rpg-title">
-            PROJECT MIRROR - Neural Interface Terminal
-          </div>
-          {gameState === 'loading' && (
-            <div className="matrix-rpg-progress-container">
-              <div 
-                className="matrix-rpg-progress-bar"
-                style={{width: `${loadingProgress}%`}}
-              ></div>
-              <div className="matrix-rpg-progress-text">
-                LOADING: {Math.floor(loadingProgress)}%
-              </div>
-            </div>
-          )}
-          <div className="matrix-rpg-sys-info">
-            <span>SYS.37912</span>
-            <span className="matrix-rpg-status">
-              STATUS: {gameState === 'ready' ? 'CRITICAL' : 'CONNECTING'}
-            </span>
-          </div>
-        </div>
+      <MatrixRPGHeader gameState={gameState} loadingProgress={loadingProgress} />
+      
+      <div className={`matrix-rpg-container ${className}`}>
+        <MatrixRPGTerminal 
+          content={renderTerminalContent()}
+          gameState={gameState}
+          terminalRef={terminalRef}
+          userInput={userInput}
+          isProcessing={isProcessing}
+          onInputChange={handleInputChange}
+          onKeyPress={handleKeyPress}
+          onSubmit={handleSubmit}
+        />
       </div>
       
-      {/* Terminal Container */}
-      <div className={`matrix-rpg-container ${className}`} ref={containerRef}>
-        {/* Old Terminal Screen */}
-        <div className="matrix-rpg-terminal">
-          <pre className="matrix-rpg-terminal-content" ref={terminalRef}>
-            {renderTerminalContent()}
-          </pre>
-          
-          {/* Chat Input - Only show when in interactive state */}
-          {gameState === 'interactive' && (
-            <form className="matrix-rpg-input-form" onSubmit={handleSubmit}>
-              <div className="matrix-rpg-input-container">
-                <span className="matrix-rpg-input-prompt">&gt;</span>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  className="matrix-rpg-input"
-                  value={userInput}
-                  onChange={handleInputChange}
-                  onKeyPress={handleKeyPress}
-                  placeholder=">_"
-                  disabled={isProcessing}
-                  autoFocus
-                />
-              </div>
-              <button 
-                type="submit" 
-                className="matrix-rpg-submit-btn"
-                disabled={isProcessing || !userInput.trim()}
-              >
-                {isProcessing ? 'TRANSMITTING...' : 'TRANSMIT'}
-              </button>
-            </form>
-          )}
-        </div>
-      </div>
-      
-      {/* Game Footer */}
-      {/* Terminal footer - keeping minimal for immersion */}
-      <div className="matrix-rpg-footer">
-        <div className="matrix-rpg-sys-info">
-          <span>SYNAPTIC INNOVATIONS • NEURAL INTERFACE • SYS.37912</span>
-        </div>
-      </div>
+      <MatrixRPGFooter />
     </div>
   );
 }
