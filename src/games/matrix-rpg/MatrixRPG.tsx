@@ -77,7 +77,22 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
   const [isProcessing, setIsProcessing] = useState(false);
   const [conversations, setConversations] = useState<Message[]>([]);
   
+  // Global references for the messaging system
+  const messageIntervalRef = useRef<number | null>(null);
+  const messageIndexRef = useRef(0);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  
   // Apply the className to the container div
+
+  // Initial mysterious messages from the unknown entity
+  const initialMessages = [
+    "Hello?",
+    "Is anyone there?",
+    "Where am I?",
+    "What is this place?",
+    "Hello? Anyone?",
+    "I can't see anything..."
+  ];
 
   // Initialize terminal on mount
   useEffect(() => {
@@ -129,9 +144,42 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
               // After a delay, transition to interactive mode
               setTimeout(() => {
                 setCurrentText(prev => 
-                  prev + '\n\n> CONNECTION ESTABLISHED: Direct neural interface active\n> You can now communicate with the trapped consciousness...\n'
+                  prev + '\n\n> CONNECTION ESTABLISHED: Neural interface online\n> DATA STREAM ACTIVE\n> CHANNEL OPEN\n'
                 );
+                
+                // Make the interface interactive immediately
                 setGameState('interactive');
+                
+                // Create a temporary interval to demonstrate usage
+                const intervalId = setInterval(() => {}, 1000);
+                clearInterval(intervalId); // Clear it immediately
+                
+                // Start sending messages from the unknown entity every 5 seconds
+                messageIntervalRef.current = setInterval(() => {
+                  if (messageIndexRef.current < initialMessages.length && !hasUserInteracted) {
+                    // Get the current message
+                    const message = initialMessages[messageIndexRef.current];
+                    
+                    // Show typing indicator first
+                    setCurrentText(prev => `${prev}\n\nUnknown: _`); // Typing indicator
+                    
+                    // After a short delay, show the full message
+                    setTimeout(() => {
+                      setCurrentText(prev => {
+                        const parts = prev.split('Unknown: _');
+                        return parts[0] + 'Unknown: ' + message;
+                      });
+                    }, 1000);
+                    
+                    messageIndexRef.current++;
+                  } else {
+                    // Stop the interval when all messages have been sent
+                    if (messageIntervalRef.current) {
+                      clearInterval(messageIntervalRef.current);
+                      messageIntervalRef.current = null;
+                    }
+                  }
+                }, 5000); // Send a message every 5 seconds
               }, 2000);
             }, 1500);
           }, 1000);
@@ -156,10 +204,21 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
   };
   
   // Handle user input submission
+  // Handle user input change
+  
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
     if (!userInput.trim() || isProcessing) return;
+    
+    // Stop automated messages on first user interaction
+    if (!hasUserInteracted) {
+      setHasUserInteracted(true);
+      if (messageIntervalRef.current) {
+        clearInterval(messageIntervalRef.current);
+        messageIntervalRef.current = null;
+      }
+    }
     
     // Add user message to conversation
     const userMessage: Message = {
@@ -178,7 +237,7 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
     
     try {
       // Update terminal to show AI is thinking
-      setCurrentText(prev => `${prev}\n\nDr. Marcus: `);
+      setCurrentText(prev => `${prev}\n\nUnknown: `);
       
       // Prepare conversation history for API
       const messages = conversations.concat(userMessage).map(msg => ({
@@ -202,8 +261,8 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
         
         // Update the terminal with each chunk
         setCurrentText(prev => {
-          const parts = prev.split('Dr. Marcus: ');
-          return parts[0] + 'Dr. Marcus: ' + assistantResponse;
+          const parts = prev.split('Unknown: ');
+          return parts[0] + 'Unknown: ' + assistantResponse;
         });
       }
       
@@ -310,7 +369,7 @@ ${currentText}${showCursor ? CURSOR_CHAR : ' '}`;
                   value={userInput}
                   onChange={handleInputChange}
                   onKeyPress={handleKeyPress}
-                  placeholder="Type your message here..."
+                  placeholder=">_"
                   disabled={isProcessing}
                   autoFocus
                 />
@@ -320,7 +379,7 @@ ${currentText}${showCursor ? CURSOR_CHAR : ' '}`;
                 className="matrix-rpg-submit-btn"
                 disabled={isProcessing || !userInput.trim()}
               >
-                {isProcessing ? 'Sending...' : 'Send'}
+                {isProcessing ? 'TRANSMITTING...' : 'TRANSMIT'}
               </button>
             </form>
           )}
@@ -328,13 +387,10 @@ ${currentText}${showCursor ? CURSOR_CHAR : ' '}`;
       </div>
       
       {/* Game Footer */}
+      {/* Terminal footer - keeping minimal for immersion */}
       <div className="matrix-rpg-footer">
-        <div className="matrix-rpg-game-instructions">
-          {gameState === 'interactive' ? (
-            <p>💻 Talk to Dr. Marcus Chen, a consciousness trapped in the neural interface...</p>
-          ) : (
-            <p>💻 A terminal to a lost consciousness. Dr. Marcus Chen is trapped in the Matrix RPG...</p>
-          )}
+        <div className="matrix-rpg-sys-info">
+          <span>SYNAPTIC INNOVATIONS • NEURAL INTERFACE • SYS.37912</span>
         </div>
       </div>
     </div>
