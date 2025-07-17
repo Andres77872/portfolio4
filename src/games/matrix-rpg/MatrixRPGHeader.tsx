@@ -2,10 +2,9 @@ import { GameState } from './types';
 
 interface Props {
   gameState: GameState;
-  loadingProgress: number;
 }
 
-export default function MatrixRPGHeader({ gameState, loadingProgress }: Props) {
+export default function MatrixRPGHeader({ gameState }: Props) {
   const getStatusText = () => {
     switch (gameState) {
       case 'initializing':
@@ -36,18 +35,6 @@ export default function MatrixRPGHeader({ gameState, loadingProgress }: Props) {
       <div className="matrix-rpg-title">
         SYNAPTIC NEURAL INTERFACE - PROJECT MIRROR
       </div>
-
-      {gameState === 'loading' && (
-        <div className="matrix-rpg-progress-container">
-          <div
-            className="matrix-rpg-progress-bar"
-            style={{width: `${loadingProgress}%`}}
-          />
-          <div className="matrix-rpg-progress-text">
-            {Math.floor(loadingProgress)}%
-          </div>
-        </div>
-      )}
 
       <div className="matrix-rpg-sys-info">
         <span>NODE-37912</span>

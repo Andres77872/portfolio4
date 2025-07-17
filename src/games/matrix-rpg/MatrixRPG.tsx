@@ -60,7 +60,6 @@ const CURSOR_CHAR = '█';
 
 export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
   const [gameState, setGameState] = useState<GameState>('initializing');
-  const [loadingProgress, setLoadingProgress] = useState(0);
   const [terminalOutput, setTerminalOutput] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const [userInput, setUserInput] = useState('');
@@ -111,10 +110,6 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
       const timer = setTimeout(() => {
         setTerminalOutput(prev => prev + BOOT_SEQUENCE[currentBootLine] + '\n');
         setCurrentBootLine(prev => prev + 1);
-
-        // Update loading progress
-        const progress = ((currentBootLine + 1) / BOOT_SEQUENCE.length) * 100;
-        setLoadingProgress(progress);
 
         // When boot sequence is complete, show welcome message
         if (currentBootLine + 1 >= BOOT_SEQUENCE.length) {
@@ -335,8 +330,8 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
 
   return (
     <div className="matrix-rpg-game">
-      <MatrixRPGHeader gameState={gameState} loadingProgress={loadingProgress} />
-      
+      <MatrixRPGHeader gameState={gameState} />
+
       <div className={`matrix-rpg-container ${className}`}>
         <MatrixRPGTerminal 
           content={renderTerminalContent()}

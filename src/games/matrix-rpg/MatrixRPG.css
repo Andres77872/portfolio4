@@ -159,51 +159,10 @@
   opacity: 0.8;
 }
 
-/* Loading Progress Bar */
-.matrix-rpg-progress-container {
-  position: relative;
-  margin: 8px 0;
-  width: 200px;
-  height: 12px;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 1px;
-  overflow: hidden;
-}
-
-.matrix-rpg-progress-bar {
-  height: 100%;
-  background: linear-gradient(to right, #004400, #00ff00);
-  transition: width 0.3s ease;
-  box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
-  position: relative;
-}
-
-.matrix-rpg-progress-bar::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2) 50%,
-    transparent
-  );
-  animation: progress-shine 2s infinite;
-}
-
 /* Animations */
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0.3; }
-}
-
-@keyframes progress-shine {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
 }
 
 @keyframes scanline {
@@ -359,10 +318,6 @@
   }
   
   .matrix-rpg-status {
-    animation: none;
-  }
-
-  .matrix-rpg-progress-bar::after {
     animation: none;
   }
 }
