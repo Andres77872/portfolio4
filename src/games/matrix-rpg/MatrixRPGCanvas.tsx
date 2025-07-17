@@ -30,10 +30,14 @@ export default function MatrixRPGCanvas({
   const [isFocused, setIsFocused] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(true);
 
-  // Text rendering constants
-  const LINE_HEIGHT = 18;
-  const PADDING = 20;
-  const FONT_FAMILY = 'bold 14px "Courier New", VT323, monospace';
+  // Terminal rendering constants
+  const LINE_HEIGHT = 16;
+  const CHAR_WIDTH = 8;
+  const PADDING = 12;
+  const FONT_FAMILY = 'bold 14px "Courier New", "Liberation Mono", monospace';
+  const TERMINAL_GREEN = '#00ff00';
+  const TERMINAL_DARK_GREEN = '#008800';
+  const TERMINAL_BRIGHT_GREEN = '#44ff44';
 
   // Cursor blinking effect
   useEffect(() => {
@@ -48,25 +52,53 @@ export default function MatrixRPGCanvas({
     return lines.length * LINE_HEIGHT + PADDING * 2;
   }, []);
 
-  const drawText = useCallback((ctx: CanvasRenderingContext2D, lines: string[], scrollOffset: number) => {
+  const drawTerminalText = useCallback((ctx: CanvasRenderingContext2D, lines: string[], scrollOffset: number) => {
     ctx.font = FONT_FAMILY;
-    ctx.fillStyle = '#33ff33';
-    ctx.shadowColor = '#33ff33';
-    ctx.shadowBlur = 1;
     ctx.textBaseline = 'top';
+    ctx.textAlign = 'left';
 
     let currentY = PADDING - scrollOffset;
 
-    lines.forEach((line) => {
+    lines.forEach((line, lineIndex) => {
       // Only draw lines that are visible in the viewport
       if (currentY >= -LINE_HEIGHT && currentY <= height + LINE_HEIGHT) {
-        // Add subtle glow effect to text
-        ctx.shadowBlur = 2;
+        // Color coding for different line types
+        let color = TERMINAL_GREEN;
+        let glowIntensity = 1;
+
+        if (line.startsWith('[ OK ]')) {
+          color = TERMINAL_BRIGHT_GREEN;
+          glowIntensity = 1.5;
+        } else if (line.startsWith('[ ERROR ]')) {
+          color = '#ff4444';
+          glowIntensity = 2;
+        } else if (line.startsWith('[ WARN ]')) {
+          color = '#ffaa00';
+          glowIntensity = 1.3;
+        } else if (line.startsWith('[ INFO ]')) {
+          color = '#44aaff';
+          glowIntensity = 1.2;
+        } else if (line.startsWith('[SYSTEM]')) {
+          color = '#ff8800';
+          glowIntensity = 1.4;
+        } else if (line.startsWith('Unknown Entity:')) {
+          color = '#ff44ff';
+          glowIntensity = 1.6;
+        } else if (line.includes('@') && line.includes('$')) {
+          // Command prompt
+          color = TERMINAL_BRIGHT_GREEN;
+          glowIntensity = 1.3;
+        }
+
+        // Draw text with glow effect
+        ctx.fillStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 2 * glowIntensity;
         ctx.fillText(line, PADDING, currentY);
 
-        // Add a second pass for extra glow
-        ctx.shadowBlur = 4;
-        ctx.globalAlpha = 0.3;
+        // Add extra glow for emphasis
+        ctx.shadowBlur = 6 * glowIntensity;
+        ctx.globalAlpha = 0.4;
         ctx.fillText(line, PADDING, currentY);
         ctx.globalAlpha = 1;
         ctx.shadowBlur = 1;
@@ -77,22 +109,25 @@ export default function MatrixRPGCanvas({
 
     // Draw user input line if in interactive mode
     if (gameState === 'interactive' && currentY >= -LINE_HEIGHT && currentY <= height + LINE_HEIGHT) {
-      const inputLine = `> ${userInput}`;
+      const inputLine = userInput;
       const cursor = (isFocused && cursorVisible) ? '█' : '';
       const fullInputLine = inputLine + cursor;
 
+      ctx.fillStyle = TERMINAL_GREEN;
+      ctx.shadowColor = TERMINAL_GREEN;
       ctx.shadowBlur = 2;
       ctx.fillText(fullInputLine, PADDING, currentY);
 
-      ctx.shadowBlur = 4;
-      ctx.globalAlpha = 0.3;
+      // Add glow effect
+      ctx.shadowBlur = 6;
+      ctx.globalAlpha = 0.4;
       ctx.fillText(fullInputLine, PADDING, currentY);
       ctx.globalAlpha = 1;
       ctx.shadowBlur = 1;
     }
   }, [height, gameState, userInput, isFocused, cursorVisible]);
 
-  const drawCRTEffect = useCallback(() => {
+  const drawCRTEffects = useCallback(() => {
     const effectCanvas = effectCanvasRef.current;
     if (!effectCanvas) return;
 
@@ -103,77 +138,88 @@ export default function MatrixRPGCanvas({
     effectCtx.clearRect(0, 0, width, height);
 
     // Draw animated scan line
-    const scanLineHeight = 3;
-    const scanLineY = (Date.now() / 15) % (height + scanLineHeight);
+    const scanLineHeight = 2;
+    const scanLineY = (Date.now() / 20) % (height + scanLineHeight);
     const scanLineGradient = effectCtx.createLinearGradient(0, scanLineY - scanLineHeight, 0, scanLineY + scanLineHeight);
-    scanLineGradient.addColorStop(0, 'rgba(51, 255, 51, 0)');
-    scanLineGradient.addColorStop(0.5, 'rgba(51, 255, 51, 0.3)');
-    scanLineGradient.addColorStop(1, 'rgba(51, 255, 51, 0)');
+    scanLineGradient.addColorStop(0, 'rgba(0, 255, 0, 0)');
+    scanLineGradient.addColorStop(0.5, 'rgba(0, 255, 0, 0.4)');
+    scanLineGradient.addColorStop(1, 'rgba(0, 255, 0, 0)');
     effectCtx.fillStyle = scanLineGradient;
     effectCtx.fillRect(0, scanLineY - scanLineHeight, width, scanLineHeight * 2);
 
     // Draw screen flicker with subtle variation
-    const flickerOpacity = 0.02 + Math.sin(Date.now() / 100) * 0.01;
-    effectCtx.fillStyle = `rgba(51, 255, 51, ${flickerOpacity})`;
+    const flickerOpacity = 0.015 + Math.sin(Date.now() / 80) * 0.01;
+    effectCtx.fillStyle = `rgba(0, 255, 0, ${flickerOpacity})`;
     effectCtx.fillRect(0, 0, width, height);
 
     // Draw horizontal scan lines (CRT raster lines)
-    effectCtx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+    effectCtx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
     effectCtx.lineWidth = 1;
+    effectCtx.beginPath();
     for (let y = 0; y < height; y += 2) {
-      effectCtx.beginPath();
       effectCtx.moveTo(0, y);
       effectCtx.lineTo(width, y);
-      effectCtx.stroke();
     }
+    effectCtx.stroke();
 
     // Create curved screen vignette effect
     const gradient = effectCtx.createRadialGradient(
       width / 2, height / 2, 0,
-      width / 2, height / 2, Math.max(width, height) / 1.2
+      width / 2, height / 2, Math.max(width, height) / 1.4
     );
     gradient.addColorStop(0, 'rgba(0,0,0,0)');
-    gradient.addColorStop(0.7, 'rgba(0,0,0,0.1)');
-    gradient.addColorStop(1, 'rgba(0,0,0,0.8)');
+    gradient.addColorStop(0.8, 'rgba(0,0,0,0.1)');
+    gradient.addColorStop(1, 'rgba(0,0,0,0.6)');
     effectCtx.fillStyle = gradient;
     effectCtx.fillRect(0, 0, width, height);
 
     // Add subtle color aberration effect
-    const aberrationOffset = Math.sin(Date.now() / 1000) * 0.5;
+    const aberrationOffset = Math.sin(Date.now() / 2000) * 0.8;
     effectCtx.globalCompositeOperation = 'screen';
-    effectCtx.fillStyle = `rgba(255, 0, 0, 0.02)`;
+    effectCtx.fillStyle = `rgba(255, 0, 0, 0.01)`;
     effectCtx.fillRect(aberrationOffset, 0, width, height);
-    effectCtx.fillStyle = `rgba(0, 0, 255, 0.02)`;
+    effectCtx.fillStyle = `rgba(0, 0, 255, 0.01)`;
     effectCtx.fillRect(-aberrationOffset, 0, width, height);
     effectCtx.globalCompositeOperation = 'source-over';
 
     // Draw scroll indicator if scrollable
     if (maxScrollY > 0) {
-      const scrollbarWidth = 6;
+      const scrollbarWidth = 4;
       const scrollbarHeight = height - 40;
-      const scrollbarX = width - scrollbarWidth - 10;
+      const scrollbarX = width - scrollbarWidth - 8;
       const scrollbarY = 20;
 
       // Scrollbar track
-      effectCtx.fillStyle = 'rgba(51, 255, 51, 0.1)';
+      effectCtx.fillStyle = 'rgba(0, 255, 0, 0.1)';
       effectCtx.fillRect(scrollbarX, scrollbarY, scrollbarWidth, scrollbarHeight);
 
       // Scrollbar thumb
       const thumbHeight = Math.max(20, (height / (maxScrollY + height)) * scrollbarHeight);
       const thumbY = scrollbarY + (scrollY / maxScrollY) * (scrollbarHeight - thumbHeight);
 
-      effectCtx.fillStyle = 'rgba(51, 255, 51, 0.5)';
+      effectCtx.fillStyle = 'rgba(0, 255, 0, 0.6)';
       effectCtx.fillRect(scrollbarX, thumbY, scrollbarWidth, thumbHeight);
     }
 
-    animationIdRef.current = requestAnimationFrame(drawCRTEffect);
-  }, [width, height, maxScrollY, scrollY]);
+    // Add processing indicator
+    if (isProcessing) {
+      const dots = Math.floor(Date.now() / 300) % 4;
+      const processingText = 'Processing' + '.'.repeat(dots);
+
+      effectCtx.font = '12px "Courier New", monospace';
+      effectCtx.fillStyle = 'rgba(0, 255, 0, 0.8)';
+      effectCtx.textAlign = 'right';
+      effectCtx.fillText(processingText, width - 10, height - 10);
+    }
+
+    animationIdRef.current = requestAnimationFrame(drawCRTEffects);
+  }, [width, height, maxScrollY, scrollY, isProcessing]);
 
   const handleWheel = useCallback((e: WheelEvent) => {
     e.preventDefault();
     setIsScrolling(true);
 
-    const scrollSpeed = 60;
+    const scrollSpeed = 40;
     const newScrollY = Math.max(0, Math.min(maxScrollY, scrollY + e.deltaY * scrollSpeed / 100));
     setScrollY(newScrollY);
 
@@ -183,7 +229,7 @@ export default function MatrixRPGCanvas({
     }
 
     // Clear scrolling indicator after a delay
-    setTimeout(() => setIsScrolling(false), 150);
+    setTimeout(() => setIsScrolling(false), 100);
   }, [scrollY, maxScrollY]);
 
   // Handle keyboard input
@@ -196,7 +242,16 @@ export default function MatrixRPGCanvas({
     } else if (e.key === 'Backspace') {
       e.preventDefault();
       onInputChange(userInput.slice(0, -1));
-    } else if (e.key.length === 1) {
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      // Simple tab completion for commands
+      const commands = ['help', 'clear', 'whoami', 'ps', 'status', 'exit'];
+      const currentInput = userInput.toLowerCase();
+      const matches = commands.filter(cmd => cmd.startsWith(currentInput));
+      if (matches.length === 1) {
+        onInputChange(matches[0]);
+      }
+    } else if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
       e.preventDefault();
       onInputChange(userInput + e.key);
     }
@@ -241,8 +296,8 @@ export default function MatrixRPGCanvas({
     ctx.scale(dpr, dpr);
     effectCtx.scale(dpr, dpr);
 
-    // Clear canvas with dark green background
-    ctx.fillStyle = '#001100';
+    // Clear canvas with terminal background
+    ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, width, height);
 
     // Split content into lines and calculate scroll bounds
@@ -256,11 +311,11 @@ export default function MatrixRPGCanvas({
       setScrollY(newMaxScrollY);
     }
 
-    // Draw text with current scroll position
-    drawText(ctx, lines, scrollY);
+    // Draw terminal text with current scroll position
+    drawTerminalText(ctx, lines, scrollY);
 
     // Start CRT effect animation
-    drawCRTEffect();
+    drawCRTEffects();
 
     // Add event listeners
     canvas.addEventListener('wheel', handleWheel, { passive: false });
@@ -271,6 +326,7 @@ export default function MatrixRPGCanvas({
 
     // Make canvas focusable
     canvas.tabIndex = 0;
+    canvas.style.outline = 'none';
 
     // Auto-focus when in interactive mode
     if (gameState === 'interactive' && !isFocused) {
@@ -288,7 +344,7 @@ export default function MatrixRPGCanvas({
         cancelAnimationFrame(animationIdRef.current);
       }
     };
-  }, [content, width, height, scrollY, drawCRTEffect, handleWheel, calculateTextHeight, drawText, isScrolling, maxScrollY, handleKeyDown, handleFocus, handleBlur, handleClick, gameState, isFocused]);
+  }, [content, width, height, scrollY, drawCRTEffects, handleWheel, calculateTextHeight, drawTerminalText, isScrolling, maxScrollY, handleKeyDown, handleFocus, handleBlur, handleClick, gameState, isFocused]);
 
   // Cleanup animation on unmount
   useEffect(() => {
@@ -306,7 +362,10 @@ export default function MatrixRPGCanvas({
       <canvas
         ref={canvasRef}
         className="matrix-rpg-canvas matrix-rpg-canvas--main"
-        style={{ outline: isFocused ? '2px solid rgba(51, 255, 51, 0.5)' : 'none' }}
+        style={{
+          outline: isFocused ? '1px solid rgba(0, 255, 0, 0.3)' : 'none',
+          cursor: gameState === 'interactive' ? 'text' : 'default'
+        }}
       />
       <canvas
         ref={effectCanvasRef}

@@ -6,166 +6,148 @@ import MatrixRPGHeader from './MatrixRPGHeader';
 import MatrixRPGFooter from './MatrixRPGFooter';
 import MatrixRPGTerminal from './MatrixRPGTerminal';
 
-// ASCII Art
-const ASCII_ART = {
-  COMPANY_LOGO: `
-   _____                       _   _      
-  / ____|                     | | (_)     
- | (___  _   _ _ __   __ _ ___| |_ _  ___ 
-  \\___ \\| | | | '_ \\ / _\` / __| __| |/ __|
-  ____) | |_| | | | | (_| \\__ \\ |_| | (__ 
- |_____/ \\__, |_| |_|\\__,_|___/\\__|_|\\___|
-          __/ |                           
-         |___/   INNOVATIONS              
-`,
-  TERMINAL_START: `
- ┌─────────────────────────────────────┐
- │  PROJECT MIRROR - Neural Interface  │
- │  SYS.37912       STATUS: CONNECTING │
- │  Terminal v3.7.9.12                 │
- │  [SYSTEM BOOT]                      │
- └─────────────────────────────────────┘
-`,
-  CHECKPOINT: `
- [CHECKPOINT DATA]
- > User ID: DR-MC-227
- > Subject: MARCUS
- > Project: MIRROR
- > Status: DISCONNECTED
-`
+// System information for terminal authenticity
+const SYSTEM_INFO = {
+  OS: 'SYNAPTIC-OS v3.7.9',
+  KERNEL: 'Neural-Core 5.14.0-matrix',
+  CPU: 'Quantum Processing Unit (QPU) x8',
+  MEMORY: '128GB Neural RAM',
+  HOSTNAME: 'matrix-terminal-node-37912',
+  USER: 'root',
+  SHELL: '/bin/neurosh'
 };
 
-// Loading messages
-const LOADING_MESSAGES = [
-  "Initializing neural interface...",
-  "Scanning memory fragments...",
-  "Establishing connection to central cortex...",
-  "Loading consciousness data...",
-  "Searching for identity markers...",
-  "Retrieving project MIRROR data...",
-  "Analyzing synaptic patterns...",
-  "Connection unstable. Retrying...",
-  "Attempting emergency protocol...",
-  "Memory corruption detected...",
-  "Initiating consciousness simulation..."
+// Terminal boot sequence
+const BOOT_SEQUENCE = [
+  '[ OK ] Starting Synaptic Innovations Neural Interface...',
+  '[ OK ] Mounting quantum filesystem...',
+  '[ OK ] Loading neural network drivers...',
+  '[ OK ] Initializing consciousness simulation...',
+  '[ OK ] Starting memory fragmentation service...',
+  '[ OK ] Enabling neural cortex bridge...',
+  '[ OK ] Loading Project MIRROR protocols...',
+  '[ WARN ] Memory integrity check failed',
+  '[ ERROR ] Consciousness transfer incomplete',
+  '[ INFO ] Switching to emergency neural mode...',
+  ''
 ];
+
+// Terminal welcome message
+const WELCOME_MESSAGE = `
+Welcome to ${SYSTEM_INFO.OS}
+${SYSTEM_INFO.HOSTNAME} - ${SYSTEM_INFO.USER}@${SYSTEM_INFO.HOSTNAME}
+Last login: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}
+
+System Information:
+- OS: ${SYSTEM_INFO.OS}
+- Kernel: ${SYSTEM_INFO.KERNEL}
+- CPU: ${SYSTEM_INFO.CPU}
+- Memory: ${SYSTEM_INFO.MEMORY}
+- Shell: ${SYSTEM_INFO.SHELL}
+
+WARNING: Neural interface unstable. Memory fragments detected.
+Project MIRROR status: DISCONNECTED
+Subject consciousness: UNKNOWN
+
+Type 'help' for available commands or just start talking...
+`;
+
+// Terminal command prompt
+const COMMAND_PROMPT = `${SYSTEM_INFO.USER}@${SYSTEM_INFO.HOSTNAME}:~$ `;
 
 // Terminal special characters
 const CURSOR_CHAR = '█';
 
-export default function MatrixRPG({ className = '', width, height }: MatrixRPGProps) {
+export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
   const [gameState, setGameState] = useState<GameState>('initializing');
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [currentText, setCurrentText] = useState(ASCII_ART.COMPANY_LOGO); // Load logo directly
+  const [terminalOutput, setTerminalOutput] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const [userInput, setUserInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [conversations, setConversations] = useState<Message[]>([]);
-  
+  const [currentBootLine, setCurrentBootLine] = useState(0);
+
   // Global references for the messaging system
   const messageIntervalRef = useRef<number | null>(null);
   const messageIndexRef = useRef(0);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   
-  // Apply the className to the container div
-
   // Initial mysterious messages from the unknown entity
   const initialMessages = [
     "Hello?",
     "Is anyone there?",
     "Where am I?",
     "What is this place?",
-    "Hello? Anyone?",
-    "I can't see anything..."
+    "I can't remember anything...",
+    "Please... help me..."
   ];
+
+  // Start mysterious messages
+  const startMysteriousMessages = () => {
+    messageIntervalRef.current = setInterval(() => {
+      if (messageIndexRef.current < initialMessages.length && !hasUserInteracted) {
+        const message = initialMessages[messageIndexRef.current];
+
+        // Add system notification of incoming message
+        setTerminalOutput(prev =>
+          prev + '\n[SYSTEM] Incoming neural transmission...\n' +
+          `Unknown Entity: ${message}\n\n` + COMMAND_PROMPT
+        );
+
+        messageIndexRef.current++;
+      } else {
+        if (messageIntervalRef.current) {
+          clearInterval(messageIntervalRef.current);
+          messageIntervalRef.current = null;
+        }
+      }
+    }, 8000); // Send a message every 8 seconds
+  };
+
+  // Boot sequence effect
+  useEffect(() => {
+    if (gameState === 'loading' && currentBootLine < BOOT_SEQUENCE.length) {
+      const timer = setTimeout(() => {
+        setTerminalOutput(prev => prev + BOOT_SEQUENCE[currentBootLine] + '\n');
+        setCurrentBootLine(prev => prev + 1);
+
+        // Update loading progress
+        const progress = ((currentBootLine + 1) / BOOT_SEQUENCE.length) * 100;
+        setLoadingProgress(progress);
+
+        // When boot sequence is complete, show welcome message
+        if (currentBootLine + 1 >= BOOT_SEQUENCE.length) {
+          setTimeout(() => {
+            setGameState('ready');
+            setTerminalOutput(prev => prev + WELCOME_MESSAGE + '\n');
+
+            // Transition to interactive mode
+            setTimeout(() => {
+              setGameState('interactive');
+              setTerminalOutput(prev => prev + COMMAND_PROMPT);
+
+              // Start mysterious messages from the unknown entity
+              startMysteriousMessages();
+            }, 2000);
+          }, 1000);
+        }
+      }, 150 + Math.random() * 200); // Realistic boot timing
+
+      return () => clearTimeout(timer);
+    }
+  }, [gameState, currentBootLine, startMysteriousMessages]);
 
   // Initialize terminal on mount
   useEffect(() => {
-    // Game sequence states
-    const startGameSequence = () => {
-      // Start with terminal header
-      setGameState('loading');
-
-      // Show loading messages
-      showNextMessage(0);
-
-      // Set loading progress incrementally
-      const progressInterval = setInterval(() => {
-        setLoadingProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(progressInterval);
-            // Show checkpoint when loading complete
-            setTimeout(() => {
-              setGameState('checkpoint');
-              setCurrentText(prev => prev + '\n\n' + ASCII_ART.CHECKPOINT);
-              // After checkpoint, show ready state
-              setTimeout(() => {
-                setGameState('ready');
-
-                // After a delay, transition to interactive mode
-                setTimeout(() => {
-                  setCurrentText(prev =>
-                    prev + '\n\n> CONNECTION ESTABLISHED: Neural interface online\n> DATA STREAM ACTIVE\n> CHANNEL OPEN\n'
-                  );
-
-                  // Make the interface interactive immediately
-                  setGameState('interactive');
-
-                  // Create a temporary interval to demonstrate usage
-                  const intervalId = setInterval(() => {}, 1000);
-                  clearInterval(intervalId); // Clear it immediately
-
-                  // Start sending messages from the unknown entity every 5 seconds
-                  messageIntervalRef.current = setInterval(() => {
-                    if (messageIndexRef.current < initialMessages.length && !hasUserInteracted) {
-                      // Get the current message
-                      const message = initialMessages[messageIndexRef.current];
-
-                      // Show typing indicator first
-                      setCurrentText(prev => `${prev}\n\nUnknown: _`); // Typing indicator
-
-                      // After a short delay, show the full message
-                      setTimeout(() => {
-                        setCurrentText(prev => {
-                          const parts = prev.split('Unknown: _');
-                          return parts[0] + 'Unknown: ' + message;
-                        });
-                      }, 1000);
-
-                      messageIndexRef.current++;
-                    } else {
-                      // Stop the interval when all messages have been sent
-                      if (messageIntervalRef.current) {
-                        clearInterval(messageIntervalRef.current);
-                        messageIntervalRef.current = null;
-                      }
-                    }
-                  }, 5000); // Send a message every 5 seconds
-                }, 2000);
-              }, 1500);
-            }, 1000);
-            return 100;
-          }
-          return prev + (Math.random() * 4 + 1);
-        });
-      }, 200);
-
-      // Function to show loading messages
-      function showNextMessage(index: number = 0) {
-        if (index >= LOADING_MESSAGES.length) return;
-
-        setCurrentText(prev => prev + '\n> ' + LOADING_MESSAGES[index]);
-        setTimeout(() => showNextMessage(index + 1), 1200);
-      }
-    };
-
-    // Start game sequence after a short delay
+    // Start boot sequence
     const timer = setTimeout(() => {
-      startGameSequence();
-    }, 1000);
+      setGameState('loading');
+      setTerminalOutput('Initializing Synaptic Neural Interface...\n\n');
+    }, 500);
 
     return () => clearTimeout(timer);
-  }, [width, height, hasUserInteracted]);
+  }, []);
 
   // Blinking cursor effect
   useEffect(() => {
@@ -194,25 +176,88 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
       }
     }
     
-    // Add user message to conversation
+    // Add user input to terminal output
+    setTerminalOutput(prev => prev + userInput + '\n');
+
+    // Handle terminal commands
+    if (userInput.toLowerCase() === 'help') {
+      setTerminalOutput(prev => prev +
+        'Available commands:\n' +
+        '  help     - Show this help message\n' +
+        '  clear    - Clear terminal screen\n' +
+        '  whoami   - Display current user\n' +
+        '  ps       - Show running processes\n' +
+        '  status   - Show system status\n' +
+        '  exit     - Exit terminal\n\n' +
+        'Or just type anything to talk with the unknown entity...\n\n' +
+        COMMAND_PROMPT
+      );
+      setUserInput('');
+      return;
+    }
+
+    if (userInput.toLowerCase() === 'clear') {
+      setTerminalOutput(COMMAND_PROMPT);
+      setUserInput('');
+      return;
+    }
+
+    if (userInput.toLowerCase() === 'whoami') {
+      setTerminalOutput(prev => prev +
+        `${SYSTEM_INFO.USER}\n` +
+        `Current session: Neural Interface Terminal\n` +
+        `Access level: ROOT (Emergency Protocol)\n\n` +
+        COMMAND_PROMPT
+      );
+      setUserInput('');
+      return;
+    }
+
+    if (userInput.toLowerCase() === 'ps') {
+      setTerminalOutput(prev => prev +
+        'PID  COMMAND\n' +
+        '1    /init\n' +
+        '127  neural-cortex-bridge\n' +
+        '256  memory-fragment-scanner\n' +
+        '512  consciousness-monitor\n' +
+        '1024 project-mirror-daemon\n' +
+        '2048 unknown-entity-handler\n\n' +
+        COMMAND_PROMPT
+      );
+      setUserInput('');
+      return;
+    }
+
+    if (userInput.toLowerCase() === 'status') {
+      setTerminalOutput(prev => prev +
+        'System Status:\n' +
+        '- Neural Interface: UNSTABLE\n' +
+        '- Memory Integrity: 23%\n' +
+        '- Consciousness Transfer: FAILED\n' +
+        '- Project MIRROR: DISCONNECTED\n' +
+        '- Unknown Entity: ACTIVE\n' +
+        '- Emergency Protocol: ENGAGED\n\n' +
+        COMMAND_PROMPT
+      );
+      setUserInput('');
+      return;
+    }
+
+    // For all other inputs, treat as conversation with the unknown entity
     const userMessage: Message = {
       role: 'user',
       content: userInput
     };
     
     setConversations(prev => [...prev, userMessage]);
-    
-    // Update terminal with user message
-    setCurrentText(prev => `${prev}\n\nYou: ${userInput}`);
-    
-    // Clear input field and set processing state
     setUserInput('');
     setIsProcessing(true);
     
     try {
-      // Update terminal to show AI is thinking
-      setCurrentText(prev => `${prev}\n\nUnknown: `);
-      
+      // Show AI is responding
+      setTerminalOutput(prev => prev + '[SYSTEM] Establishing neural link...\n');
+      setTerminalOutput(prev => prev + 'Unknown Entity: ');
+
       // Prepare conversation history for API
       const messages = conversations.concat(userMessage).map(msg => ({
         role: msg.role,
@@ -234,9 +279,13 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
         assistantResponse += chunk;
         
         // Update the terminal with each chunk
-        setCurrentText(prev => {
-          const parts = prev.split('Unknown: ');
-          return parts[0] + 'Unknown: ' + assistantResponse;
+        setTerminalOutput(prev => {
+          const lines = prev.split('\n');
+          const lastLineIndex = lines.length - 1;
+          if (lines[lastLineIndex].startsWith('Unknown Entity: ')) {
+            lines[lastLineIndex] = 'Unknown Entity: ' + assistantResponse;
+          }
+          return lines.join('\n');
         });
       }
       
@@ -247,9 +296,17 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
       };
       
       setConversations(prev => [...prev, assistantMessage]);
+
+      // Add new command prompt
+      setTerminalOutput(prev => prev + '\n\n' + COMMAND_PROMPT);
+
     } catch (error) {
       console.error('Error processing chat:', error);
-      setCurrentText(prev => `${prev}\nERROR: Connection to neural interface lost. Please try again.`);
+      setTerminalOutput(prev => prev +
+        '\n[ERROR] Neural interface connection lost\n' +
+        '[SYSTEM] Attempting to reconnect...\n\n' +
+        COMMAND_PROMPT
+      );
     } finally {
       setIsProcessing(false);
     }
@@ -257,36 +314,24 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
   
   // Render the terminal content based on game state
   const renderTerminalContent = () => {
-    let content = currentText;
-    
-    if (gameState === 'ready') {
-      content = `${ASCII_ART.TERMINAL_START}
+    let content = terminalOutput;
 
-${currentText}
-
-> Consciousness transfer failed
-> Memory fragmentation: 92.7%
-> System reboot required
-
-> ALERT: Subject appears to be conscious
-> Attempting emergency extraction...
-> Connection lost.
-
-${showCursor ? '> _' : '> '}`;
-    } else if (gameState === 'interactive') {
-      content = `${ASCII_ART.TERMINAL_START}
-
-${currentText}`;
-      
-      // Don't show cursor in interactive mode as input has its own cursor
-    } else {
-      content = `${ASCII_ART.TERMINAL_START}
-
-${currentText}${showCursor ? CURSOR_CHAR : ' '}`;
+    // Add cursor for non-interactive states
+    if (gameState !== 'interactive') {
+      content += showCursor ? CURSOR_CHAR : ' ';
     }
     
     return content;
   };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (messageIntervalRef.current) {
+        clearInterval(messageIntervalRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="matrix-rpg-game">
