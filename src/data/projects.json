@@ -13,7 +13,14 @@
       "OPENCLIP",
       "QDRANT"
     ],
-    "status": "production"
+    "status": "production",
+    "license": "",
+    "language": ["Python", "TypeScript", "React"],
+    "releaseDate": "2023-01-14",
+    "auth": {
+      "login": true,
+      "register": false
+    }
   },
   {
     "title": "Novus Talk",
@@ -31,7 +38,13 @@
       "OPENAI",
       "MAGIC-LLM"
     ],
-    "status": "production"
+    "status": "production",
+    "language": ["Python", "TypeScript", "React"],
+    "releaseDate": "2023-12-02",
+    "auth": {
+      "login": true,
+      "register": false
+    }
   },
   {
     "title": "JustAnotherFileStorage",
@@ -46,7 +59,13 @@
       "FILE SHARING",
       "ENCRYPTION"
     ],
-    "status": "production"
+    "status": "production",
+    "language": ["Python", "TypeScript", "React"],
+    "releaseDate": "2023-12-30",
+    "auth": {
+      "login": false,
+      "register": false
+    }
   },
   {
     "title": "spyder.findit",
@@ -63,7 +82,14 @@
       "VECTOR EMBEDDINGS",
       "GRAPH VISUALIZATION"
     ],
-    "status": "production"
+    "status": "production",
+    "license": "Apache 2.0",
+    "language": ["TypeScript", "React", "Three.js"],
+    "releaseDate": "2025-05-29",
+    "auth": {
+      "login": false,
+      "register": false
+    }
   },
   {
     "title": "Colpali-Arxiv Chat",
@@ -80,7 +106,14 @@
       "COLPALI",
       "LLM"
     ],
-    "status": "production"
+    "status": "production",
+    "license": "Apache 2.0",
+    "language": ["Python", "Streamlit"],
+    "releaseDate": "2025-03-06",
+    "auth": {
+      "login": false,
+      "register": false
+    }
   },
   {
     "title": "ColWrite",
@@ -100,7 +133,14 @@
       "EMBEDDINGS",
       "MAGIC-ASSISTANT"
     ],
-    "status": "production"
+    "status": "production",
+    "license": "Apache 2.0",
+    "language": ["TypeScript", "React", "Python"],
+    "releaseDate": "2025-06-18",
+    "auth": {
+      "login": true,
+      "register": false
+    }
   },
   {
     "title": "Magic Worlds",
@@ -115,7 +155,14 @@
       "VITE",
       "MAGIC-ASSISTANT"
     ],
-    "status": "production"
+    "status": "production",
+    "license": "Apache 2.0",
+    "language": ["TypeScript", "React"],
+    "releaseDate": "2025-06-14",
+    "auth": {
+      "login": true,
+      "register": false
+    }
   },
   {
     "title": "Magic Slider",
@@ -133,7 +180,14 @@
       "RAG",
       "MAGIC-AGENTS"
     ],
-    "status": "production"
+    "status": "production",
+    "license": "Apache 2.0",
+    "language": ["TypeScript", "React", "RevealJS"],
+    "releaseDate": "2025-06-07",
+    "auth": {
+      "login": false,
+      "register": false
+    }
   },
   {
     "title": "Magic Auth",
@@ -152,7 +206,14 @@
       "RBAC",
       "JWT"
     ],
-    "status": "production"
+    "status": "production",
+    "license": "Apache 2.0",
+    "language": ["Python", "TypeScript", "React", "MySQL"],
+    "releaseDate": "2025-06-28",
+    "auth": {
+      "login": true,
+      "register": false
+    }
   },
   {
     "title": "magic-llm",
@@ -171,7 +232,14 @@
       "HTTPX",
       "AIOHTTP"
     ],
-    "status": "repo"
+    "status": "repo",
+    "license": "Apache 2.0",
+    "language": ["Python"],
+    "releaseDate": "2024-01-04",
+    "auth": {
+      "login": false,
+      "register": false
+    }
   },
   {
     "title": "magic-agents",
@@ -188,7 +256,14 @@
       "JINJA2",
       "AGENTS"
     ],
-    "status": "repo"
+    "status": "repo",
+    "license": "Apache 2.0",
+    "language": ["Python", "NetworkX", "Jinja2"],
+    "releaseDate": "2024-12-01",
+    "auth": {
+      "login": false,
+      "register": false
+    }
   },
   {
     "title": "Portfolio",
@@ -205,7 +280,14 @@
       "CHATBOT",
       "RPG"
     ],
-    "status": "production"
+    "status": "production",
+    "license": "Apache 2.0",
+    "language": ["TypeScript", "React", "Canvas"],
+    "releaseDate": "2025-06-07",
+    "auth": {
+      "login": false,
+      "register": false
+    }
   },
   {
     "title": "SmolVLM-500M-Anime-Caption",
@@ -223,6 +305,13 @@
       "FINE-TUNING",
       "LLM"
     ],
-    "status": "production"
+    "status": "production",
+    "license": "Apache 2.0",
+    "language": ["Python", "transformers", "PyTorch"],
+    "releaseDate": "2025-05-12",
+    "auth": {
+      "login": false,
+      "register": false
+    }
   }
 ]

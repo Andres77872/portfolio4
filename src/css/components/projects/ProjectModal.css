@@ -73,6 +73,102 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Project metadata section */
+.project-modal__metadata {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  background-color: var(--background-color-secondary);
+  border-radius: var(--border-radius-small);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.project-modal__metadata-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.project-modal__metadata-label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.project-modal__metadata-value {
+  font-size: var(--font-size-md);
+  color: var(--text-color);
+}
+
+/* Status styles */
+.project-modal__status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.project-modal__status--production {
+  background-color: rgba(0, 200, 83, 0.2);
+  color: rgb(0, 200, 83);
+}
+
+.project-modal__status--repo {
+  background-color: rgba(100, 100, 255, 0.2);
+  color: rgb(100, 100, 255);
+}
+
+/* Language tags */
+.project-modal__language-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.project-modal__language-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  background-color: var(--background-color-tertiary);
+  color: var(--text-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Auth badges */
+.project-modal__auth-info {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.project-modal__auth-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  background-color: rgba(255, 165, 0, 0.2);
+  color: rgb(255, 165, 0);
+}
+
+.project-modal__auth-badge--none {
+  background-color: rgba(150, 150, 150, 0.2);
+  color: rgb(150, 150, 150);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .project-modal__metadata {
+    grid-template-columns: 1fr;
+  }
+}
+
 .project-modal__title {
   font-size: var(--h3-font-size);
   margin-bottom: var(--space-md);

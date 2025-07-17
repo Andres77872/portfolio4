@@ -10,4 +10,11 @@ export interface Project {
     image?: string;
     tags?: string[];
     status?: 'production' | 'repo';
+    license?: string;
+    language?: string[];
+    releaseDate?: string;
+    auth?: {
+        login: boolean;
+        register: boolean;
+    };
 }
