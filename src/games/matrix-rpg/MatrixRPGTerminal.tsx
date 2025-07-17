@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { GameState } from './types';
 import MatrixRPGInput from './MatrixRPGInput';
+import MatrixRPGCanvas from './MatrixRPGCanvas';
 
 interface Props {
   content: string;
   gameState: GameState;
-  terminalRef: React.RefObject<HTMLPreElement>;
   userInput: string;
   isProcessing: boolean;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -14,14 +14,41 @@ interface Props {
 }
 
 export default function MatrixRPGTerminal({
-  content, gameState, terminalRef, userInput, isProcessing, onInputChange, onKeyPress, onSubmit
+  content, gameState, userInput, isProcessing, onInputChange, onKeyPress, onSubmit
 }: Props) {
+  const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const updateDimensions = () => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      // Reserve space for input if in interactive mode
+      const inputHeight = gameState === 'interactive' ? 80 : 0;
+      setDimensions({
+        width: rect.width,
+        height: rect.height - inputHeight
+      });
+    };
+
+    updateDimensions();
+
+    const resizeObserver = new ResizeObserver(updateDimensions);
+    resizeObserver.observe(containerRef.current);
+
+    return () => resizeObserver.disconnect();
+  }, [gameState]);
+
   return (
-    <div className="matrix-rpg-terminal">
-      <pre className="matrix-rpg-terminal-content" ref={terminalRef}>
-        {content}
-      </pre>
-      
+    <div className="matrix-rpg-terminal" ref={containerRef}>
+      <MatrixRPGCanvas
+        content={content}
+        width={dimensions.width}
+        height={dimensions.height}
+      />
+
       {gameState === 'interactive' && (
         <MatrixRPGInput 
           userInput={userInput}
@@ -33,4 +60,4 @@ export default function MatrixRPGTerminal({
       )}
     </div>
   );
-} 
+}

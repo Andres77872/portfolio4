@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, KeyboardEvent, ChangeEvent, FormEvent } from 'react';
+import { useEffect, useState, KeyboardEvent, ChangeEvent, FormEvent, useRef } from 'react';
 import './MatrixRPG.css';
 import { streamChatCompletion } from '../../services/chatService';
 import { GameState, Message, MatrixRPGProps } from './types';
@@ -54,7 +54,6 @@ const LOADING_MESSAGES = [
 const CURSOR_CHAR = '█';
 
 export default function MatrixRPG({ className = '', width, height }: MatrixRPGProps) {
-  const terminalRef = useRef<HTMLPreElement>(null);
   const [gameState, setGameState] = useState<GameState>('initializing');
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [currentText, setCurrentText] = useState(ASCII_ART.COMPANY_LOGO); // Load logo directly
@@ -90,13 +89,6 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
     return () => clearTimeout(timer);
   }, [width, height]);
   
-  // Scroll terminal content to bottom whenever it changes
-  useEffect(() => {
-    if (terminalRef.current) {
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
-    }
-  }, [currentText, gameState]);
-
   // Blinking cursor effect
   useEffect(() => {
     const cursorInterval = setInterval(() => {
@@ -315,7 +307,6 @@ ${currentText}${showCursor ? CURSOR_CHAR : ' '}`;
         <MatrixRPGTerminal 
           content={renderTerminalContent()}
           gameState={gameState}
-          terminalRef={terminalRef}
           userInput={userInput}
           isProcessing={isProcessing}
           onInputChange={handleInputChange}
