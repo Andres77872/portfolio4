@@ -19,39 +19,39 @@
     inset 0 0 30px rgba(0, 0, 0, 0.7);
 }
 
-/* Terminal Window Chrome */
+/* Terminal Window Chrome - Unified Header */
 .matrix-rpg-header {
   flex-shrink: 0;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
   border-radius: 8px 8px 0 0;
   border: 1px solid #333;
+  padding: 8px 12px;
+  gap: 1rem;
+  color: #00ff00;
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
   position: relative;
 }
 
-.matrix-rpg-container {
-  flex: 1;
-  position: relative;
-  border-radius: 0 0 8px 8px;
-  overflow: hidden;
-  background: #000;
-  border: 1px solid #333;
-  border-top: none;
-  min-height: 400px;
-  max-height: calc(100vh - 120px);
-  width: 100%;
+/* Window Controls */
+.matrix-rpg-header::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background: #ff5555;
+  border-radius: 50%;
   box-shadow:
-    inset 0 0 60px rgba(0, 0, 0, 0.8),
-    inset 0 0 20px rgba(0, 255, 0, 0.05);
-}
-
-.matrix-rpg-footer {
-  flex-shrink: 0;
-  width: 100%;
-  background: linear-gradient(to bottom, #1a1a1a, #0a0a0a);
-  border-radius: 0 0 8px 8px;
-  border: 1px solid #333;
-  border-top: none;
+    16px 0 0 #ffaa00,
+    32px 0 0 #00ff00;
 }
 
 /* Terminal Screen with Authentic CRT Look */
@@ -60,6 +60,7 @@
   width: 100%;
   height: 100%;
   min-height: 400px;
+  min-width: 560px;
   padding: 0;
   box-sizing: border-box;
   color: #00ff00;
@@ -80,70 +81,38 @@
   background-size: 100% 100%, 100% 4px;
 }
 
-/* Terminal Window Title Bar */
-.matrix-rpg-hud {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
-  padding: 8px 12px;
-  border-bottom: 1px solid #333;
-  gap: 1rem;
+/* Terminal Footer - Unified Footer */
+.matrix-rpg-footer {
+  flex-shrink: 0;
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(to bottom, #1a1a1a, #0a0a0a);
+  border-radius: 0 0 8px 8px;
+  border: 1px solid #333;
+  border-top: none;
+  padding: 6px 12px;
+  box-sizing: border-box;
   color: #00ff00;
-  font-size: 12px;
-  font-weight: bold;
-  text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
-  position: relative;
-}
-
-/* Window Controls */
-.matrix-rpg-hud::before {
-  content: '';
-  position: absolute;
-  left: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
-  background: #ff5555;
-  border-radius: 50%;
-  box-shadow:
-    16px 0 0 #ffaa00,
-    32px 0 0 #00ff00;
-}
-
-.matrix-rpg-title {
-  font-weight: bold;
-  font-size: 12px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin-left: 48px;
-  color: #cccccc;
-  text-shadow: none;
-}
-
-.matrix-rpg-sys-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
   font-size: 11px;
-  color: #00ff00;
-  font-family: 'Courier New', monospace;
+  font-weight: 500;
+  text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
 }
 
-.matrix-rpg-status {
-  animation: blink 2s infinite;
-  padding: 2px 6px;
-  background: rgba(0, 255, 0, 0.1);
-  border: 1px solid rgba(0, 255, 0, 0.3);
-  border-radius: 2px;
-}
-
-.matrix-rpg-status.critical {
-  color: #ff3333;
-  background: rgba(255, 51, 51, 0.1);
-  border-color: rgba(255, 51, 51, 0.3);
-  text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+/* Terminal Container */
+.matrix-rpg-container {
+  flex: 1;
+  position: relative;
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid #333;
+  border-top: none;
+  min-height: 400px;
+  max-height: calc(100vh - 120px);
+  width: 100%;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    inset 0 0 20px rgba(0, 255, 0, 0.05);
 }
 
 /* Terminal Canvas Container */
@@ -226,20 +195,6 @@
   animation: progress-shine 2s infinite;
 }
 
-/* Terminal Footer */
-.matrix-rpg-footer .matrix-rpg-sys-info {
-  text-align: center;
-  background: linear-gradient(to bottom, #1a1a1a, #0a0a0a);
-  padding: 6px 12px;
-  width: 100%;
-  box-sizing: border-box;
-  color: #00ff00;
-  font-size: 11px;
-  font-weight: 500;
-  text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
-  border-top: 1px solid #333;
-}
-
 /* Animations */
 @keyframes blink {
   0%, 50% { opacity: 1; }
@@ -296,6 +251,43 @@
   border-radius: 0 0 8px 8px;
 }
 
+/* Title */
+.matrix-rpg-title {
+  font-weight: bold;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-left: 48px;
+  color: #cccccc;
+  text-shadow: none;
+}
+
+/* System Info */
+.matrix-rpg-sys-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: #00ff00;
+  font-family: 'Courier New', monospace;
+}
+
+/* Status */
+.matrix-rpg-status {
+  animation: blink 2s infinite;
+  padding: 2px 6px;
+  background: rgba(0, 255, 0, 0.1);
+  border: 1px solid rgba(0, 255, 0, 0.3);
+  border-radius: 2px;
+}
+
+.matrix-rpg-status.critical {
+  color: #ff3333;
+  background: rgba(255, 51, 51, 0.1);
+  border-color: rgba(255, 51, 51, 0.3);
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .matrix-rpg-game {
@@ -313,7 +305,7 @@
     border-radius: 8px;
   }
   
-  .matrix-rpg-hud {
+  .matrix-rpg-header {
     padding: 6px 8px;
     font-size: 10px;
   }
@@ -323,7 +315,7 @@
     margin-left: 40px;
   }
   
-  .matrix-rpg-hud::before {
+  .matrix-rpg-header::before {
     width: 8px;
     height: 8px;
     box-shadow:
@@ -350,7 +342,7 @@
     background: #000;
   }
 
-  .matrix-rpg-hud {
+  .matrix-rpg-header {
     background: #000;
     border-color: #00ff00;
   }
