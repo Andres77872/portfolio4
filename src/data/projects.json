@@ -189,5 +189,40 @@
       "AGENTS"
     ],
     "status": "repo"
+  },
+  {
+    "title": "Portfolio",
+    "description": "Interactive personal portfolio showcasing projects and skills. Features an AI chatbot for portfolio exploration and a terminal-based canvas RPG game powered by LLM technology.",
+    "descriptionMD": "**Portfolio: Interactive Developer Showcase**\n\nA modern and engaging portfolio that demonstrates technical skills and creative projects through interactive elements and AI integration.\n\n**Key Features:**\n*   **AI Chatbot Assistant:** Engage with an intelligent chatbot that provides information about projects, skills, and experience in an interactive format.\n*   **Terminal RPG Game:** Experience a unique mini-game with a terminal interface rendered on canvas, using LLM technology to simulate an immersive role-playing experience.\n*   **Project Showcase:** Comprehensive display of development projects with detailed information and visual elements.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for optimal performance and development experience.\n*   **AI Integration:** Incorporates LLM technology for interactive elements and game simulation.\n*   **Canvas Rendering:** Utilizes HTML5 Canvas for creative visual elements and the terminal-based game interface.\n\nThis portfolio represents both a showcase of technical skills and a demonstration of creative application development.",
+    "url": "https://arizmendi.io/",
+    "image": "https://img.arz.ai/_lOApj6h",
+    "repoUrl": "https://github.com/Andres77872/portfolio4",
+    "tags": [
+      "REACT",
+      "VITE",
+      "LLM",
+      "CANVAS",
+      "CHATBOT",
+      "RPG"
+    ],
+    "status": "production"
+  },
+  {
+    "title": "SmolVLM-500M-Anime-Caption",
+    "description": "Specialized vision-language model for anime image captioning, fine-tuned from SmolVLM-500M-Base on 400,000 synthetic image/caption pairs generated with Llama 4 Maverick. Produces natural English descriptions for anime and illustration artworks.",
+    "descriptionMD": "**SmolVLM-500M-Anime-Caption: Specialized Anime Image Captioning Model**\n\nA vision-language model specifically designed for describing anime-style images with natural English captions. This model represents a significant advancement in anime content understanding and description generation.\n\n**Core Features:**\n*   **Anime-Focused Captioning:** Generates detailed, accurate descriptions for anime, manga panels, and illustrations.\n*   **Fine-Tuned Architecture:** Built on **HuggingFaceTB/SmolVLM-500M-Base** with **SigLIP** vision encoder (google/siglip-base-patch16-512).\n*   **Extensive Training Data:** Trained on 400,000 synthetic image/caption pairs (200k SFW / 200k NSFW) generated with **Llama 4 Maverick**.\n*   **Content Indexing:** Ideal for tagging and organizing anime-focused archives, databases, and creative tools.\n\n**Technical Details:**\n*   **Model Size:** 500M parameters for efficient inference while maintaining high-quality outputs.\n*   **Language:** English image captioning with natural language descriptions.\n*   **License:** Apache 2.0 (inherited from base and training components).\n\nThis model bridges the gap between computer vision and natural language processing specifically for anime content, enabling more sophisticated anime image understanding and description.",
+    "url": "https://huggingface.co/spaces/Andres77872/anime-caption-v0.2",
+    "image": "https://img.arz.ai/l6oA8nJp",
+    "apiUrl": "https://api.findit.moe/docs#/Utilities/image_caption_util_image_caption_post",
+    "repoUrl": "https://huggingface.co/Andres77872/SmolVLM-500M-anime-caption-v0.2",
+    "tags": [
+      "HUGGINGFACE",
+      "VLM",
+      "IMAGE CAPTIONING",
+      "SIGLIP",
+      "FINE-TUNING",
+      "LLM"
+    ],
+    "status": "production"
   }
 ]
