@@ -32,11 +32,9 @@ export default function MatrixRPGCanvas({
 
   // Terminal rendering constants
   const LINE_HEIGHT = 16;
-  const CHAR_WIDTH = 8;
   const PADDING = 12;
   const FONT_FAMILY = 'bold 14px "Courier New", "Liberation Mono", monospace';
   const TERMINAL_GREEN = '#00ff00';
-  const TERMINAL_DARK_GREEN = '#008800';
   const TERMINAL_BRIGHT_GREEN = '#44ff44';
 
   // Cursor blinking effect
@@ -59,7 +57,7 @@ export default function MatrixRPGCanvas({
 
     let currentY = PADDING - scrollOffset;
 
-    lines.forEach((line, lineIndex) => {
+    lines.forEach((line) => {
       // Only draw lines that are visible in the viewport
       if (currentY >= -LINE_HEIGHT && currentY <= height + LINE_HEIGHT) {
         // Color coding for different line types

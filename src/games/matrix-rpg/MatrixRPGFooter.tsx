@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function MatrixRPGFooter() {
   return (
     <div className="matrix-rpg-footer">
@@ -8,4 +6,4 @@ export default function MatrixRPGFooter() {
       </div>
     </div>
   );
-} 
+}
