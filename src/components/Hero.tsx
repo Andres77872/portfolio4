@@ -93,21 +93,22 @@ export default function Hero() {
         </div>
         
         <div className="hero__visual">
-          <div className="hero__ai-container">
+          <div>
             {/* Render current game */}
             {React.createElement(games[currentGameIndex].component, {
               className: "hero__ai-canvas"
             })}
-            
-            {/* Game switcher */}
+
+            {/* Game switcher overlay */}
             <div className="hero__game-switcher">
               <div className="hero__game-pagination">
                 {games.map((game, index) => (
-                  <button 
+                  <button
                     key={game.name}
                     className={`hero__game-dot ${index === currentGameIndex ? 'hero__game-dot--active' : ''}`}
                     onClick={() => setCurrentGameIndex(index)}
                     aria-label={`Switch to ${game.name}`}
+                    title={game.name}
                   />
                 ))}
               </div>
@@ -118,7 +119,7 @@ export default function Hero() {
           </div>
         </div>
       </div>
-      
+
       <div className="hero__scroll-indicator">
         <div className="hero__scroll-arrow" onClick={() => scrollToSection('about')}>
           <span>Scroll to explore</span>
@@ -127,4 +128,4 @@ export default function Hero() {
       </div>
     </section>
   );
-} 
+}
