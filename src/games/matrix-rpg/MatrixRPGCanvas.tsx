@@ -86,6 +86,10 @@ export default function MatrixRPGCanvas({
           // Command prompt
           color = TERMINAL_BRIGHT_GREEN;
           glowIntensity = 1.3;
+        } else if (line.match(/^               /)) {
+          // Wrapped continuation lines from Unknown Entity (15 spaces for "Unknown Entity: ")
+          color = '#ff44ff';
+          glowIntensity = 1.2;
         }
 
         // Draw text with glow effect

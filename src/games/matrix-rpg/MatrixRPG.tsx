@@ -58,6 +58,56 @@ const COMMAND_PROMPT = `${SYSTEM_INFO.USER}@${SYSTEM_INFO.HOSTNAME}:~$ `;
 // Terminal special characters
 const CURSOR_CHAR = '█';
 
+// Text wrapping utility for streaming content
+const wrapText = (text: string, maxWidth: number = 75): string[] => {
+  const words = text.split(' ');
+  const lines: string[] = [];
+  let currentLine = '';
+
+  for (const word of words) {
+    // If adding this word would exceed the line length
+    if (currentLine.length + word.length + 1 > maxWidth) {
+      if (currentLine.length > 0) {
+        lines.push(currentLine);
+        currentLine = word;
+      } else {
+        // Word is longer than max width, force break
+        lines.push(word);
+        currentLine = '';
+      }
+    } else {
+      currentLine += (currentLine.length > 0 ? ' ' : '') + word;
+    }
+  }
+
+  if (currentLine.length > 0) {
+    lines.push(currentLine);
+  }
+
+  return lines;
+};
+
+// Format wrapped text for terminal display with canvas width consideration
+const formatWrappedText = (text: string, prefix: string = '', canvasWidth: number = 800): string => {
+  // Calculate character width based on canvas width minus 30px for margins
+  const availableWidth = canvasWidth - 30;
+  // Approximate character width for monospace font (14px)
+  const charWidth = 8.4;
+  const maxChars = Math.floor(availableWidth / charWidth);
+
+  // Reserve space for the prefix
+  const textMaxWidth = Math.max(30, maxChars - prefix.length);
+
+  const wrappedLines = wrapText(text, textMaxWidth);
+  return wrappedLines.map((line, index) => {
+    if (index === 0) {
+      return prefix + line;
+    } else {
+      return ' '.repeat(prefix.length) + line;
+    }
+  }).join('\n');
+};
+
 export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
   const [gameState, setGameState] = useState<GameState>('initializing');
   const [terminalOutput, setTerminalOutput] = useState('');
@@ -71,7 +121,7 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
   const messageIntervalRef = useRef<number | null>(null);
   const messageIndexRef = useRef(0);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
-  
+
   // Initial mysterious messages from the unknown entity
   const initialMessages = [
     "Hello?",
@@ -157,11 +207,11 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
   const handleInputChange = (input: string) => {
     setUserInput(input);
   };
-  
+
   // Handle user input submission
   const handleSubmit = async () => {
     if (!userInput.trim() || isProcessing) return;
-    
+
     // Stop automated messages on first user interaction
     if (!hasUserInteracted) {
       setHasUserInteracted(true);
@@ -170,7 +220,7 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
         messageIntervalRef.current = null;
       }
     }
-    
+
     // Add user input to terminal output
     setTerminalOutput(prev => prev + userInput + '\n');
 
@@ -273,17 +323,39 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
         const chunk = new TextDecoder().decode(value);
         assistantResponse += chunk;
         
-        // Update the terminal with each chunk
+        // Update terminal output by appending the chunk to the last line
         setTerminalOutput(prev => {
           const lines = prev.split('\n');
           const lastLineIndex = lines.length - 1;
+
+          // Find the line that starts with "Unknown Entity: " and append the chunk
           if (lines[lastLineIndex].startsWith('Unknown Entity: ')) {
             lines[lastLineIndex] = 'Unknown Entity: ' + assistantResponse;
           }
+
           return lines.join('\n');
         });
       }
-      
+
+      // After streaming is complete, format the final response with proper wrapping
+      setTerminalOutput(prev => {
+        const lines = prev.split('\n');
+
+        // Find the last "Unknown Entity: " line and replace it with properly wrapped version
+        for (let i = lines.length - 1; i >= 0; i--) {
+          if (lines[i].startsWith('Unknown Entity: ')) {
+            // Get actual canvas width (canvas width minus 30px for margins)
+            const canvasElement = document.querySelector('.matrix-rpg-canvas--main') as HTMLCanvasElement;
+            const actualCanvasWidth = canvasElement ? canvasElement.clientWidth : 800;
+            const wrappedResponse = formatWrappedText(assistantResponse, 'Unknown Entity: ', actualCanvasWidth);
+            lines.splice(i, 1, ...wrappedResponse.split('\n'));
+            break;
+          }
+        }
+
+        return lines.join('\n');
+      });
+
       // Add assistant's response to conversation history
       const assistantMessage: Message = {
         role: 'assistant',
@@ -315,7 +387,7 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
     if (gameState !== 'interactive') {
       content += showCursor ? CURSOR_CHAR : ' ';
     }
-    
+
     return content;
   };
 
@@ -333,7 +405,7 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
       <MatrixRPGHeader gameState={gameState} />
 
       <div className={`matrix-rpg-container ${className}`}>
-        <MatrixRPGTerminal 
+        <MatrixRPGTerminal
           content={renderTerminalContent()}
           gameState={gameState}
           userInput={userInput}
@@ -342,7 +414,7 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
           onSubmit={handleSubmit}
         />
       </div>
-      
+
       <MatrixRPGFooter />
     </div>
   );
