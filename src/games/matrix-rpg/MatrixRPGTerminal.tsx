@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { GameState } from './types';
-import MatrixRPGInput from './MatrixRPGInput';
 import MatrixRPGCanvas from './MatrixRPGCanvas';
 
 interface Props {
@@ -8,13 +7,12 @@ interface Props {
   gameState: GameState;
   userInput: string;
   isProcessing: boolean;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onKeyPress: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onInputChange: (input: string) => void;
+  onSubmit: () => void;
 }
 
 export default function MatrixRPGTerminal({
-  content, gameState, userInput, isProcessing, onInputChange, onKeyPress, onSubmit
+  content, gameState, userInput, isProcessing, onInputChange, onSubmit
 }: Props) {
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -25,11 +23,10 @@ export default function MatrixRPGTerminal({
     const updateDimensions = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      // Reserve space for input if in interactive mode
-      const inputHeight = gameState === 'interactive' ? 80 : 0;
+      // No need to reserve space for input since it's now rendered in canvas
       setDimensions({
         width: rect.width,
-        height: rect.height - inputHeight
+        height: rect.height
       });
     };
 
@@ -39,7 +36,7 @@ export default function MatrixRPGTerminal({
     resizeObserver.observe(containerRef.current);
 
     return () => resizeObserver.disconnect();
-  }, [gameState]);
+  }, []);
 
   return (
     <div className="matrix-rpg-terminal" ref={containerRef}>
@@ -47,17 +44,12 @@ export default function MatrixRPGTerminal({
         content={content}
         width={dimensions.width}
         height={dimensions.height}
+        gameState={gameState}
+        userInput={userInput}
+        isProcessing={isProcessing}
+        onInputChange={onInputChange}
+        onSubmit={onSubmit}
       />
-
-      {gameState === 'interactive' && (
-        <MatrixRPGInput 
-          userInput={userInput}
-          isProcessing={isProcessing}
-          onInputChange={onInputChange}
-          onKeyPress={onKeyPress}
-          onSubmit={onSubmit}
-        />
-      )}
     </div>
   );
 }

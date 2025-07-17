@@ -1,4 +1,4 @@
-import { useEffect, useState, KeyboardEvent, ChangeEvent, FormEvent, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './MatrixRPG.css';
 import { streamChatCompletion } from '../../services/chatService';
 import { GameState, Message, MatrixRPGProps } from './types';
@@ -81,14 +81,92 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
 
   // Initialize terminal on mount
   useEffect(() => {
+    // Game sequence states
+    const startGameSequence = () => {
+      // Start with terminal header
+      setGameState('loading');
+
+      // Show loading messages
+      showNextMessage(0);
+
+      // Set loading progress incrementally
+      const progressInterval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(progressInterval);
+            // Show checkpoint when loading complete
+            setTimeout(() => {
+              setGameState('checkpoint');
+              setCurrentText(prev => prev + '\n\n' + ASCII_ART.CHECKPOINT);
+              // After checkpoint, show ready state
+              setTimeout(() => {
+                setGameState('ready');
+
+                // After a delay, transition to interactive mode
+                setTimeout(() => {
+                  setCurrentText(prev =>
+                    prev + '\n\n> CONNECTION ESTABLISHED: Neural interface online\n> DATA STREAM ACTIVE\n> CHANNEL OPEN\n'
+                  );
+
+                  // Make the interface interactive immediately
+                  setGameState('interactive');
+
+                  // Create a temporary interval to demonstrate usage
+                  const intervalId = setInterval(() => {}, 1000);
+                  clearInterval(intervalId); // Clear it immediately
+
+                  // Start sending messages from the unknown entity every 5 seconds
+                  messageIntervalRef.current = setInterval(() => {
+                    if (messageIndexRef.current < initialMessages.length && !hasUserInteracted) {
+                      // Get the current message
+                      const message = initialMessages[messageIndexRef.current];
+
+                      // Show typing indicator first
+                      setCurrentText(prev => `${prev}\n\nUnknown: _`); // Typing indicator
+
+                      // After a short delay, show the full message
+                      setTimeout(() => {
+                        setCurrentText(prev => {
+                          const parts = prev.split('Unknown: _');
+                          return parts[0] + 'Unknown: ' + message;
+                        });
+                      }, 1000);
+
+                      messageIndexRef.current++;
+                    } else {
+                      // Stop the interval when all messages have been sent
+                      if (messageIntervalRef.current) {
+                        clearInterval(messageIntervalRef.current);
+                        messageIntervalRef.current = null;
+                      }
+                    }
+                  }, 5000); // Send a message every 5 seconds
+                }, 2000);
+              }, 1500);
+            }, 1000);
+            return 100;
+          }
+          return prev + (Math.random() * 4 + 1);
+        });
+      }, 200);
+
+      // Function to show loading messages
+      function showNextMessage(index: number = 0) {
+        if (index >= LOADING_MESSAGES.length) return;
+
+        setCurrentText(prev => prev + '\n> ' + LOADING_MESSAGES[index]);
+        setTimeout(() => showNextMessage(index + 1), 1200);
+      }
+    };
+
     // Start game sequence after a short delay
     const timer = setTimeout(() => {
       startGameSequence();
     }, 1000);
-    
+
     return () => clearTimeout(timer);
-  }, [width, height]);
-  
+  }, [width, height, hasUserInteracted]);
+
   // Blinking cursor effect
   useEffect(() => {
     const cursorInterval = setInterval(() => {
@@ -98,95 +176,13 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
     return () => clearInterval(cursorInterval);
   }, []);
 
-  // Game sequence states
-  const startGameSequence = () => {
-    // Start with terminal header
-    setGameState('loading');
-    
-    // Show loading messages
-    showNextMessage(0);
-    
-    // Set loading progress incrementally
-    const progressInterval = setInterval(() => {
-      setLoadingProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(progressInterval);
-          // Show checkpoint when loading complete
-          setTimeout(() => {
-            setGameState('checkpoint');
-            setCurrentText(prev => prev + '\n\n' + ASCII_ART.CHECKPOINT);
-            // After checkpoint, show ready state
-            setTimeout(() => {
-              setGameState('ready');
-              
-              // After a delay, transition to interactive mode
-              setTimeout(() => {
-                setCurrentText(prev => 
-                  prev + '\n\n> CONNECTION ESTABLISHED: Neural interface online\n> DATA STREAM ACTIVE\n> CHANNEL OPEN\n'
-                );
-                
-                // Make the interface interactive immediately
-                setGameState('interactive');
-                
-                // Create a temporary interval to demonstrate usage
-                const intervalId = setInterval(() => {}, 1000);
-                clearInterval(intervalId); // Clear it immediately
-                
-                // Start sending messages from the unknown entity every 5 seconds
-                messageIntervalRef.current = setInterval(() => {
-                  if (messageIndexRef.current < initialMessages.length && !hasUserInteracted) {
-                    // Get the current message
-                    const message = initialMessages[messageIndexRef.current];
-                    
-                    // Show typing indicator first
-                    setCurrentText(prev => `${prev}\n\nUnknown: _`); // Typing indicator
-                    
-                    // After a short delay, show the full message
-                    setTimeout(() => {
-                      setCurrentText(prev => {
-                        const parts = prev.split('Unknown: _');
-                        return parts[0] + 'Unknown: ' + message;
-                      });
-                    }, 1000);
-                    
-                    messageIndexRef.current++;
-                  } else {
-                    // Stop the interval when all messages have been sent
-                    if (messageIntervalRef.current) {
-                      clearInterval(messageIntervalRef.current);
-                      messageIntervalRef.current = null;
-                    }
-                  }
-                }, 5000); // Send a message every 5 seconds
-              }, 2000);
-            }, 1500);
-          }, 1000);
-          return 100;
-        }
-        return prev + (Math.random() * 4 + 1);
-      });
-    }, 200);
-    
-    // Function to show loading messages
-    function showNextMessage(index: number = 0) {
-      if (index >= LOADING_MESSAGES.length) return;
-      
-      setCurrentText(prev => prev + '\n> ' + LOADING_MESSAGES[index]);
-      setTimeout(() => showNextMessage(index + 1), 1200);
-    }
-  };
-  
   // Handle user input change
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUserInput(e.target.value);
+  const handleInputChange = (input: string) => {
+    setUserInput(input);
   };
   
   // Handle user input submission
-  // Handle user input change
-  
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = async () => {
     if (!userInput.trim() || isProcessing) return;
     
     // Stop automated messages on first user interaction
@@ -259,13 +255,6 @@ export default function MatrixRPG({ className = '', width, height }: MatrixRPGPr
     }
   };
   
-  // Handle keyboard input
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      handleSubmit(e as unknown as FormEvent);
-    }
-  };
-
   // Render the terminal content based on game state
   const renderTerminalContent = () => {
     let content = currentText;
@@ -310,7 +299,6 @@ ${currentText}${showCursor ? CURSOR_CHAR : ' '}`;
           userInput={userInput}
           isProcessing={isProcessing}
           onInputChange={handleInputChange}
-          onKeyPress={handleKeyPress}
           onSubmit={handleSubmit}
         />
       </div>

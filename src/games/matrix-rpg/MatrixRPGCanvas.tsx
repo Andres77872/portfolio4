@@ -4,20 +4,45 @@ interface Props {
   content: string;
   width: number;
   height: number;
+  gameState: 'initializing' | 'loading' | 'checkpoint' | 'ready' | 'typing' | 'interactive';
+  userInput: string;
+  isProcessing: boolean;
+  onInputChange: (input: string) => void;
+  onSubmit: () => void;
 }
 
-export default function MatrixRPGCanvas({ content, width, height }: Props) {
+export default function MatrixRPGCanvas({
+  content,
+  width,
+  height,
+  gameState,
+  userInput,
+  isProcessing,
+  onInputChange,
+  onSubmit
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const effectCanvasRef = useRef<HTMLCanvasElement>(null);
   const animationIdRef = useRef<number>();
   const [scrollY, setScrollY] = useState(0);
   const [maxScrollY, setMaxScrollY] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [cursorVisible, setCursorVisible] = useState(true);
 
   // Text rendering constants
   const LINE_HEIGHT = 18;
   const PADDING = 20;
   const FONT_FAMILY = 'bold 14px "Courier New", VT323, monospace';
+
+  // Cursor blinking effect
+  useEffect(() => {
+    const cursorInterval = setInterval(() => {
+      setCursorVisible(prev => !prev);
+    }, 500);
+
+    return () => clearInterval(cursorInterval);
+  }, []);
 
   const calculateTextHeight = useCallback((lines: string[]) => {
     return lines.length * LINE_HEIGHT + PADDING * 2;
@@ -49,7 +74,23 @@ export default function MatrixRPGCanvas({ content, width, height }: Props) {
 
       currentY += LINE_HEIGHT;
     });
-  }, [height]);
+
+    // Draw user input line if in interactive mode
+    if (gameState === 'interactive' && currentY >= -LINE_HEIGHT && currentY <= height + LINE_HEIGHT) {
+      const inputLine = `> ${userInput}`;
+      const cursor = (isFocused && cursorVisible) ? '█' : '';
+      const fullInputLine = inputLine + cursor;
+
+      ctx.shadowBlur = 2;
+      ctx.fillText(fullInputLine, PADDING, currentY);
+
+      ctx.shadowBlur = 4;
+      ctx.globalAlpha = 0.3;
+      ctx.fillText(fullInputLine, PADDING, currentY);
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 1;
+    }
+  }, [height, gameState, userInput, isFocused, cursorVisible]);
 
   const drawCRTEffect = useCallback(() => {
     const effectCanvas = effectCanvasRef.current;
@@ -145,6 +186,41 @@ export default function MatrixRPGCanvas({ content, width, height }: Props) {
     setTimeout(() => setIsScrolling(false), 150);
   }, [scrollY, maxScrollY]);
 
+  // Handle keyboard input
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (gameState !== 'interactive' || isProcessing) return;
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      onSubmit();
+    } else if (e.key === 'Backspace') {
+      e.preventDefault();
+      onInputChange(userInput.slice(0, -1));
+    } else if (e.key.length === 1) {
+      e.preventDefault();
+      onInputChange(userInput + e.key);
+    }
+  }, [gameState, isProcessing, userInput, onInputChange, onSubmit]);
+
+  // Handle focus events
+  const handleFocus = useCallback(() => {
+    setIsFocused(true);
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    setIsFocused(false);
+  }, []);
+
+  // Handle click to focus
+  const handleClick = useCallback(() => {
+    if (gameState === 'interactive') {
+      const canvas = canvasRef.current;
+      if (canvas) {
+        canvas.focus();
+      }
+    }
+  }, [gameState]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const effectCanvas = effectCanvasRef.current;
@@ -171,7 +247,7 @@ export default function MatrixRPGCanvas({ content, width, height }: Props) {
 
     // Split content into lines and calculate scroll bounds
     const lines = content.split('\n');
-    const textHeight = calculateTextHeight(lines);
+    const textHeight = calculateTextHeight(lines) + (gameState === 'interactive' ? LINE_HEIGHT : 0);
     const newMaxScrollY = Math.max(0, textHeight - height);
     setMaxScrollY(newMaxScrollY);
 
@@ -186,17 +262,33 @@ export default function MatrixRPGCanvas({ content, width, height }: Props) {
     // Start CRT effect animation
     drawCRTEffect();
 
-    // Add wheel event listener for scrolling
+    // Add event listeners
     canvas.addEventListener('wheel', handleWheel, { passive: false });
+    canvas.addEventListener('keydown', handleKeyDown);
+    canvas.addEventListener('focus', handleFocus);
+    canvas.addEventListener('blur', handleBlur);
+    canvas.addEventListener('click', handleClick);
 
-    // Cleanup animation on unmount
+    // Make canvas focusable
+    canvas.tabIndex = 0;
+
+    // Auto-focus when in interactive mode
+    if (gameState === 'interactive' && !isFocused) {
+      setTimeout(() => canvas.focus(), 100);
+    }
+
+    // Cleanup
     return () => {
       canvas.removeEventListener('wheel', handleWheel);
+      canvas.removeEventListener('keydown', handleKeyDown);
+      canvas.removeEventListener('focus', handleFocus);
+      canvas.removeEventListener('blur', handleBlur);
+      canvas.removeEventListener('click', handleClick);
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
       }
     };
-  }, [content, width, height, scrollY, drawCRTEffect, handleWheel, calculateTextHeight, drawText, isScrolling, maxScrollY]);
+  }, [content, width, height, scrollY, drawCRTEffect, handleWheel, calculateTextHeight, drawText, isScrolling, maxScrollY, handleKeyDown, handleFocus, handleBlur, handleClick, gameState, isFocused]);
 
   // Cleanup animation on unmount
   useEffect(() => {
@@ -214,6 +306,7 @@ export default function MatrixRPGCanvas({ content, width, height }: Props) {
       <canvas
         ref={canvasRef}
         className="matrix-rpg-canvas matrix-rpg-canvas--main"
+        style={{ outline: isFocused ? '2px solid rgba(51, 255, 51, 0.5)' : 'none' }}
       />
       <canvas
         ref={effectCanvasRef}
