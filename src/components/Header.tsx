@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import Navbar from './Navbar';
+import { useModal } from '../contexts/ModalContext';
 
 export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
+  const { isModalOpen } = useModal();
 
   // Update CSS variable with header height
   useEffect(() => {
@@ -43,6 +45,11 @@ export default function Header() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  // Hide header when modal is open
+  if (isModalOpen) {
+    return null;
+  }
 
   return (
     <header className={`header ${scrolled ? 'header--scrolled' : ''}`} ref={headerRef}>

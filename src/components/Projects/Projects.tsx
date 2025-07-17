@@ -5,6 +5,7 @@ import ProjectCard from './ProjectCard';
 import ProjectFilters from './ProjectFilters';
 import ProjectModal from './ProjectModal';
 import Section from '../common/Section';
+import { useModal } from '../../contexts/ModalContext';
 import '../../css/components/projects/Projects.css';
 
 const Projects: React.FC = () => {
@@ -12,7 +13,7 @@ const Projects: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { isModalOpen, setIsModalOpen } = useModal();
 
     const openProjectModal = (project: Project) => {
         setSelectedProject(project);
@@ -21,6 +22,7 @@ const Projects: React.FC = () => {
     };
 
     const closeProjectModal = () => {
+        setSelectedProject(null);
         setIsModalOpen(false);
         document.body.style.overflow = ''; // Re-enable scrolling
     };
