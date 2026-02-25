@@ -1,323 +1,594 @@
-/* MatrixRPG.css - Authentic Terminal Interface */
+/* MatrixRPG.css - Authentic Vintage CRT Monitor Interface */
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   ROOT VARIABLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --crt-green: #33ff33;
+  --crt-green-dim: #00aa00;
+  --crt-green-bright: #66ff66;
+  --crt-amber: #ffb000;
+  --crt-phosphor-glow: rgba(51, 255, 51, 0.15);
+  --monitor-bezel: #1a1a18;
+  --monitor-bezel-light: #2a2a28;
+  --monitor-bezel-dark: #0a0a08;
+  --monitor-plastic: #1e1e1c;
+  --screen-black: #0a0f0a;
+  --led-red: #ff3333;
+  --led-green: #33ff33;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MONITOR OUTER FRAME (The physical CRT case)
+   ═══════════════════════════════════════════════════════════════════════════ */
 .matrix-rpg-game {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
-  max-height: 100vh;
-  gap: 0;
-  border-radius: 12px;
-  background: #0a0a0a;
-  padding: 8px;
-  border: 3px solid #1a1a1a;
-  box-sizing: border-box;
-  overflow: hidden;
+  /* Fixed width for consistent terminal experience */
+  width: 680px;
+  min-width: 680px;
+  max-width: 680px;
+  height: 600px;
+  min-height: 600px;
+  position: relative;
   font-family: 'Courier New', 'Liberation Mono', 'DejaVu Sans Mono', monospace;
+  margin: 0 auto; /* Center the monitor */
+  
+  /* Monitor outer plastic casing */
+  background: linear-gradient(
+    145deg,
+    var(--monitor-bezel-light) 0%,
+    var(--monitor-bezel) 20%,
+    var(--monitor-bezel-dark) 80%,
+    #000 100%
+  );
+  
+  /* Thick CRT bezel */
+  border-radius: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+  
+  /* Deep shadow for 3D depth effect */
   box-shadow:
-    0 0 40px rgba(0, 0, 0, 0.9),
-    inset 0 0 30px rgba(0, 0, 0, 0.7);
+    /* Inner glow from screen */
+    inset 0 0 100px rgba(51, 255, 51, 0.03),
+    /* Outer monitor shadow */
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 10px 30px rgba(0, 0, 0, 0.6),
+    /* Ambient glow on surface */
+    0 0 80px rgba(51, 255, 51, 0.08);
+  
+  /* Slight perspective for 3D effect */
+  transform: perspective(1000px) rotateX(1deg);
+  transform-origin: center bottom;
 }
 
-/* Terminal Window Chrome - Unified Header */
+/* Monitor ventilation slots (decorative) */
+.matrix-rpg-game::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 4px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--monitor-bezel-dark) 0px,
+    var(--monitor-bezel-dark) 8px,
+    transparent 8px,
+    transparent 12px
+  );
+  opacity: 0.6;
+  border-radius: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MONITOR HEADER (Top bezel with brand and controls)
+   ═══════════════════════════════════════════════════════════════════════════ */
 .matrix-rpg-header {
   flex-shrink: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
-  border-radius: 8px 8px 0 0;
-  border: 1px solid #333;
-  padding: 8px 12px;
-  gap: 1rem;
-  color: #00ff00;
-  font-size: 12px;
-  font-weight: bold;
-  text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
+  padding: 12px 20px;
+  background: linear-gradient(
+    180deg,
+    var(--monitor-bezel-light) 0%,
+    var(--monitor-bezel) 50%,
+    var(--monitor-bezel-dark) 100%
+  );
+  border-radius: 12px 12px 0 0;
+  border: 2px solid var(--monitor-bezel-dark);
+  border-bottom: none;
   position: relative;
+  
+  /* Subtle texture */
+  background-image: 
+    linear-gradient(
+      180deg,
+      var(--monitor-bezel-light) 0%,
+      var(--monitor-bezel) 50%,
+      var(--monitor-bezel-dark) 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.05) 2px,
+      rgba(0, 0, 0, 0.05) 4px
+    );
 }
 
-/* Window Controls */
-.matrix-rpg-header::before {
+/* Brand logo area */
+.matrix-rpg-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.matrix-rpg-brand-logo {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #888;
+  text-transform: uppercase;
+  text-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.1),
+    0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.matrix-rpg-model {
+  font-size: 10px;
+  color: #666;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+/* Monitor title display */
+.matrix-rpg-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--crt-green-dim);
+  text-shadow: 
+    0 0 10px var(--crt-phosphor-glow),
+    0 0 20px var(--crt-phosphor-glow);
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px 12px;
+  border-radius: 2px;
+  border: 1px solid rgba(51, 255, 51, 0.2);
+}
+
+/* Control panel area */
+.matrix-rpg-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Status indicator */
+.matrix-rpg-sys-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #777;
+}
+
+.matrix-rpg-node {
+  color: var(--crt-green-dim);
+  text-shadow: 0 0 5px var(--crt-phosphor-glow);
+}
+
+/* Power LED indicator */
+.matrix-rpg-power-led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--led-green);
+  box-shadow:
+    0 0 4px var(--led-green),
+    0 0 8px var(--led-green),
+    0 0 12px rgba(51, 255, 51, 0.5),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  animation: led-pulse 2s ease-in-out infinite;
+}
+
+.matrix-rpg-power-led.standby {
+  background: var(--led-red);
+  box-shadow:
+    0 0 4px var(--led-red),
+    0 0 8px rgba(255, 51, 51, 0.5),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  animation: led-blink 1s ease-in-out infinite;
+}
+
+.matrix-rpg-status {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--crt-green);
+  text-shadow: 0 0 5px var(--crt-phosphor-glow);
+  border: 1px solid rgba(51, 255, 51, 0.2);
+}
+
+.matrix-rpg-status.critical {
+  color: var(--crt-amber);
+  text-shadow: 0 0 5px rgba(255, 176, 0, 0.5);
+  border-color: rgba(255, 176, 0, 0.3);
+  animation: status-blink 0.5s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MONITOR SCREEN CONTAINER (The glass/screen area)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.matrix-rpg-container {
+  flex: 1;
+  position: relative;
+  min-height: 400px;
+  max-height: calc(100vh - 140px);
+  width: 100%;
+  overflow: hidden;
+  
+  /* Screen bezel - inner frame around the glass */
+  background: linear-gradient(
+    145deg,
+    #0c0c0c 0%,
+    #000 50%,
+    #050505 100%
+  );
+  border: 4px solid var(--monitor-bezel-dark);
+  border-radius: 8px;
+  padding: 8px;
+  box-sizing: border-box;
+  
+  /* Inner shadow for depth */
+  box-shadow:
+    inset 0 0 30px rgba(0, 0, 0, 0.9),
+    inset 0 0 60px rgba(0, 0, 0, 0.5),
+    /* Subtle screen glow */
+    inset 0 0 100px var(--crt-phosphor-glow);
+}
+
+/* CRT screen glass curvature effect */
+.matrix-rpg-container::before {
   content: '';
   position: absolute;
+  top: 8px;
   left: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
-  background: #ff5555;
-  border-radius: 50%;
-  box-shadow:
-    16px 0 0 #ffaa00,
-    32px 0 0 #00ff00;
+  right: 8px;
+  bottom: 8px;
+  border-radius: 4px;
+  background: 
+    /* Screen reflection - top left highlight */
+    radial-gradient(
+      ellipse 80% 50% at 25% 25%,
+      rgba(255, 255, 255, 0.03) 0%,
+      transparent 60%
+    ),
+    /* Screen reflection - bottom right */
+    radial-gradient(
+      ellipse 60% 40% at 75% 85%,
+      rgba(255, 255, 255, 0.015) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+  z-index: 15;
 }
 
-/* Terminal Screen with Authentic CRT Look */
+/* Animated scanline effect */
+.matrix-rpg-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 8px;
+  right: 8px;
+  height: 3px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(51, 255, 51, 0.08) 50%,
+    transparent
+  );
+  z-index: 12;
+  animation: scanline-move 6s linear infinite;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TERMINAL SCREEN (The actual display area)
+   ═══════════════════════════════════════════════════════════════════════════ */
 .matrix-rpg-terminal {
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 400px;
-  min-width: 560px;
+  min-height: 380px;
+  min-width: 500px;
   padding: 0;
   box-sizing: border-box;
-  color: #00ff00;
+  color: var(--crt-green);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
+  border-radius: 4px;
+  
+  /* CRT phosphor screen background */
   background:
-    radial-gradient(ellipse at center, #001100 0%, #000800 50%, #000400 100%),
+    /* Curved vignette for CRT curvature simulation */
+    radial-gradient(
+      ellipse 120% 120% at 50% 50%,
+      var(--screen-black) 0%,
+      #060a06 40%,
+      #030503 70%,
+      #000 100%
+    ),
+    /* Subtle phosphor texture */
     repeating-linear-gradient(
       0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 255, 0, 0.03) 2px,
-      rgba(0, 255, 0, 0.03) 4px
+      transparent 0px,
+      transparent 1px,
+      rgba(51, 255, 51, 0.008) 1px,
+      rgba(51, 255, 51, 0.008) 2px
     );
-  background-size: 100% 100%, 100% 4px;
 }
 
-/* Terminal Footer - Unified Footer */
-.matrix-rpg-footer {
-  flex-shrink: 0;
-  width: 100%;
-  text-align: center;
-  background: linear-gradient(to bottom, #1a1a1a, #0a0a0a);
-  border-radius: 0 0 8px 8px;
-  border: 1px solid #333;
-  border-top: none;
-  padding: 6px 12px;
-  box-sizing: border-box;
-  color: #00ff00;
-  font-size: 11px;
-  font-weight: 500;
-  text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
-}
-
-/* Terminal Container */
-.matrix-rpg-container {
-  flex: 1;
-  position: relative;
-  border-radius: 0 0 8px 8px;
-  overflow: hidden;
-  background: #000;
-  border: 1px solid #333;
-  border-top: none;
-  min-height: 400px;
-  max-height: calc(100vh - 120px);
-  width: 100%;
-  box-shadow:
-    inset 0 0 60px rgba(0, 0, 0, 0.8),
-    inset 0 0 20px rgba(0, 255, 0, 0.05);
-}
-
-/* Terminal Canvas Container */
+/* ═══════════════════════════════════════════════════════════════════════════
+   CANVAS CONTAINER (Where the terminal content renders)
+   ═══════════════════════════════════════════════════════════════════════════ */
 .matrix-rpg-canvas-container {
   width: 100%;
-  height: 400px;
+  height: 100%;
+  min-height: 380px;
   position: relative;
   overflow: hidden;
   cursor: text;
-  background: #000;
-  border: 2px solid #001100;
-  border-radius: 0;
-  margin: 4px;
-  padding: 8px;
-  box-sizing: border-box;
+  background: transparent;
+  border-radius: 4px;
 }
 
 .matrix-rpg-canvas-container--scrollable {
-  cursor: grab;
+  cursor: ns-resize;
 }
 
 .matrix-rpg-canvas-container:active {
   cursor: grabbing;
 }
 
+/* Canvas layers */
 .matrix-rpg-canvas {
   width: 100%;
   height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  background: transparent;
+  border-radius: 4px;
 }
 
 .matrix-rpg-canvas--main {
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
+  background: transparent;
+  image-rendering: auto;
+  z-index: 1;
 }
 
 .matrix-rpg-canvas--effects {
   pointer-events: none;
-  mix-blend-mode: screen;
+  z-index: 2;
+}
+
+/* Focus indicator for canvas */
+.matrix-rpg-canvas--main:focus {
+  outline: none;
+}
+
+.matrix-rpg-canvas--main.focused {
+  box-shadow: inset 0 0 0 2px rgba(51, 255, 51, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MONITOR FOOTER (Bottom bezel with brand info)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.matrix-rpg-footer {
+  flex-shrink: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  background: linear-gradient(
+    0deg,
+    var(--monitor-bezel-light) 0%,
+    var(--monitor-bezel) 40%,
+    var(--monitor-bezel-dark) 100%
+  );
+  border-radius: 0 0 12px 12px;
+  border: 2px solid var(--monitor-bezel-dark);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+}
+
+/* Footer brand label */
+.matrix-rpg-footer-brand {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #555;
+  text-transform: uppercase;
+  text-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.1),
+    0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Footer decorative buttons */
+.matrix-rpg-footer-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.matrix-rpg-footer-btn {
+  width: 32px;
+  height: 6px;
+  background: linear-gradient(
+    180deg,
+    var(--monitor-bezel) 0%,
+    var(--monitor-bezel-dark) 50%,
+    var(--monitor-bezel) 100%
+  );
+  border-radius: 3px;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Footer system info */
+.matrix-rpg-footer-info {
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: var(--crt-green-dim);
+  text-shadow: 0 0 5px var(--crt-phosphor-glow);
   opacity: 0.8;
 }
 
-/* Animations */
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0.3; }
+/* ═══════════════════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+@keyframes led-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
-@keyframes scanline {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
+@keyframes led-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
-/* CRT Monitor Effects */
-.matrix-rpg-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(0, 255, 0, 0.3) 50%,
-    transparent
-  );
-  z-index: 10;
-  animation: scanline 4s linear infinite;
-  pointer-events: none;
+@keyframes status-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
-.matrix-rpg-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.2) 100%),
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 0, 0, 0.1) 2px,
-      rgba(0, 0, 0, 0.1) 4px
-    );
-  pointer-events: none;
-  z-index: 8;
-  border-radius: 0 0 8px 8px;
+@keyframes scanline-move {
+  0% { top: -3px; }
+  100% { top: calc(100% + 3px); }
 }
 
-/* Title */
-.matrix-rpg-title {
-  font-weight: bold;
-  font-size: 12px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin-left: 48px;
-  color: #cccccc;
-  text-shadow: none;
+@keyframes screen-flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.8; }
+  94% { opacity: 1; }
+  96% { opacity: 0.9; }
+  97% { opacity: 1; }
 }
 
-/* System Info */
-.matrix-rpg-sys-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 11px;
-  color: #00ff00;
-  font-family: 'Courier New', monospace;
-}
-
-/* Status */
-.matrix-rpg-status {
-  animation: blink 2s infinite;
-  padding: 2px 6px;
-  background: rgba(0, 255, 0, 0.1);
-  border: 1px solid rgba(0, 255, 0, 0.3);
-  border-radius: 2px;
-}
-
-.matrix-rpg-status.critical {
-  color: #ff3333;
-  background: rgba(255, 51, 51, 0.1);
-  border-color: rgba(255, 51, 51, 0.3);
-  text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .matrix-rpg-game {
-    padding: 6px;
+@keyframes power-on {
+  0% {
+    filter: brightness(0) saturate(0);
+    transform: scaleY(0.01);
   }
-  
-  .matrix-rpg-container {
-    max-height: calc(100vh - 100px);
+  20% {
+    filter: brightness(0.3) saturate(0.5);
+    transform: scaleY(0.01);
+  }
+  40% {
+    filter: brightness(0.5) saturate(0.8);
+    transform: scaleY(1);
+  }
+  60% {
+    filter: brightness(1.5) saturate(1.2);
+  }
+  100% {
+    filter: brightness(1) saturate(1);
   }
 }
 
-@media (max-width: 768px) {
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 720px) {
   .matrix-rpg-game {
-    padding: 4px;
-    border-radius: 8px;
+    width: 100%;
+    min-width: 320px;
+    max-width: 100%;
+    height: auto;
+    min-height: 500px;
+    padding: 12px;
+    border-radius: 12px;
+    transform: none;
   }
   
   .matrix-rpg-header {
-    padding: 6px 8px;
-    font-size: 10px;
+    padding: 10px 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .matrix-rpg-brand {
+    display: none;
   }
   
   .matrix-rpg-title {
-    font-size: 10px;
-    margin-left: 40px;
+    font-size: 9px;
+    padding: 3px 8px;
   }
   
-  .matrix-rpg-header::before {
-    width: 8px;
-    height: 8px;
-    box-shadow:
-      12px 0 0 #ffaa00,
-      24px 0 0 #00ff00;
+  .matrix-rpg-footer {
+    padding: 10px 16px;
   }
-}
-
-@media (max-width: 640px) {
-  .matrix-rpg-canvas-container {
-    margin: 2px;
-    padding: 4px;
+  
+  .matrix-rpg-footer-buttons {
+    display: none;
   }
   
   .matrix-rpg-container {
-    min-height: 300px;
-    max-height: calc(100vh - 80px);
+    border-width: 3px;
+    padding: 6px;
+    min-height: 350px;
+  }
+  
+  .matrix-rpg-terminal {
+    min-height: 330px;
+    min-width: 280px;
   }
 }
 
-/* High contrast mode support */
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════════════════════════════════════════════ */
 @media (prefers-contrast: high) {
   .matrix-rpg-terminal {
     background: #000;
   }
-
-  .matrix-rpg-header {
+  
+  .matrix-rpg-header,
+  .matrix-rpg-footer {
     background: #000;
-    border-color: #00ff00;
+    border-color: var(--crt-green);
   }
   
   .matrix-rpg-game {
-    border-color: #00ff00;
+    border: 2px solid var(--crt-green);
   }
 }
 
-/* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  .matrix-rpg-container::before {
+  .matrix-rpg-container::after,
+  .matrix-rpg-power-led,
+  .matrix-rpg-status.critical {
     animation: none;
   }
   
-  .matrix-rpg-status {
-    animation: none;
+  .matrix-rpg-power-led {
+    opacity: 1;
   }
 }

@@ -79,14 +79,29 @@ const Projects: React.FC = () => {
                 onClearAllTags={clearAllTags}
             />
 
+            {/* Results info */}
+            {(searchTerm || selectedTags.length > 0) && (
+                <div className="projects__results-info">
+                    <span className="projects__results-count">
+                        {filteredProjects.length} {filteredProjects.length === 1 ? 'project' : 'projects'} found
+                    </span>
+                    {filteredProjects.length === 0 && (
+                        <p className="projects__no-results">
+                            No projects match your current filters. Try adjusting your search or clearing some tags.
+                        </p>
+                    )}
+                </div>
+            )}
+
             <div className="projects__cards">
                 {filteredProjects.map((project, index) => (
                     <ProjectCard
-                        key={index}
+                        key={project.title}
                         project={project}
                         onCardClick={openProjectModal}
                         onTagClick={handleTagClick}
                         selectedTags={selectedTags}
+                        index={index}
                     />
                 ))}
             </div>

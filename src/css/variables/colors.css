@@ -1,112 +1,125 @@
-/* colors.css */
+/* colors.css - shadcn/ui inspired design tokens */
 :root {
-    /* Color Palette System - Each color has a complete range of shades */
-    --gray-50: #f9fafb;
-    --gray-100: #f3f4f6;
-    --gray-200: #e5e7eb;
-    --gray-300: #d1d5db;
-    --gray-400: #9ca3af;
-    --gray-500: #6b7280;
-    --gray-600: #4b5563;
-    --gray-700: #374151;
-    --gray-800: #1f2937;
-    --gray-900: #111827;
-    --gray-950: #030712;
+    /* ===== Raw Color Palette (HSL) ===== */
+    /* Zinc scale - shadcn/ui default neutral */
+    --gray-50: hsl(0 0% 98%);
+    --gray-100: hsl(240 5% 96%);
+    --gray-200: hsl(240 6% 90%);
+    --gray-300: hsl(240 5% 84%);
+    --gray-400: hsl(240 5% 65%);
+    --gray-500: hsl(240 4% 46%);
+    --gray-600: hsl(240 5% 34%);
+    --gray-700: hsl(240 5% 26%);
+    --gray-800: hsl(240 4% 16%);
+    --gray-900: hsl(240 6% 10%);
+    --gray-950: hsl(240 10% 4%);
 
-    /* Indigo color palette (accent) */
-    --indigo-50: #eef2ff;
-    --indigo-100: #e0e7ff;
-    --indigo-200: #c7d2fe;
-    --indigo-300: #a5b4fc;
-    --indigo-400: #818cf8;
-    --indigo-500: #6366f1;
-    --indigo-600: #4f46e5;
-    --indigo-700: #4338ca;
-    --indigo-800: #3730a3;
-    --indigo-900: #312e81;
-    --indigo-950: #1e1b4b;
+    /* Primary color palette - Indigo */
+    --indigo-50: hsl(226 100% 97%);
+    --indigo-100: hsl(226 100% 94%);
+    --indigo-200: hsl(228 96% 89%);
+    --indigo-300: hsl(230 94% 82%);
+    --indigo-400: hsl(234 89% 74%);
+    --indigo-500: hsl(239 84% 67%);
+    --indigo-600: hsl(243 75% 59%);
+    --indigo-700: hsl(245 58% 51%);
+    --indigo-800: hsl(244 47% 43%);
+    --indigo-900: hsl(242 47% 34%);
+    --indigo-950: hsl(244 47% 20%);
 
-    /* Status Colors Palettes */
-    /* Blue (Info) */
-    --blue-300: #93c5fd;
-    --blue-400: #60a5fa;
-    --blue-500: #3b82f6;
-    --blue-600: #2563eb;
-    --blue-700: #1d4ed8;
+    /* Status Colors */
+    --blue-300: hsl(212 96% 78%);
+    --blue-400: hsl(213 94% 68%);
+    --blue-500: hsl(217 91% 60%);
+    --blue-600: hsl(221 83% 53%);
+    --blue-700: hsl(224 76% 48%);
     
-    /* Green (Success) */
-    --green-300: #86efac;
-    --green-400: #4ade80;
-    --green-500: #22c55e;
-    --green-600: #16a34a;
-    --green-700: #15803d;
+    --green-300: hsl(142 77% 73%);
+    --green-400: hsl(142 69% 58%);
+    --green-500: hsl(142 71% 45%);
+    --green-600: hsl(142 76% 36%);
+    --green-700: hsl(142 72% 29%);
     
-    /* Red (Error) */
-    --red-300: #fca5a5;
-    --red-400: #f87171;
-    --red-500: #ef4444;
-    --red-600: #dc2626;
-    --red-700: #b91c1c;
+    --red-300: hsl(0 94% 82%);
+    --red-400: hsl(0 91% 71%);
+    --red-500: hsl(0 84% 60%);
+    --red-600: hsl(0 72% 51%);
+    --red-700: hsl(0 74% 42%);
     
-    /* Amber (Warning) */
-    --amber-300: #fcd34d;
-    --amber-400: #fbbf24;
-    --amber-500: #f59e0b;
-    --amber-600: #d97706;
-    --amber-700: #b45309;
+    --amber-300: hsl(46 97% 65%);
+    --amber-400: hsl(43 96% 56%);
+    --amber-500: hsl(38 92% 50%);
+    --amber-600: hsl(32 95% 44%);
+    --amber-700: hsl(26 90% 37%);
 
-    /* Theme variables - mapped to color palette */
-    
-    /* Primary Background Colors */
-    --background-color-website: var(--gray-950); /* Deeper black for website background */
-    --background-color-primary: var(--gray-900); /* Slightly lighter black for primary containers */
-    --background-color-secondary: var(--gray-800); /* Dark gray for secondary elements */
-    --background-color-tertiary: var(--gray-700); /* Slightly lighter for tertiary elements */
-    --background-color-hover: var(--gray-600); /* Subtle hover state */
-    --background-color-focus: var(--gray-500); /* Subtle focus state */
-    --background-color-disable: var(--gray-800); /* Darker for disabled elements */
-    --background-color-header: var(--gray-900); /* Specific color for header background */
+    /* ===== shadcn/ui Semantic Design Tokens (Dark Theme) ===== */
+
+    /* Backgrounds */
+    --background-color-website: var(--gray-950);
+    --background-color-primary: var(--gray-900);
+    --background-color-secondary: var(--gray-800);
+    --background-color-tertiary: var(--gray-700);
+    --background-color-hover: hsl(240 4% 16% / 0.8);
+    --background-color-focus: var(--gray-800);
+    --background-color-disable: var(--gray-800);
+    --background-color-header: var(--gray-900);
+
+    /* Card (shadcn card token) */
+    --card: var(--gray-900);
+    --card-foreground: var(--gray-50);
+
+    /* Muted (shadcn muted token) */
+    --muted: var(--gray-800);
+    --muted-foreground: var(--gray-400);
 
     /* Text Colors */
-    --text-color: var(--gray-50); /* Slightly off-white for better eye comfort */
-    --text-color-secondary: var(--gray-400); /* Medium gray for secondary text */
-    --text-color-tertiary: var(--gray-500); /* Darker gray for less emphasis */
-    --text-color-placeholder: var(--gray-600); /* Darker gray for placeholders */
-    --text-color-header: var(--gray-50); /* Specific color for header text */
+    --text-color: var(--gray-50);
+    --text-color-secondary: var(--gray-400);
+    --text-color-tertiary: var(--gray-500);
+    --text-color-placeholder: var(--gray-600);
+    --text-color-header: var(--gray-50);
 
-    /* Border Colors */
-    --border-color: var(--gray-600); /* Dark gray for borders */
-    --border-color-lighter: var(--gray-500); /* Slightly lighter for emphasis */
-    --border-color-header: var(--gray-600); /* Specific color for header borders */
+    /* Border Colors - shadcn uses very subtle borders */
+    --border-color: hsl(240 4% 16%);
+    --border-color-lighter: hsl(240 5% 26%);
+    --border-color-header: hsl(240 4% 16%);
 
-    /* Accent Colors (Improved palette with better contrast) */
-    --accent-color: var(--indigo-500); /* Brighter indigo for better visibility */
-    --accent-color-hover: var(--indigo-600); /* Darker indigo for hover states */
-    --accent-color-secondary: var(--indigo-400); /* Lighter indigo for secondary elements */
-    --accent-color-muted: var(--indigo-700); /* Muted indigo for subtle accents */
+    /* Primary (shadcn primary) */
+    --accent-color: var(--indigo-500);
+    --accent-color-hover: var(--indigo-600);
+    --accent-color-secondary: var(--indigo-400);
+    --accent-color-muted: hsl(243 75% 59% / 0.15);
+    --accent-glow-color: hsl(239 84% 67% / 0.1);
 
-    /* Status Message Colors (improved contrast for better readability) */
-    --color-messages-info: var(--blue-500); /* Brighter info blue */
-    --color-messages-success: var(--green-500); /* Brighter success green */
-    --color-messages-error: var(--red-500); /* Brighter error red */
-    --color-messages-warning: var(--amber-500); /* Brighter warning amber */
+    /* Ring (shadcn) */
+    --ring: var(--indigo-500);
+
+    /* Status Message Colors */
+    --color-messages-info: var(--blue-500);
+    --color-messages-success: var(--green-500);
+    --color-messages-error: var(--red-500);
+    --color-messages-warning: var(--amber-500);
+
+    /* Destructive (shadcn) */
+    --destructive: var(--red-600);
+    --destructive-foreground: var(--gray-50);
 
     /* Miscellaneous Colors */
-    --color-dark: var(--gray-950); /* Very dark for special cases */
-    --color-hover-secondary: var(--gray-800); /* Alternative hover state */
-    --color-footer: var(--gray-950); /* Match website background for footer */
-    --color-brighter: #ffffff; /* Pure white for high contrast elements */
+    --color-dark: var(--gray-950);
+    --color-hover-secondary: var(--gray-800);
+    --color-footer: var(--gray-950);
+    --color-brighter: #ffffff;
 
-    /* Transparency */
-    --background-transparency-standard: rgba(0, 0, 0, 0.6);
-    --background-transparency-light: rgba(0, 0, 0, 0.3);
-    --background-transparency-dark: rgba(0, 0, 0, 0.8);
+    /* Transparency - subtle frosted glass */
+    --background-transparency-standard: hsl(240 10% 4% / 0.6);
+    --background-transparency-light: hsl(240 10% 4% / 0.3);
+    --background-transparency-dark: hsl(240 10% 4% / 0.85);
     --background-transparency: var(--background-transparency-dark);
 
-    /* Header-specific transparency */
-    --header-transparency: rgba(26, 26, 26, 0.95); /* Semi-transparent header background */
+    /* Header transparency */
+    --header-transparency: hsl(240 6% 10% / 0.8);
     
-    /* Light theme variables - for future theme switching */
+    /* Light theme variables */
     --light-background-color-website: var(--gray-50);
     --light-background-color-primary: var(--gray-100);
     --light-background-color-secondary: var(--gray-200);

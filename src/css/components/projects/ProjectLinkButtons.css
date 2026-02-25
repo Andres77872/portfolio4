@@ -1,108 +1,137 @@
-/* ProjectLinkButtons.css - Styling for project link buttons */
+/* ============================================
+   ProjectLinkButtons – shadcn/ui inspired
+   ============================================ */
 
 .project-link-buttons {
   display: flex;
-  gap: var(--space-sm);
   flex-wrap: wrap;
-  margin: var(--space-md) ;
+  gap: 0.5rem;
+  align-items: center;
 }
 
-/* Base button styles */
+/* ---- Base button ---- */
 .project-link-button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: var(--border-radius-small);
-  font-size: var(--font-size-sm);
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  color: #fff;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  border: 1px solid hsl(0 0% 100% / 0.08);
+  border-radius: var(--radius-md, 0.5rem);
+  background: hsl(0 0% 100% / 0.06);
+  color: var(--text-color-secondary, hsl(0 0% 72%));
   text-decoration: none;
-  transition: all 0.2s ease;
-  border: none;
   cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
-.project-link-buttons a:hover {
-  color: white;
+.project-link-button svg {
+  width: 0.95em;
+  height: 0.95em;
+  flex-shrink: 0;
+  fill: currentColor;
 }
 
+/* ---- Shared hover ---- */
+.project-link-buttons a:hover,
+.project-link-button:hover {
+  transform: translateY(-1px);
+}
 
-/* GitHub button with dark theme */
+/* ---- GitHub variant ---- */
 .project-link-button--github {
-  background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  background: hsl(0 0% 100% / 0.06);
+  border-color: hsl(0 0% 100% / 0.1);
+  color: var(--text-color-secondary, hsl(0 0% 72%));
 }
 
 .project-link-button--github:hover {
-  background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  background: hsl(0 0% 100% / 0.12);
+  border-color: hsl(0 0% 100% / 0.18);
+  color: hsl(0 0% 92%);
 }
 
-/* API button with blue theme */
+/* ---- API variant ---- */
 .project-link-button--api {
-  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+  background: hsl(217 60% 50% / 0.12);
+  border-color: hsl(217 60% 50% / 0.18);
+  color: hsl(213 80% 72%);
 }
 
 .project-link-button--api:hover {
-  background: linear-gradient(135deg, #45a8eb 0%, #3990c9 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+  background: hsl(217 60% 50% / 0.22);
+  border-color: hsl(217 60% 50% / 0.32);
+  color: hsl(213 85% 80%);
 }
 
-/* Live Site button with green theme */
+/* ---- Live variant ---- */
 .project-link-button--live {
-  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-  box-shadow: 0 2px 4px rgba(46, 204, 113, 0.3);
+  background: hsl(142 50% 45% / 0.12);
+  border-color: hsl(142 50% 45% / 0.18);
+  color: hsl(142 60% 68%);
 }
 
 .project-link-button--live:hover {
-  background: linear-gradient(135deg, #3edc81 0%, #37be70 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(46, 204, 113, 0.4);
+  background: hsl(142 50% 45% / 0.22);
+  border-color: hsl(142 50% 45% / 0.32);
+  color: hsl(142 65% 76%);
 }
 
-/* Button icon styling */
-.project-link-button svg {
-  width: 14px;
-  height: 14px;
-}
-
-/* Active state for all buttons */
+/* ---- Active ---- */
 .project-link-button:active {
   transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  filter: brightness(0.92);
 }
 
-/* Focus state for accessibility */
+/* ---- Focus ring (shadcn-style) ---- */
 .project-link-button:focus {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow:
+    0 0 0 2px hsl(0 0% 7%),
+    0 0 0 4px hsl(217 60% 55% / 0.55);
 }
 
-/* Responsive adjustments */
-@media screen and (max-width: 768px) {
+/* ---- Compact variant ---- */
+.project-link-buttons--compact .project-link-button {
+  padding: 0.3rem 0.65rem;
+  font-size: 0.72rem;
+  gap: 0.3rem;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .project-link-buttons {
+    gap: 0.4rem;
+  }
+
   .project-link-button {
-    padding: 6px 10px;
-    font-size: calc(var(--font-size-sm) - 1px);
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
   }
 }
 
-/* Compact mode for smaller containers */
-.project-link-buttons--compact .project-link-button {
-  padding: 5px 8px;
-  font-size: calc(var(--font-size-sm) - 2px);
-}
-
-/* Remove animation for users who prefer reduced motion */
+/* ---- Reduced motion ---- */
 @media (prefers-reduced-motion: reduce) {
   .project-link-button {
     transition: none;
   }
-  
+
+  .project-link-buttons a:hover,
   .project-link-button:hover {
+    transform: none;
+  }
+
+  .project-link-button:active {
     transform: none;
   }
 }

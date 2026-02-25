@@ -12,43 +12,53 @@ const SYSTEM_INFO = {
   KERNEL: 'Neural-Core 5.14.0-matrix',
   CPU: 'Quantum Processing Unit (QPU) x8',
   MEMORY: '128GB Neural RAM',
-  HOSTNAME: 'matrix-terminal-node-37912',
+  HOSTNAME: 'nxterm-37912',
   USER: 'root',
   SHELL: '/bin/neurosh'
 };
 
-// Terminal boot sequence
+// Terminal boot sequence - authentic POST/boot style
 const BOOT_SEQUENCE = [
-  '[ OK ] Starting Synaptic Innovations Neural Interface...',
-  '[ OK ] Mounting quantum filesystem...',
-  '[ OK ] Loading neural network drivers...',
-  '[ OK ] Initializing consciousness simulation...',
-  '[ OK ] Starting memory fragmentation service...',
-  '[ OK ] Enabling neural cortex bridge...',
-  '[ OK ] Loading Project MIRROR protocols...',
-  '[ WARN ] Memory integrity check failed',
-  '[ ERROR ] Consciousness transfer incomplete',
-  '[ INFO ] Switching to emergency neural mode...',
+  '',
+  '╔════════════════════════════════════════════════════╗',
+  '║  SYNAPTIC INNOVATIONS NX-3700 Terminal             ║',
+  '║  BIOS v2.4.1 - Quantum Core Ready                  ║',
+  '╚════════════════════════════════════════════════════╝',
+  '',
+  'POST: Neural Memory Test......... 131072 KB OK',
+  'POST: Quantum Processor Check.... QPU x8 Online',
+  '',
+  '[ OK ] Loading SYNAPTIC-OS kernel...',
+  '[ OK ] Mounting quantum filesystem /dev/qfs0',
+  '[ OK ] Starting neural network subsystem',
+  '[ OK ] Initializing consciousness simulation',
+  '[ OK ] Loading synaptic drivers',
+  '[ WARN ] Memory integrity: fragmented sectors',
+  '[ OK ] Enabling neural cortex bridge',
+  '[ OK ] Starting Project MIRROR daemon',
+  '[ ERROR ] Consciousness transfer: connection lost',
+  '[ INFO ] Engaging emergency neural mode...',
   ''
 ];
 
 // Terminal welcome message
 const WELCOME_MESSAGE = `
-Welcome to ${SYSTEM_INFO.OS}
-${SYSTEM_INFO.HOSTNAME} - ${SYSTEM_INFO.USER}@${SYSTEM_INFO.HOSTNAME}
-Last login: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}
+┌────────────────────────────────────────────────────┐
+│ Welcome to ${SYSTEM_INFO.OS}                      │
+│ ${SYSTEM_INFO.HOSTNAME} • Session Active                      │
+└────────────────────────────────────────────────────┘
 
-System Information:
-- OS: ${SYSTEM_INFO.OS}
-- Kernel: ${SYSTEM_INFO.KERNEL}
-- CPU: ${SYSTEM_INFO.CPU}
-- Memory: ${SYSTEM_INFO.MEMORY}
-- Shell: ${SYSTEM_INFO.SHELL}
+System Status:
+  Kernel........... ${SYSTEM_INFO.KERNEL}
+  Processor........ ${SYSTEM_INFO.CPU}
+  Memory........... ${SYSTEM_INFO.MEMORY}
+  Shell............ ${SYSTEM_INFO.SHELL}
 
 WARNING: Neural interface unstable. Memory fragments detected.
-Project MIRROR status: DISCONNECTED
-Subject consciousness: UNKNOWN
+WARNING: Project MIRROR status: DISCONNECTED
+WARNING: Subject consciousness: UNKNOWN
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Type 'help' for available commands or just start talking...
 `;
 
@@ -58,55 +68,7 @@ const COMMAND_PROMPT = `${SYSTEM_INFO.USER}@${SYSTEM_INFO.HOSTNAME}:~$ `;
 // Terminal special characters
 const CURSOR_CHAR = '█';
 
-// Text wrapping utility for streaming content
-const wrapText = (text: string, maxWidth: number = 75): string[] => {
-  const words = text.split(' ');
-  const lines: string[] = [];
-  let currentLine = '';
 
-  for (const word of words) {
-    // If adding this word would exceed the line length
-    if (currentLine.length + word.length + 1 > maxWidth) {
-      if (currentLine.length > 0) {
-        lines.push(currentLine);
-        currentLine = word;
-      } else {
-        // Word is longer than max width, force break
-        lines.push(word);
-        currentLine = '';
-      }
-    } else {
-      currentLine += (currentLine.length > 0 ? ' ' : '') + word;
-    }
-  }
-
-  if (currentLine.length > 0) {
-    lines.push(currentLine);
-  }
-
-  return lines;
-};
-
-// Format wrapped text for terminal display with canvas width consideration
-const formatWrappedText = (text: string, prefix: string = '', canvasWidth: number = 800): string => {
-  // Calculate character width based on canvas width minus 30px for margins
-  const availableWidth = canvasWidth - 30;
-  // Approximate character width for monospace font (14px)
-  const charWidth = 8.4;
-  const maxChars = Math.floor(availableWidth / charWidth);
-
-  // Reserve space for the prefix
-  const textMaxWidth = Math.max(30, maxChars - prefix.length);
-
-  const wrappedLines = wrapText(text, textMaxWidth);
-  return wrappedLines.map((line, index) => {
-    if (index === 0) {
-      return prefix + line;
-    } else {
-      return ' '.repeat(prefix.length) + line;
-    }
-  }).join('\n');
-};
 
 export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
   const [gameState, setGameState] = useState<GameState>('initializing');
@@ -177,15 +139,15 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
             }, 2000);
           }, 1000);
         }
-      }, 150 + Math.random() * 200); // Realistic boot timing
+      }, 80 + Math.random() * 120); // Faster boot timing for authenticity
 
       return () => clearTimeout(timer);
     }
   }, [gameState, currentBootLine, startMysteriousMessages]);
 
-  // Initialize terminal on mount
+  // Initialize terminal on mount with CRT power-on effect
   useEffect(() => {
-    // Start boot sequence
+    // Start boot sequence after brief CRT warmup
     const timer = setTimeout(() => {
       setGameState('loading');
       setTerminalOutput('Initializing Synaptic Neural Interface...\n\n');
@@ -227,14 +189,18 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
     // Handle terminal commands
     if (userInput.toLowerCase() === 'help') {
       setTerminalOutput(prev => prev +
-        'Available commands:\n' +
-        '  help     - Show this help message\n' +
-        '  clear    - Clear terminal screen\n' +
-        '  whoami   - Display current user\n' +
-        '  ps       - Show running processes\n' +
-        '  status   - Show system status\n' +
-        '  exit     - Exit terminal\n\n' +
-        'Or just type anything to talk with the unknown entity...\n\n' +
+        '\n┌─────────────────────────────────────────────────────────────────┐\n' +
+        '│ AVAILABLE COMMANDS                                              │\n' +
+        '├─────────────────────────────────────────────────────────────────┤\n' +
+        '│  help     Display this help menu                                │\n' +
+        '│  clear    Clear terminal screen                                 │\n' +
+        '│  whoami   Display current user information                      │\n' +
+        '│  ps       List running neural processes                         │\n' +
+        '│  status   Show system status report                             │\n' +
+        '│  exit     Terminate neural session                              │\n' +
+        '├─────────────────────────────────────────────────────────────────┤\n' +
+        '│  Or type anything to communicate with the unknown entity...     │\n' +
+        '└─────────────────────────────────────────────────────────────────┘\n\n' +
         COMMAND_PROMPT
       );
       setUserInput('');
@@ -249,9 +215,12 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
 
     if (userInput.toLowerCase() === 'whoami') {
       setTerminalOutput(prev => prev +
-        `${SYSTEM_INFO.USER}\n` +
-        `Current session: Neural Interface Terminal\n` +
-        `Access level: ROOT (Emergency Protocol)\n\n` +
+        '\n' +
+        `User.......... ${SYSTEM_INFO.USER}\n` +
+        `Session....... Neural Interface Terminal\n` +
+        `Access........ ROOT (Emergency Protocol)\n` +
+        `UID........... 0\n` +
+        `Groups........ root, neural, mirror, cortex\n\n` +
         COMMAND_PROMPT
       );
       setUserInput('');
@@ -260,13 +229,14 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
 
     if (userInput.toLowerCase() === 'ps') {
       setTerminalOutput(prev => prev +
-        'PID  COMMAND\n' +
-        '1    /init\n' +
-        '127  neural-cortex-bridge\n' +
-        '256  memory-fragment-scanner\n' +
-        '512  consciousness-monitor\n' +
-        '1024 project-mirror-daemon\n' +
-        '2048 unknown-entity-handler\n\n' +
+        '\n  PID  TTY      STAT   TIME COMMAND\n' +
+        '    1  ?        Ss     0:03 /sbin/init --neural\n' +
+        '  127  tty1     S      0:15 neural-cortex-bridge -d\n' +
+        '  256  ?        S      2:41 memory-fragment-scanner --deep\n' +
+        '  512  ?        R     12:33 consciousness-monitor --watch\n' +
+        ' 1024  ?        Sl    45:21 project-mirror-daemon\n' +
+        ' 2048  pts/0    S+     8:17 unknown-entity-handler\n' +
+        ' 3072  pts/0    R+     0:00 ps aux\n\n' +
         COMMAND_PROMPT
       );
       setUserInput('');
@@ -275,13 +245,16 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
 
     if (userInput.toLowerCase() === 'status') {
       setTerminalOutput(prev => prev +
-        'System Status:\n' +
-        '- Neural Interface: UNSTABLE\n' +
-        '- Memory Integrity: 23%\n' +
-        '- Consciousness Transfer: FAILED\n' +
-        '- Project MIRROR: DISCONNECTED\n' +
-        '- Unknown Entity: ACTIVE\n' +
-        '- Emergency Protocol: ENGAGED\n\n' +
+        '\n┌─ SYSTEM STATUS REPORT ──────────────────────────────────────────┐\n' +
+        '│                                                                 │\n' +
+        '│  Neural Interface............ ████████░░░░ UNSTABLE (67%)       │\n' +
+        '│  Memory Integrity............ ██░░░░░░░░░░ CRITICAL (23%)       │\n' +
+        '│  Consciousness Transfer...... ░░░░░░░░░░░░ FAILED               │\n' +
+        '│  Project MIRROR.............. ░░░░░░░░░░░░ DISCONNECTED         │\n' +
+        '│  Unknown Entity.............. ████████████ ACTIVE               │\n' +
+        '│  Emergency Protocol.......... ████████████ ENGAGED              │\n' +
+        '│                                                                 │\n' +
+        '└─────────────────────────────────────────────────────────────────┘\n\n' +
         COMMAND_PROMPT
       );
       setUserInput('');
@@ -323,38 +296,19 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
         const chunk = new TextDecoder().decode(value);
         assistantResponse += chunk;
         
-        // Update terminal output by appending the chunk to the last line
+        // Simple update - just replace the Unknown Entity line with current response
         setTerminalOutput(prev => {
           const lines = prev.split('\n');
           const lastLineIndex = lines.length - 1;
-
-          // Find the line that starts with "Unknown Entity: " and append the chunk
-          if (lines[lastLineIndex].startsWith('Unknown Entity: ')) {
+          
+          // Update the last line if it starts with Unknown Entity
+          if (lines[lastLineIndex].startsWith('Unknown Entity:')) {
             lines[lastLineIndex] = 'Unknown Entity: ' + assistantResponse;
           }
-
+          
           return lines.join('\n');
         });
       }
-
-      // After streaming is complete, format the final response with proper wrapping
-      setTerminalOutput(prev => {
-        const lines = prev.split('\n');
-
-        // Find the last "Unknown Entity: " line and replace it with properly wrapped version
-        for (let i = lines.length - 1; i >= 0; i--) {
-          if (lines[i].startsWith('Unknown Entity: ')) {
-            // Get actual canvas width (canvas width minus 30px for margins)
-            const canvasElement = document.querySelector('.matrix-rpg-canvas--main') as HTMLCanvasElement;
-            const actualCanvasWidth = canvasElement ? canvasElement.clientWidth : 800;
-            const wrappedResponse = formatWrappedText(assistantResponse, 'Unknown Entity: ', actualCanvasWidth);
-            lines.splice(i, 1, ...wrappedResponse.split('\n'));
-            break;
-          }
-        }
-
-        return lines.join('\n');
-      });
 
       // Add assistant's response to conversation history
       const assistantMessage: Message = {

@@ -8,39 +8,46 @@ export default function MatrixRPGHeader({ gameState }: Props) {
   const getStatusText = () => {
     switch (gameState) {
       case 'initializing':
-        return 'INITIALIZING';
+        return 'INIT';
       case 'loading':
-        return 'LOADING';
+        return 'BOOT';
       case 'ready':
         return 'READY';
       case 'interactive':
-        return 'ACTIVE';
+        return 'ONLINE';
       default:
-        return 'STANDBY';
+        return 'IDLE';
     }
   };
 
-  const getStatusClass = () => {
-    switch (gameState) {
-      case 'ready':
-      case 'interactive':
-        return 'critical';
-      default:
-        return '';
-    }
-  };
+  const isActive = gameState === 'ready' || gameState === 'interactive';
+  const isLoading = gameState === 'initializing' || gameState === 'loading';
 
   return (
     <div className="matrix-rpg-header">
-      <div className="matrix-rpg-title">
-        SYNAPTIC NEURAL INTERFACE - PROJECT MIRROR
+      {/* Brand/Logo section - mimics vintage monitor branding */}
+      <div className="matrix-rpg-brand">
+        <span className="matrix-rpg-brand-logo">SYNAPTIC</span>
+        <span className="matrix-rpg-model">NX-3700</span>
       </div>
 
-      <div className="matrix-rpg-sys-info">
-        <span>NODE-37912</span>
-        <span className={`matrix-rpg-status ${getStatusClass()}`}>
-          {getStatusText()}
-        </span>
+      {/* Center display - digital readout style */}
+      <div className="matrix-rpg-title">
+        NEURAL INTERFACE • PROJECT MIRROR
+      </div>
+
+      {/* Control panel section */}
+      <div className="matrix-rpg-controls">
+        <div className="matrix-rpg-sys-info">
+          <span className="matrix-rpg-node">SYS.37912</span>
+          <div 
+            className={`matrix-rpg-power-led ${isLoading ? 'standby' : ''}`}
+            title={isActive ? 'System Online' : 'Initializing...'}
+          />
+          <span className={`matrix-rpg-status ${isActive ? 'critical' : ''}`}>
+            {getStatusText()}
+          </span>
+        </div>
       </div>
     </div>
   );

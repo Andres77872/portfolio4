@@ -1,76 +1,153 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import './NeuralNexus.css';
+import { Node, Particle, ScorePopup, DEFAULT_SETTINGS, CanvasProps } from './types';
 
-// Type definitions
-interface AINode {
-  x: number;
-  y: number;
-  z: number;
-  vx: number;
-  vy: number;
-  vz: number;
-  radius: number;
-  connections: number[];
-  activity: number;
-  pulse: number;
-  type: 'input' | 'hidden' | 'output';
-  isScoring: boolean; // New: tracks if node is contributing to score
+// Game state interface
+interface GameState {
+  score: number;
+  highScore: number;
+  combo: number;
+  maxCombo: number;
+  level: number;
+  timeElapsed: number;
+  isActive: boolean;
+  isPaused: boolean;
+  nodesInZone: number;
 }
 
-interface AIParticle {
-  x: number;
-  y: number;
-  z: number;
-  vx: number;
-  vy: number;
-  vz: number;
-  life: number;
-  size: number;
-  type: number;
-}
-
-interface AICanvasProps {
-  className?: string;
-  width?: number;
-  height?: number;
-}
-
-// Game constants
-const GAME_SETTINGS = {
-  ATTRACTION_RANGE: 120,    // Distance within which nodes are attracted to cursor
-  REPULSION_RANGE: 35,      // Distance within which nodes are repelled from cursor
-  DANGER_ZONE: 25,          // Distance that counts as "touching" the cursor
-  SCORING_RANGE: 80,        // Distance within which nodes contribute to score
-  ATTRACTION_FORCE: 0.015,  // Force of attraction
-  REPULSION_FORCE: 0.08,    // Force of repulsion (stronger to prevent touching)
-  REJECTION_RANGE: 200,     // Distance beyond which nodes are rejected
-  REJECTION_FORCE: 0.005,   // Force of rejection when too far
-  RANDOM_MOVEMENT: 0.0015,  // Force of random movement
-  EDGE_REPULSION: 0.002,    // Base force to maximize edge distances
-  EDGE_MIN_DISTANCE: 50,    // Distance at which max repulsion is applied
-  EDGE_MAX_DISTANCE: 200,   // Distance at which min repulsion is applied
-  OUTSIDE_BOOST: 2.5,       // Boost factor for separation when outside cursor areas
-  MAX_VELOCITY: 0.6,        // Maximum velocity for nodes
-  MIN_VELOCITY: 0.05,       // Minimum velocity for nodes
-  VELOCITY_DECAY: 0.98      // Velocity decay factor for smooth movement
-};
-
-export default function NeuralNexus({ className = '', width, height }: AICanvasProps) {
+export default function NeuralNexus({ className = '', width, height }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
-  const mouseRef = useRef({ x: -1000, y: -1000 }); // Start off-screen
-  const nodesRef = useRef<AINode[]>([]);
-  const particlesRef = useRef<AIParticle[]>([]);
+  const mouseRef = useRef({ x: -1000, y: -1000 });
+  const nodesRef = useRef<Node[]>([]);
+  const particlesRef = useRef<Particle[]>([]);
+  const scorePopupsRef = useRef<ScorePopup[]>([]);
+  const lastScoreTimeRef = useRef(0);
+  const isActiveRef = useRef(false);
+  const isPausedRef = useRef(false);
+  const settings = DEFAULT_SETTINGS;
   
   // Game state
-  const [score, setScore] = useState(0);
-  const [highScore, setHighScore] = useState(() => {
-    const saved = localStorage.getItem('aiCanvasHighScore');
-    return saved ? parseInt(saved, 10) : 0;
+  const [gameState, setGameState] = useState<GameState>({
+    score: 0,
+    highScore: parseInt(localStorage.getItem('neuralNexusHighScore') || '0', 10),
+    combo: 0,
+    maxCombo: parseInt(localStorage.getItem('neuralNexusMaxCombo') || '0', 10),
+    level: 1,
+    timeElapsed: 0,
+    isActive: false,
+    isPaused: false,
+    nodesInZone: 0,
   });
-  const [gameTime, setGameTime] = useState(0);
-  const [isGameActive, setIsGameActive] = useState(false);
 
+  const [showTutorial, setShowTutorial] = useState(true);
+
+  // Sync refs so the animation loop reads latest values without re-running the effect
+  useEffect(() => { isActiveRef.current = gameState.isActive; }, [gameState.isActive]);
+  useEffect(() => { isPausedRef.current = gameState.isPaused; }, [gameState.isPaused]);
+
+  // Initialize nodes
+  const initNodes = useCallback((canvasWidth: number, canvasHeight: number) => {
+    nodesRef.current = Array.from({ length: settings.NODE_COUNT }, (_, i) => ({
+      id: i,
+      x: Math.random() * canvasWidth,
+      y: Math.random() * canvasHeight,
+      z: Math.random() * 100,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      vz: (Math.random() - 0.5) * 0.2,
+      radius: Math.random() * 4 + 3,
+      connections: [],
+      activity: 0,
+      pulse: 0,
+      type: i < 6 ? 'input' : i < 12 ? 'hidden' : 'output',
+      isScoring: false,
+      scoreMultiplier: 1,
+    }));
+
+    // Create connections
+    nodesRef.current.forEach((node, i) => {
+      nodesRef.current.forEach((_, j) => {
+        if (i !== j && Math.random() > 0.82) {
+          node.connections.push(j);
+        }
+      });
+    });
+  }, [settings.NODE_COUNT]);
+
+  // Initialize particles
+  const initParticles = useCallback((canvasWidth: number, canvasHeight: number) => {
+    particlesRef.current = Array.from({ length: settings.PARTICLE_COUNT }, () => ({
+      x: Math.random() * canvasWidth,
+      y: Math.random() * canvasHeight,
+      z: Math.random() * 50,
+      vx: (Math.random() - 0.5) * 0.2,
+      vy: (Math.random() - 0.5) * 0.2,
+      vz: (Math.random() - 0.5) * 0.1,
+      life: Math.random(),
+      size: Math.random() * 1.5 + 0.5,
+      type: 'ambient' as const,
+      color: ['rgba(99, 102, 241, 0.3)', 'rgba(168, 85, 247, 0.3)', 'rgba(34, 197, 94, 0.3)'][Math.floor(Math.random() * 3)],
+    }));
+  }, [settings.PARTICLE_COUNT]);
+
+  // Add score popup
+  const addScorePopup = useCallback((x: number, y: number, value: number) => {
+    scorePopupsRef.current.push({
+      x,
+      y,
+      value,
+      life: 1,
+      vy: -1.5,
+    });
+  }, []);
+
+  // Format time display
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Reset game
+  const resetGame = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      initNodes(canvas.offsetWidth, canvas.offsetHeight);
+      initParticles(canvas.offsetWidth, canvas.offsetHeight);
+    }
+    scorePopupsRef.current = [];
+    mouseRef.current = { x: -1000, y: -1000 };
+    setGameState(prev => ({
+      ...prev,
+      score: 0,
+      combo: 0,
+      level: 1,
+      timeElapsed: 0,
+      isActive: false,
+      isPaused: false,
+      nodesInZone: 0,
+    }));
+    setShowTutorial(true);
+  }, [initNodes, initParticles]);
+
+  // Toggle pause
+  const togglePause = useCallback(() => {
+    setGameState(prev => ({ ...prev, isPaused: !prev.isPaused }));
+  }, []);
+
+  // Game timer
+  useEffect(() => {
+    if (!gameState.isActive || gameState.isPaused) return;
+
+    const interval = setInterval(() => {
+      setGameState(prev => ({ ...prev, timeElapsed: prev.timeElapsed + 1 }));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [gameState.isActive, gameState.isPaused]);
+
+  // Main game effect
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -78,63 +155,23 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size
+    // Set canvas size — read from container, let CSS handle display size
     const resizeCanvas = () => {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * window.devicePixelRatio;
-      canvas.height = rect.height * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-      canvas.style.width = rect.width + 'px';
-      canvas.style.height = rect.height + 'px';
+      const container = canvas.parentElement;
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    const resizeObserver = new ResizeObserver(() => resizeCanvas());
+    if (canvas.parentElement) resizeObserver.observe(canvas.parentElement);
 
-    // Initialize neural network nodes
-    const initNodes = () => {
-      nodesRef.current = Array.from({ length: 15 }, (_, i) => ({
-        x: Math.random() * canvas.offsetWidth,
-        y: Math.random() * canvas.offsetHeight,
-        z: Math.random() * 100,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        vz: (Math.random() - 0.5) * 0.2,
-        radius: Math.random() * 4 + 3,
-        connections: [],
-        activity: 0,
-        pulse: 0,
-        type: i < 5 ? 'input' : i < 10 ? 'hidden' : 'output',
-        isScoring: false
-      }));
-
-      // Create fewer connections for cleaner gameplay
-      nodesRef.current.forEach((node, i) => {
-        nodesRef.current.forEach((_, j) => {
-          if (i !== j && Math.random() > 0.85) {
-            node.connections.push(j);
-          }
-        });
-      });
-    };
-
-    // Initialize AI particles
-    const initParticles = () => {
-      particlesRef.current = Array.from({ length: 20 }, () => ({
-        x: Math.random() * canvas.offsetWidth,
-        y: Math.random() * canvas.offsetHeight,
-        z: Math.random() * 50,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: (Math.random() - 0.5) * 0.2,
-        vz: (Math.random() - 0.5) * 0.1,
-        life: Math.random(),
-        size: Math.random() * 1.5 + 0.5,
-        type: Math.floor(Math.random() * 3)
-      }));
-    };
-
-    initNodes();
-    initParticles();
+    initNodes(canvas.offsetWidth, canvas.offsetHeight);
+    initParticles(canvas.offsetWidth, canvas.offsetHeight);
 
     // Mouse interaction
     const handleMouseMove = (e: MouseEvent) => {
@@ -142,8 +179,9 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
       mouseRef.current.x = e.clientX - rect.left;
       mouseRef.current.y = e.clientY - rect.top;
       
-      if (!isGameActive) {
-        setIsGameActive(true);
+      if (!isActiveRef.current) {
+        setGameState(prev => ({ ...prev, isActive: true }));
+        setShowTutorial(false);
       }
     };
 
@@ -152,166 +190,160 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
       mouseRef.current.y = -1000;
     };
 
+    // Touch support
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      mouseRef.current.x = touch.clientX - rect.left;
+      mouseRef.current.y = touch.clientY - rect.top;
+      
+      if (!isActiveRef.current) {
+        setGameState(prev => ({ ...prev, isActive: true }));
+        setShowTutorial(false);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      mouseRef.current.x = -1000;
+      mouseRef.current.y = -1000;
+    };
+
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseleave', handleMouseLeave);
-
-    // Game scoring logic
-    const updateScore = () => {
-      let currentScore = 0;
-      const mouseX = mouseRef.current.x;
-      const mouseY = mouseRef.current.y;
-      
-      if (mouseX < 0 || mouseY < 0) return; // Mouse not in canvas
-      
-      nodesRef.current.forEach(node => {
-        const dx = mouseX - node.x;
-        const dy = mouseY - node.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-        // Check if node is in scoring range but not in danger zone
-        if (distance <= GAME_SETTINGS.SCORING_RANGE && distance > GAME_SETTINGS.DANGER_ZONE) {
-          const proximity = 1 - (distance / GAME_SETTINGS.SCORING_RANGE);
-          currentScore += Math.floor(proximity * 10);
-          node.isScoring = true;
-        } else {
-          node.isScoring = false;
-        }
-      });
-      
-      setScore(currentScore);
-    };
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    canvas.addEventListener('touchend', handleTouchEnd);
 
     // Animation loop
     const animate = (time: number) => {
-      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-      
-      // Update game time
-      if (isGameActive) {
-        setGameTime(prev => prev + 1);
+      if (isPausedRef.current) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
       }
+
+      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
       
       // Create gradient background
       const gradient = ctx.createRadialGradient(
         canvas.offsetWidth / 2, canvas.offsetHeight / 2, 0,
         canvas.offsetWidth / 2, canvas.offsetHeight / 2, Math.max(canvas.offsetWidth, canvas.offsetHeight) / 2
       );
-      gradient.addColorStop(0, 'rgba(99, 102, 241, 0.05)');
-      gradient.addColorStop(0.5, 'rgba(99, 102, 241, 0.02)');
+      gradient.addColorStop(0, 'rgba(99, 102, 241, 0.08)');
+      gradient.addColorStop(0.5, 'rgba(168, 85, 247, 0.03)');
       gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
 
-      // Draw cursor zones (visual feedback)
       const mouseX = mouseRef.current.x;
       const mouseY = mouseRef.current.y;
       
+      // Draw cursor zones with enhanced visuals
       if (mouseX >= 0 && mouseY >= 0) {
-        // Danger zone (red)
+        // Outer glow
+        const outerGlow = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, settings.ATTRACTION_RANGE);
+        outerGlow.addColorStop(0, 'rgba(99, 102, 241, 0.05)');
+        outerGlow.addColorStop(1, 'rgba(99, 102, 241, 0)');
+        ctx.fillStyle = outerGlow;
         ctx.beginPath();
-        ctx.arc(mouseX, mouseY, GAME_SETTINGS.DANGER_ZONE, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+        ctx.arc(mouseX, mouseY, settings.ATTRACTION_RANGE, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = 'rgba(239, 68, 68, 0.3)';
+
+        // Scoring zone (animated)
+        const pulseScale = 1 + Math.sin(time * 0.003) * 0.05;
+        ctx.beginPath();
+        ctx.arc(mouseX, mouseY, settings.SCORING_RANGE * pulseScale, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(34, 197, 94, 0.4)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        
+        // Danger zone (pulsing)
+        const dangerPulse = 1 + Math.sin(time * 0.008) * 0.1;
+        const dangerGradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, settings.DANGER_ZONE * dangerPulse);
+        dangerGradient.addColorStop(0, 'rgba(239, 68, 68, 0.2)');
+        dangerGradient.addColorStop(0.7, 'rgba(239, 68, 68, 0.1)');
+        dangerGradient.addColorStop(1, 'rgba(239, 68, 68, 0)');
+        ctx.fillStyle = dangerGradient;
+        ctx.beginPath();
+        ctx.arc(mouseX, mouseY, settings.DANGER_ZONE * dangerPulse, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
         ctx.lineWidth = 2;
         ctx.stroke();
         
-        // Scoring zone (green)
-        ctx.beginPath();
-        ctx.arc(mouseX, mouseY, GAME_SETTINGS.SCORING_RANGE, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(34, 197, 94, 0.2)';
+        // Cursor crosshair
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
         ctx.lineWidth = 1;
-        ctx.stroke();
-        
-        // Attraction zone (blue)
         ctx.beginPath();
-        ctx.arc(mouseX, mouseY, GAME_SETTINGS.ATTRACTION_RANGE, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(99, 102, 241, 0.1)';
-        ctx.lineWidth = 1;
+        ctx.moveTo(mouseX - 8, mouseY);
+        ctx.lineTo(mouseX + 8, mouseY);
+        ctx.moveTo(mouseX, mouseY - 8);
+        ctx.lineTo(mouseX, mouseY + 8);
         ctx.stroke();
       }
 
+      // Update and track scoring nodes
+      let scoringNodesCount = 0;
+      let frameScore = 0;
+
       // Update nodes with game physics
       nodesRef.current.forEach((node, i) => {
-        // Apply random movement forces for slow, natural movement
-        node.vx += (Math.random() - 0.5) * GAME_SETTINGS.RANDOM_MOVEMENT;
-        node.vy += (Math.random() - 0.5) * GAME_SETTINGS.RANDOM_MOVEMENT;
-        node.vz += (Math.random() - 0.5) * GAME_SETTINGS.RANDOM_MOVEMENT * 0.5;
+        // Apply random movement forces
+        node.vx += (Math.random() - 0.5) * settings.RANDOM_MOVEMENT;
+        node.vy += (Math.random() - 0.5) * settings.RANDOM_MOVEMENT;
+        node.vz += (Math.random() - 0.5) * settings.RANDOM_MOVEMENT * 0.5;
         
-        // Calculate if node is inside any cursor area
         const distToCursor = mouseX >= 0 && mouseY >= 0 ? 
-          Math.sqrt((mouseX - node.x) * (mouseX - node.x) + (mouseY - node.y) * (mouseY - node.y)) : 
+          Math.sqrt((mouseX - node.x) ** 2 + (mouseY - node.y) ** 2) : 
           Infinity;
-        const insideCursorArea = distToCursor <= GAME_SETTINGS.ATTRACTION_RANGE;
+        const insideCursorArea = distToCursor <= settings.ATTRACTION_RANGE;
         
-        // Edge distance maximization - but only if outside cursor areas
+        // Edge distance maximization when outside cursor areas
         if (!insideCursorArea) {
-          // Apply stronger separation when outside cursor areas
-          const outsideBoostFactor = GAME_SETTINGS.OUTSIDE_BOOST;
-          
           nodesRef.current.forEach((otherNode, j) => {
-            // Skip self
             if (i === j) return;
             
-            // Check if these nodes are connected
             const isConnected = node.connections.includes(j) || otherNode.connections.includes(i);
             
             if (isConnected) {
-              // Calculate direction vector between nodes
               const dx = otherNode.x - node.x;
               const dy = otherNode.y - node.y;
               const dz = otherNode.z - node.z;
-              
-              // Calculate distance between nodes
               const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
               
               if (distance > 0) {
-                // Dynamic repulsion - stronger when close, weaker when far apart
-                // Clamp distance between min and max values for stable behavior
                 const clampedDistance = Math.max(
-                  GAME_SETTINGS.EDGE_MIN_DISTANCE,
-                  Math.min(distance, GAME_SETTINGS.EDGE_MAX_DISTANCE)
+                  settings.EDGE_MIN_DISTANCE,
+                  Math.min(distance, settings.EDGE_MAX_DISTANCE)
                 );
                 
-                // Calculate factor: 1.0 at min distance, approaching 0 at max distance
                 const distanceFactor = 1.0 - (
-                  (clampedDistance - GAME_SETTINGS.EDGE_MIN_DISTANCE) / 
-                  (GAME_SETTINGS.EDGE_MAX_DISTANCE - GAME_SETTINGS.EDGE_MIN_DISTANCE)
+                  (clampedDistance - settings.EDGE_MIN_DISTANCE) / 
+                  (settings.EDGE_MAX_DISTANCE - settings.EDGE_MIN_DISTANCE)
                 );
                 
-                // Apply repulsion force that's inversely proportional to distance
-                const force = GAME_SETTINGS.EDGE_REPULSION * 
-                              distanceFactor * 
-                              outsideBoostFactor;
+                const force = settings.EDGE_REPULSION * distanceFactor * settings.OUTSIDE_BOOST;
                 
-                // Apply repulsion force
                 node.vx -= (dx / distance) * force;
                 node.vy -= (dy / distance) * force;
                 node.vz -= (dz / distance) * force;
               }
             }
           });
-        }
-        
-        // Apply additional repulsion from all nodes (connected or not) when outside cursor area
-        // This helps maintain overall separation
-        if (!insideCursorArea) {
+
+          // General separation
           nodesRef.current.forEach((otherNode, j) => {
-            // Skip self
             if (i === j) return;
             
-            // Calculate direction vector between nodes
             const dx = otherNode.x - node.x;
             const dy = otherNode.y - node.y;
             const dz = otherNode.z - node.z;
-            
-            // Calculate distance between nodes
             const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
             
-            // Only apply repulsion if nodes are relatively close
-            if (distance > 0 && distance < GAME_SETTINGS.EDGE_MAX_DISTANCE * 0.7) {
-              // Weak general repulsion to maintain overall separation
-              const force = (GAME_SETTINGS.EDGE_REPULSION * 0.3) / Math.max(1, distance * 0.2);
-              
+            if (distance > 0 && distance < settings.EDGE_MAX_DISTANCE * 0.7) {
+              const force = (settings.EDGE_REPULSION * 0.3) / Math.max(1, distance * 0.2);
               node.vx -= (dx / distance) * force;
               node.vy -= (dy / distance) * force;
               node.vz -= (dz / distance) * force;
@@ -320,57 +352,67 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
         }
         
         // Handle mouse interaction
-        const dx = mouseX - node.x;
-        const dy = mouseY - node.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
         if (mouseX >= 0 && mouseY >= 0) {
-          if (distance < GAME_SETTINGS.REPULSION_RANGE) {
-            // Strong repulsion - prevent touching cursor
-            const force = GAME_SETTINGS.REPULSION_FORCE * (1 - distance / GAME_SETTINGS.REPULSION_RANGE);
-            node.vx -= (dx / distance) * force;
-            node.vy -= (dy / distance) * force;
+          const dx = mouseX - node.x;
+          const dy = mouseY - node.y;
+          
+          if (distToCursor < settings.REPULSION_RANGE) {
+            // Strong repulsion
+            const force = settings.REPULSION_FORCE * (1 - distToCursor / settings.REPULSION_RANGE);
+            node.vx -= (dx / distToCursor) * force;
+            node.vy -= (dy / distToCursor) * force;
             node.activity = 1;
-          } else if (distance < GAME_SETTINGS.ATTRACTION_RANGE) {
-            // Attraction - try to follow cursor
-            const force = GAME_SETTINGS.ATTRACTION_FORCE * (1 - distance / GAME_SETTINGS.ATTRACTION_RANGE);
-            node.vx += (dx / distance) * force;
-            node.vy += (dy / distance) * force;
-            node.activity = Math.min(1, 0.3 + (1 - distance / GAME_SETTINGS.ATTRACTION_RANGE) * 0.7);
-          } else if (distance > GAME_SETTINGS.REJECTION_RANGE) {
-            // Rejection - push away when too far
-            const force = GAME_SETTINGS.REJECTION_FORCE;
-            node.vx -= (dx / distance) * force;
-            node.vy -= (dy / distance) * force;
+          } else if (distToCursor < settings.ATTRACTION_RANGE) {
+            // Attraction
+            const force = settings.ATTRACTION_FORCE * (1 - distToCursor / settings.ATTRACTION_RANGE);
+            node.vx += (dx / distToCursor) * force;
+            node.vy += (dy / distToCursor) * force;
+            node.activity = Math.min(1, 0.3 + (1 - distToCursor / settings.ATTRACTION_RANGE) * 0.7);
+          } else if (distToCursor > settings.REJECTION_RANGE) {
+            // Rejection
+            const force = settings.REJECTION_FORCE;
+            node.vx -= (dx / distToCursor) * force;
+            node.vy -= (dy / distToCursor) * force;
             node.activity = Math.max(0, node.activity - 0.02);
           } else {
             node.activity = Math.max(0, node.activity - 0.01);
           }
+
+          // Check scoring
+          if (distToCursor <= settings.SCORING_RANGE && distToCursor > settings.DANGER_ZONE) {
+            const proximity = 1 - (distToCursor / settings.SCORING_RANGE);
+            const points = Math.floor(proximity * 10 * node.scoreMultiplier);
+            frameScore += points;
+            node.isScoring = true;
+            scoringNodesCount++;
+          } else {
+            node.isScoring = false;
+          }
         } else {
           node.activity = Math.max(0, node.activity - 0.01);
+          node.isScoring = false;
         }
         
-        // Apply velocity decay for smoother motion
-        node.vx *= GAME_SETTINGS.VELOCITY_DECAY;
-        node.vy *= GAME_SETTINGS.VELOCITY_DECAY;
-        node.vz *= GAME_SETTINGS.VELOCITY_DECAY;
+        // Apply velocity decay
+        node.vx *= settings.VELOCITY_DECAY;
+        node.vy *= settings.VELOCITY_DECAY;
+        node.vz *= settings.VELOCITY_DECAY;
         
-        // Clamp velocity to prevent excessive speed
-        const speed = Math.sqrt(node.vx * node.vx + node.vy * node.vy + node.vz * node.vz);
-        if (speed > GAME_SETTINGS.MAX_VELOCITY) {
-          const ratio = GAME_SETTINGS.MAX_VELOCITY / speed;
+        // Clamp velocity
+        const speed = Math.sqrt(node.vx ** 2 + node.vy ** 2 + node.vz ** 2);
+        if (speed > settings.MAX_VELOCITY) {
+          const ratio = settings.MAX_VELOCITY / speed;
           node.vx *= ratio;
           node.vy *= ratio;
           node.vz *= ratio;
-        } else if (speed < GAME_SETTINGS.MIN_VELOCITY) {
-          // Ensure minimum movement
-          const ratio = GAME_SETTINGS.MIN_VELOCITY / Math.max(0.01, speed);
+        } else if (speed < settings.MIN_VELOCITY) {
+          const ratio = settings.MIN_VELOCITY / Math.max(0.01, speed);
           node.vx *= ratio;
           node.vy *= ratio;
           node.vz *= ratio;
         }
         
-        // Update node position
+        // Update position
         node.x += node.vx;
         node.y += node.vy;
         node.z += node.vz;
@@ -393,50 +435,116 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
         }
       });
 
-      // Draw connections (simplified for gameplay)
+      // Update score with combo system
+      if (frameScore > 0 && time - lastScoreTimeRef.current > 100) {
+        lastScoreTimeRef.current = time;
+        
+        setGameState(prev => {
+          const newCombo = scoringNodesCount >= settings.COMBO_THRESHOLD ? prev.combo + 1 : 0;
+          const comboMultiplier = Math.floor(newCombo / 10) + 1;
+          const finalScore = prev.score + frameScore * comboMultiplier;
+          const newLevel = Math.floor(finalScore / settings.LEVEL_UP_SCORE) + 1;
+          
+          if (finalScore > prev.highScore) {
+            localStorage.setItem('neuralNexusHighScore', finalScore.toString());
+          }
+          if (newCombo > prev.maxCombo) {
+            localStorage.setItem('neuralNexusMaxCombo', newCombo.toString());
+          }
+
+          // Add score popup for significant scores
+          if (frameScore >= 20 && mouseX >= 0 && mouseY >= 0) {
+            addScorePopup(mouseX, mouseY - 30, frameScore * comboMultiplier);
+          }
+
+          return {
+            ...prev,
+            score: finalScore,
+            highScore: Math.max(finalScore, prev.highScore),
+            combo: newCombo,
+            maxCombo: Math.max(newCombo, prev.maxCombo),
+            level: newLevel,
+            nodesInZone: scoringNodesCount,
+          };
+        });
+      }
+
+      // Draw connections
       nodesRef.current.forEach((node) => {
         node.connections.forEach((connectionIndex: number) => {
           const connectedNode = nodesRef.current[connectionIndex];
           if (!connectedNode) return;
 
           const activity = (node.activity + connectedNode.activity) / 2;
-          if (activity < 0.2) return; // Only draw active connections
+          if (activity < 0.15) return;
           
-          const opacity = activity * 0.3;
+          const lineGradient = ctx.createLinearGradient(node.x, node.y, connectedNode.x, connectedNode.y);
+          
+          if (node.isScoring && connectedNode.isScoring) {
+            lineGradient.addColorStop(0, `rgba(34, 197, 94, ${activity * 0.5})`);
+            lineGradient.addColorStop(1, `rgba(34, 197, 94, ${activity * 0.5})`);
+          } else {
+            lineGradient.addColorStop(0, `rgba(99, 102, 241, ${activity * 0.4})`);
+            lineGradient.addColorStop(0.5, `rgba(168, 85, 247, ${activity * 0.3})`);
+            lineGradient.addColorStop(1, `rgba(99, 102, 241, ${activity * 0.4})`);
+          }
           
           ctx.beginPath();
           ctx.moveTo(node.x, node.y);
           ctx.lineTo(connectedNode.x, connectedNode.y);
-          ctx.strokeStyle = `rgba(99, 102, 241, ${opacity})`;
-          ctx.lineWidth = 1 + activity;
+          ctx.strokeStyle = lineGradient;
+          ctx.lineWidth = 1 + activity * 2;
           ctx.stroke();
+          
+          // Add data flow particles on active connections
+          if (activity > 0.5 && Math.random() > 0.97) {
+            const t = (time * 0.001) % 1;
+            const px = node.x + (connectedNode.x - node.x) * t;
+            const py = node.y + (connectedNode.y - node.y) * t;
+            ctx.beginPath();
+            ctx.arc(px, py, 2, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${activity * 0.8})`;
+            ctx.fill();
+          }
         });
       });
 
-      // Draw nodes with game-specific styling
+      // Draw nodes with enhanced styling
       nodesRef.current.forEach((node) => {
         const radius = node.radius;
         const brightness = 0.3 + node.activity * 0.7;
         const pulse = node.pulse * 0.2 + 0.8;
         
-        // Enhanced glow for scoring nodes
+        // Scoring node special effects
         if (node.isScoring) {
-          const scoreGlow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, radius * 4);
-          scoreGlow.addColorStop(0, `rgba(34, 197, 94, ${brightness * 0.4})`);
+          // Outer glow
+          const scoreGlow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, radius * 5);
+          scoreGlow.addColorStop(0, `rgba(34, 197, 94, ${brightness * 0.3})`);
+          scoreGlow.addColorStop(0.5, `rgba(34, 197, 94, ${brightness * 0.1})`);
           scoreGlow.addColorStop(1, 'rgba(34, 197, 94, 0)');
           ctx.fillStyle = scoreGlow;
           ctx.beginPath();
-          ctx.arc(node.x, node.y, radius * 4 * pulse, 0, Math.PI * 2);
+          ctx.arc(node.x, node.y, radius * 5 * pulse, 0, Math.PI * 2);
           ctx.fill();
+
+          // Ring animation
+          const ringRadius = radius * 2 + (time * 0.02) % (radius * 3);
+          const ringOpacity = 1 - ((ringRadius - radius * 2) / (radius * 3));
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, ringRadius, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(34, 197, 94, ${ringOpacity * 0.5})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
         }
         
         // Node glow
-        const glowGradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, radius * 2.5);
-        glowGradient.addColorStop(0, `rgba(99, 102, 241, ${brightness * 0.4})`);
-        glowGradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+        const glowGradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, radius * 3);
+        const glowColor = node.isScoring ? '34, 197, 94' : '99, 102, 241';
+        glowGradient.addColorStop(0, `rgba(${glowColor}, ${brightness * 0.5})`);
+        glowGradient.addColorStop(1, `rgba(${glowColor}, 0)`);
         ctx.fillStyle = glowGradient;
         ctx.beginPath();
-        ctx.arc(node.x, node.y, radius * 2.5 * pulse, 0, Math.PI * 2);
+        ctx.arc(node.x, node.y, radius * 3 * pulse, 0, Math.PI * 2);
         ctx.fill();
         
         // Node core
@@ -463,13 +571,19 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
         ctx.fill();
         
         // Node ring
-        ctx.strokeStyle = `rgba(255, 255, 255, ${brightness * 0.6})`;
-        ctx.lineWidth = node.isScoring ? 2 : 1;
+        ctx.strokeStyle = `rgba(255, 255, 255, ${brightness * 0.7})`;
+        ctx.lineWidth = node.isScoring ? 2.5 : 1.5;
         ctx.stroke();
+        
+        // Inner highlight
+        ctx.beginPath();
+        ctx.arc(node.x - radius * 0.3, node.y - radius * 0.3, radius * 0.3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${brightness * 0.3})`;
+        ctx.fill();
       });
 
-      // Update and draw particles (reduced for performance)
-      particlesRef.current.forEach((particle: AIParticle) => {
+      // Update and draw particles
+      particlesRef.current.forEach((particle: Particle) => {
         particle.x += particle.vx;
         particle.y += particle.vy;
         particle.z += particle.vz;
@@ -482,7 +596,6 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
           particle.life = 0;
         }
         
-        // Bounce off edges
         if (particle.x < 0 || particle.x > canvas.offsetWidth) particle.vx *= -1;
         if (particle.y < 0 || particle.y > canvas.offsetHeight) particle.vy *= -1;
         if (particle.z < 0 || particle.z > 50) particle.vz *= -1;
@@ -490,24 +603,32 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
         const z = 25 + particle.z;
         const scale = 50 / z;
         const size = particle.size * scale;
-        const alpha = (1 - particle.life) * 0.3;
+        const alpha = (1 - particle.life) * 0.4;
         
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, size, 0, Math.PI * 2);
-        
-        if (particle.type === 0) {
-          ctx.fillStyle = `rgba(99, 102, 241, ${alpha})`;
-        } else if (particle.type === 1) {
-          ctx.fillStyle = `rgba(168, 85, 247, ${alpha})`;
-        } else {
-          ctx.fillStyle = `rgba(34, 197, 94, ${alpha})`;
-        }
-        
+        ctx.fillStyle = particle.color.replace('0.3', alpha.toString());
         ctx.fill();
       });
 
-      // Update score
-      updateScore();
+      // Draw and update score popups
+      scorePopupsRef.current = scorePopupsRef.current.filter(popup => {
+        popup.y += popup.vy;
+        popup.life -= 0.02;
+        popup.vy -= 0.02;
+        
+        if (popup.life <= 0) return false;
+        
+        ctx.font = `600 ${14 + popup.value / 10}px 'JetBrains Mono', 'Courier New', monospace`;
+        ctx.textAlign = 'center';
+        ctx.fillStyle = `rgba(34, 197, 94, ${popup.life})`;
+        ctx.shadowColor = 'rgba(34, 197, 94, 0.4)';
+        ctx.shadowBlur = 6;
+        ctx.fillText(`+${popup.value}`, popup.x, popup.y);
+        ctx.shadowBlur = 0;
+        
+        return true;
+      });
       
       animationRef.current = requestAnimationFrame(animate);
     };
@@ -515,54 +636,107 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
     animate(0);
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      resizeObserver.disconnect();
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
+      canvas.removeEventListener('touchmove', handleTouchMove);
+      canvas.removeEventListener('touchend', handleTouchEnd);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [width, height, isGameActive]);
+  }, [width, height, initNodes, initParticles, addScorePopup, settings]);
 
-  // Update high score
+  // Keyboard controls
   useEffect(() => {
-    if (score > highScore) {
-      setHighScore(score);
-      localStorage.setItem('aiCanvasHighScore', score.toString());
-    }
-  }, [score, highScore]);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
+        togglePause();
+      }
+      if (e.key === 'r' || e.key === 'R') {
+        resetGame();
+      }
+    };
 
-  const resetGame = () => {
-    setScore(0);
-    setGameTime(0);
-    setIsGameActive(false);
-    mouseRef.current = { x: -1000, y: -1000 };
-  };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [togglePause, resetGame]);
+
+  const comboMultiplier = Math.floor(gameState.combo / 10) + 1;
 
   return (
-    <div className="neural-nexus-game">
-      {/* Game Header - Outside Canvas */}
+    <div className={`neural-nexus-game ${gameState.isPaused ? 'paused' : ''}`}>
+      {/* Game Header */}
       <div className="neural-nexus-header">
         <div className="neural-nexus-hud">
-          <div className="neural-nexus-score-display">
-            <span className="neural-nexus-score-label">Score</span>
-            <span className="neural-nexus-score-value">{score}</span>
+          <div className="neural-nexus-stat-group">
+            <div className="neural-nexus-stat">
+              <span className="neural-nexus-stat-indicator score-indicator" />
+              <div className="neural-nexus-stat-content">
+                <span className="neural-nexus-stat-label">Score</span>
+                <span className="neural-nexus-stat-value score">{gameState.score.toLocaleString()}</span>
+              </div>
+            </div>
+            
+            <div className="neural-nexus-stat">
+              <span className="neural-nexus-stat-indicator best-indicator" />
+              <div className="neural-nexus-stat-content">
+                <span className="neural-nexus-stat-label">Best</span>
+                <span className="neural-nexus-stat-value high-score">{gameState.highScore.toLocaleString()}</span>
+              </div>
+            </div>
+            
+            <div className="neural-nexus-stat">
+              <span className={`neural-nexus-stat-indicator combo-indicator ${comboMultiplier > 1 ? 'active' : ''}`} />
+              <div className="neural-nexus-stat-content">
+                <span className="neural-nexus-stat-label">Combo</span>
+                <span className={`neural-nexus-stat-value ${comboMultiplier > 1 ? 'combo-active' : ''}`}>
+                  x{comboMultiplier}
+                </span>
+              </div>
+            </div>
           </div>
-          <div className="neural-nexus-high-score-display">
-            <span className="neural-nexus-score-label">Best</span>
-            <span className="neural-nexus-score-value">{highScore}</span>
+          
+          <div className="neural-nexus-stat-group">
+            <div className="neural-nexus-stat">
+              <span className="neural-nexus-stat-indicator level-indicator" />
+              <div className="neural-nexus-stat-content">
+                <span className="neural-nexus-stat-label">Level</span>
+                <span className="neural-nexus-stat-value level">{gameState.level}</span>
+              </div>
+            </div>
+            
+            <div className="neural-nexus-stat">
+              <span className="neural-nexus-stat-indicator time-indicator" />
+              <div className="neural-nexus-stat-content">
+                <span className="neural-nexus-stat-label">Time</span>
+                <span className="neural-nexus-stat-value">{formatTime(gameState.timeElapsed)}</span>
+              </div>
+            </div>
+            
+            <div className="neural-nexus-controls">
+              <button 
+                className={`neural-nexus-btn ${gameState.isPaused ? 'active' : ''}`}
+                onClick={togglePause}
+                title={gameState.isPaused ? 'Resume (P)' : 'Pause (P)'}
+                aria-label={gameState.isPaused ? 'Resume' : 'Pause'}
+              >
+                {gameState.isPaused ? '▶' : '⏸'}
+              </button>
+              <button 
+                className="neural-nexus-btn reset" 
+                onClick={resetGame}
+                title="Reset (R)"
+                aria-label="Reset game"
+              >
+                ↺
+              </button>
+            </div>
           </div>
-          <div className="neural-nexus-game-time">
-            <span className="neural-nexus-score-label">Time</span>
-            <span className="neural-nexus-score-value">{Math.floor(gameTime / 60)}s</span>
-          </div>
-          <button className="neural-nexus-reset-button" onClick={resetGame}>
-            Reset
-          </button>
         </div>
       </div>
       
-      {/* Game Canvas - Clean Area */}
+      {/* Game Canvas */}
       <div className="neural-nexus-container">
         <canvas
           ref={canvasRef}
@@ -570,21 +744,66 @@ export default function NeuralNexus({ className = '', width, height }: AICanvasP
           style={{
             width: width || '100%',
             height: height || '100%',
-            cursor: 'crosshair'
+            cursor: gameState.isPaused ? 'default' : 'crosshair'
           }}
         />
+        
+        {/* Pause Overlay */}
+        {gameState.isPaused && (
+          <div className="neural-nexus-overlay" onClick={togglePause}>
+            <div className="neural-nexus-overlay-content" onClick={(e) => e.stopPropagation()}>
+              <h2>Paused</h2>
+              <p>Press <kbd>P</kbd> to resume</p>
+              <p>Press <kbd>R</kbd> to restart</p>
+              <button className="neural-nexus-resume-btn" onClick={togglePause}>Resume</button>
+            </div>
+          </div>
+        )}
+        
+        {/* Tutorial Overlay */}
+        {showTutorial && !gameState.isActive && (
+          <div className="neural-nexus-tutorial">
+            <div className="neural-nexus-tutorial-content">
+              <h2>Neural Nexus</h2>
+              <div className="neural-nexus-tutorial-rules">
+                <div className="neural-nexus-rule">
+                  <span className="rule-dot green" />
+                  <span>Keep nodes in the <strong>green zone</strong> to score points</span>
+                </div>
+                <div className="neural-nexus-rule">
+                  <span className="rule-dot red" />
+                  <span>Avoid letting nodes touch the <strong>red zone</strong></span>
+                </div>
+                <div className="neural-nexus-rule">
+                  <span className="rule-dot blue" />
+                  <span>Nodes are attracted to your cursor</span>
+                </div>
+                <div className="neural-nexus-rule">
+                  <span className="rule-dot amber" />
+                  <span>Keep 3+ nodes scoring for <strong>combo multiplier</strong></span>
+                </div>
+              </div>
+              <p className="neural-nexus-tutorial-start">Move your cursor over the canvas to start</p>
+            </div>
+          </div>
+        )}
       </div>
       
-      {/* Game Footer - Outside Canvas */}
+      {/* Game Footer */}
       <div className="neural-nexus-footer">
-        <div className="neural-nexus-game-instructions">
-          {!isGameActive ? (
-            <p>🎯 Move your cursor to attract nodes and earn points! Keep them close but don't let them touch you!</p>
-          ) : (
-            <p>🟢 Green nodes are scoring! 🔴 Red zone = danger, 🟢 Green zone = points, 🔵 Blue zone = attraction</p>
-          )}
+        <div className="neural-nexus-status-bar">
+          <div className="neural-nexus-status-item">
+            <span className={`status-dot ${gameState.nodesInZone > 0 ? 'active' : ''}`} />
+            <span>Nodes scoring: <strong>{gameState.nodesInZone}</strong></span>
+          </div>
+          <div className="neural-nexus-status-item">
+            <span>Max combo: <strong>x{Math.floor(gameState.maxCombo / 10) + 1}</strong></span>
+          </div>
+          <div className="neural-nexus-status-item hint">
+            <kbd>P</kbd> Pause <span className="separator">·</span> <kbd>R</kbd> Reset
+          </div>
         </div>
       </div>
     </div>
   );
-} 
+}

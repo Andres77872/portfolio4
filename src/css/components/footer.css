@@ -1,12 +1,11 @@
-/* footer.css - Ultra-modern AI-themed footer matching header design */
+/* footer.css - shadcn/ui inspired minimal dark footer */
 
 .footer {
   background: var(--background-color-primary);
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid hsl(0 0% 100% / 0.08);
   padding: var(--space-lg) 0 var(--space-sm);
   position: relative;
-  animation: footerFadeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+  animation: footerFadeIn 0.4s ease-out forwards;
 }
 
 .footer::before {
@@ -19,10 +18,10 @@
   background: linear-gradient(
     90deg,
     transparent,
-    var(--accent-color),
+    hsl(0 0% 100% / 0.06),
     transparent
   );
-  opacity: 0.8;
+  opacity: 0.5;
 }
 
 .footer__container {
@@ -37,7 +36,7 @@
   gap: var(--space-lg);
   margin-bottom: var(--space-md);
   padding-bottom: var(--space-md);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid hsl(0 0% 100% / 0.08);
 }
 
 .footer__brand {
@@ -55,39 +54,36 @@
 .footer__logo-main {
   display: flex;
   align-items: baseline;
-  font-family: var(--font-family-heading);
+  font-family: 'Inter', var(--font-family-heading);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   line-height: 1.2;
-  letter-spacing: var(--letter-spacing-tight);
+  letter-spacing: -0.025em;
 }
 
 .footer__logo-name {
   color: var(--text-color);
-  position: relative;
   font-weight: var(--font-weight-semibold);
 }
 
 .footer__logo-accent {
-  background: linear-gradient(135deg, var(--accent-color) 0%, var(--indigo-600) 50%, var(--blue-500) 100%);
+  background: linear-gradient(135deg, var(--accent-color), var(--indigo-400));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   font-weight: var(--font-weight-extra-bold);
-  position: relative;
-  animation: gradientShift 3s ease-in-out infinite;
   background-size: 200% 200%;
+  animation: gradientShift 6s ease-in-out infinite;
 }
 
 .footer__tagline {
   font-size: var(--font-size-sm);
-  color: var(--text-color-secondary);
+  color: var(--muted-foreground);
   margin: 0;
   max-width: 300px;
-  line-height: 1.4;
-  font-family: var(--font-family-mono);
-  letter-spacing: var(--letter-spacing-wide);
-  opacity: 0.9;
+  line-height: 1.5;
+  font-family: 'Inter', var(--font-family-body);
+  letter-spacing: normal;
 }
 
 .footer__links {
@@ -97,10 +93,11 @@
 }
 
 .footer__section h4 {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--text-color);
   margin: 0 0 var(--space-xs) 0;
+  letter-spacing: -0.01em;
 }
 
 .footer__section ul {
@@ -109,7 +106,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-xxs);
+  gap: 0.125rem;
 }
 
 .footer__section li {
@@ -117,21 +114,17 @@
 }
 
 .footer__section a {
-  color: var(--text-color-secondary);
+  color: var(--muted-foreground);
   text-decoration: none;
-  font-size: var(--font-size-md);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: var(--font-size-sm);
+  transition: color 0.15s ease;
   display: flex;
   align-items: center;
-  padding: var(--space-xxs) 0;
-  position: relative;
-  overflow: hidden;
+  padding: 0.25rem 0;
 }
 
 .footer__section a:hover {
-  color: var(--accent-color);
-  transform: translateX(5px);
-  text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+  color: var(--text-color);
 }
 
 .footer__bottom {
@@ -145,32 +138,32 @@
 .footer__built p {
   margin: 0;
   font-size: var(--font-size-sm);
-  color: var(--text-color-tertiary);
+  color: var(--muted-foreground);
 }
 
 .footer__built {
   display: flex;
   align-items: center;
   gap: var(--space-xxs);
-  padding: var(--padding-xxs) var(--padding-xs);
-  border-radius: 50px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-  border: 1px solid var(--accent-color-muted);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.75rem;
+  background: hsl(0 0% 100% / 0.04);
+  border: 1px solid hsl(0 0% 100% / 0.08);
+  transition: background 0.15s ease;
 }
 
 .footer__built:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.2);
+  background: hsl(0 0% 100% / 0.06);
 }
 
 .footer__built::before {
   content: '⚡';
-  font-size: var(--font-size-md);
-  animation: pulseGlow 2s ease-in-out infinite;
+  font-size: var(--font-size-sm);
+  animation: pulseGlow 3s ease-in-out infinite;
 }
 
-/* Responsive Design - Matching header.css patterns */
+/* ===== Responsive ===== */
+
 @media (max-width: 1024px) {
   .footer__container {
     padding: 0 clamp(1rem, 4vw, 2rem);
@@ -192,6 +185,14 @@
     text-align: center;
   }
 
+  .footer__brand {
+    align-items: center;
+  }
+
+  .footer__tagline {
+    text-align: center;
+  }
+
   .footer__links {
     grid-template-columns: 1fr;
     gap: var(--space-sm);
@@ -202,35 +203,29 @@
     gap: var(--space-sm);
     text-align: center;
   }
-
-  .footer__section a:hover {
-    transform: none;
-  }
 }
 
 @media (max-width: 480px) {
-  .footer__logo-text {
+  .footer__logo-main {
     font-size: var(--font-size-lg);
   }
 
   .footer__tagline {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs, 0.75rem);
   }
 }
 
-/* Animations for Footer */
+/* ===== Keyframes ===== */
+
 @keyframes footerFadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
-/* Reuse gradient animation from header */
 @keyframes gradientShift {
   0%, 100% {
     background-position: 0% 50%;
@@ -243,43 +238,55 @@
 @keyframes pulseGlow {
   0%, 100% {
     opacity: 1;
-    text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
   }
   50% {
-    opacity: 0.8;
-    text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+    opacity: 0.6;
   }
 }
 
-/* Accessibility */
+/* ===== Accessibility ===== */
+
 @media (prefers-reduced-motion: reduce) {
   .footer {
     animation: none;
   }
-  
+
   .footer__logo-accent {
     animation: none;
   }
-  
+
   .footer__built::before {
     animation: none;
   }
 }
 
-/* Focus states for keyboard navigation */
 .footer__section a:focus-visible {
-  outline: var(--focus-outline);
-  outline-offset: var(--focus-ring-offset);
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
 }
 
-/* High contrast mode support - Matching header */
+.footer__built:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
 @media (prefers-contrast: high) {
   .footer {
     border-top: 2px solid var(--text-color);
   }
-  
+
+  .footer::before {
+    display: none;
+  }
+
   .footer__logo-accent {
     background: none;
     color: var(--accent-color);
+  }
+
+  .footer__section a {
+    color: var(--text-color);
+    text-decoration: underline;
   }
 }

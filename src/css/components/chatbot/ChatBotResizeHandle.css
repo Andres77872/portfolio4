@@ -1,93 +1,144 @@
-/* ChatBotResizeHandle.css - Resize handle for chatbot window */
+/* ===================================================
+   ChatBotResizeHandle.css - shadcn/ui resize handle
+   Clean, minimal grip with subtle accent hover
+   =================================================== */
 
+/* ===== BASE HANDLE ===== */
 .cb-resize-handle {
   position: absolute;
   top: 0;
   left: 0;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   cursor: nw-resize;
-  background: transparent;
   z-index: 1001;
+
+  /* Invisible by default — only the grip hints at interaction */
+  background: transparent;
+  border: none;
   border-radius: 0 0 var(--radius-sm) 0;
-  transition: all 0.2s ease;
+  padding: 0;
+
+  /* shadcn-standard transition */
+  transition:
+    background-color var(--transition-duration-fast) var(--ease-in-out),
+    box-shadow var(--transition-duration-fast) var(--ease-in-out);
 }
 
+/* ── Grip pattern ── */
 .cb-resize-handle::before {
   content: '';
   position: absolute;
-  top: 6px;
-  left: 6px;
-  width: 12px;
-  height: 12px;
-  background: repeating-linear-gradient(
-    45deg,
-    var(--text-color-secondary),
-    var(--text-color-secondary) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  border-radius: 2px;
-  opacity: 0.3;
-  transition: all 0.2s ease;
+  top: 4px;
+  left: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-xs);
+  opacity: 0.25;
+
+  /* Dot-grid grip — two stacked diagonal lines */
+  background-image:
+    linear-gradient(
+      135deg,
+      var(--muted-foreground) 25%,
+      transparent 25%
+    ),
+    linear-gradient(
+      135deg,
+      transparent 75%,
+      var(--muted-foreground) 75%
+    );
+  background-size: 3px 3px;
+  background-position: 0 0, 1.5px 1.5px;
+
+  transition: opacity var(--transition-duration-fast) var(--ease-in-out);
+}
+
+/* ===== HOVER STATE ===== */
+.cb-resize-handle:hover {
+  background: var(--accent-glow-color);
 }
 
 .cb-resize-handle:hover::before {
-  opacity: 0.8;
-  background: repeating-linear-gradient(
-    45deg,
-    var(--accent-color),
-    var(--accent-color) 1px,
-    transparent 1px,
-    transparent 3px
-  );
+  opacity: 0.7;
+
+  /* Swap grip colour to accent on hover */
+  background-image:
+    linear-gradient(
+      135deg,
+      var(--accent-color) 25%,
+      transparent 25%
+    ),
+    linear-gradient(
+      135deg,
+      transparent 75%,
+      var(--accent-color) 75%
+    );
+  background-size: 3px 3px;
+  background-position: 0 0, 1.5px 1.5px;
 }
 
-.cb-resize-handle:hover {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.2));
-}
-
+/* ===== FOCUS-VISIBLE — shadcn ring ===== */
 .cb-resize-handle:focus-visible {
-  outline: 2px solid var(--accent-color);
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
-/* Mobile responsiveness */
+/* ===== RESPONSIVE (≤ 768px) ===== */
 @media (max-width: 768px) {
   .cb-resize-handle {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
   }
 
   .cb-resize-handle::before {
-    top: 4px;
-    left: 4px;
-    width: 10px;
-    height: 10px;
+    top: 3px;
+    left: 3px;
+    width: 8px;
+    height: 8px;
   }
 }
 
-/* High contrast mode support */
+/* ===== HIGH CONTRAST ===== */
 @media (prefers-contrast: high) {
   .cb-resize-handle::before {
     opacity: 0.6;
+
+    background-image:
+      linear-gradient(
+        135deg,
+        var(--text-color) 25%,
+        transparent 25%
+      ),
+      linear-gradient(
+        135deg,
+        transparent 75%,
+        var(--text-color) 75%
+      );
   }
-  
+
   .cb-resize-handle:hover::before {
     opacity: 1;
   }
+
+  .cb-resize-handle:focus-visible {
+    outline-width: 3px;
+  }
 }
 
-/* Touch device optimizations */
+/* ===== TOUCH DEVICES ===== */
 @media (hover: none) {
   .cb-resize-handle {
     width: 28px;
     height: 28px;
   }
-  
+
   .cb-resize-handle::before {
-    top: 8px;
-    left: 8px;
-    opacity: 0.6;
+    top: 7px;
+    left: 7px;
+    width: 14px;
+    height: 14px;
+    opacity: 0.45;
   }
-} 
+}
