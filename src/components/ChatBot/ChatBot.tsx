@@ -177,7 +177,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
           inputRef={inputRef}
         />
 
-        <p className="border-t border-border/40 px-4 py-2 text-[0.7rem] leading-snug text-muted-foreground/80">
+        <p className="rounded-b-2xl border-t border-border bg-muted/40 px-4 py-2 text-[0.7rem] leading-snug text-muted-foreground/80">
           External AI service processes chat messages. Do not send secrets.
         </p>
 

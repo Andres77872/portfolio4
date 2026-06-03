@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bot, MessageSquare, Minus, Sparkles } from 'lucide-react';
+import { Bot, MessageSquare, Minus } from 'lucide-react';
 import { ChatBotToggleProps } from './types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -28,15 +28,15 @@ const ChatBotToggle: React.FC<ChatBotToggleProps> = ({
 
       <Button
         className={cn(
-          'group relative size-[54px] overflow-visible rounded-full border border-border/70 shadow-lg',
-          'bg-primary text-primary-foreground transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out',
-          'hover:scale-[1.03] hover:border-primary/50 hover:shadow-[0_10px_32px_rgb(0_0_0/0.22),0_0_0_6px_hsl(var(--primary)/0.12)]',
+          'group relative size-[54px] overflow-visible rounded-full border border-border bg-card text-foreground shadow-md',
+          'transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out',
+          'hover:-translate-y-0.5 hover:border-primary/40 hover:bg-accent hover:text-accent-foreground hover:shadow-lg',
           'active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-          'motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
+          'motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100',
           'contrast-more:border-2 contrast-more:border-primary',
           'max-md:size-12 max-xs:size-[46px]',
-          isOpen && !isMinimized && 'bg-muted text-foreground hover:bg-muted/90',
-          isMinimized && 'bg-card text-foreground hover:bg-accent',
+          isOpen && !isMinimized && 'bg-muted hover:bg-muted/90',
+          isMinimized && 'bg-card hover:bg-accent',
         )}
         size="icon"
         onClick={onClick}
@@ -49,16 +49,6 @@ const ChatBotToggle: React.FC<ChatBotToggleProps> = ({
         aria-describedby={cn(triggerDescriptionId, showPromptCue && !isOpen && cueDescriptionId)}
         type="button"
       >
-        {showPromptCue && !isOpen && (
-          <span
-            className={cn(
-              'pointer-events-none absolute inset-[-7px] rounded-full border border-primary/30 bg-primary/10 opacity-80',
-              'motion-safe:animate-pulse motion-reduce:animate-none',
-              'contrast-more:border-2 contrast-more:border-primary/80'
-            )}
-            aria-hidden="true"
-          />
-        )}
         <span className="relative grid size-full place-items-center" aria-hidden="true">
           <Bot
             className={cn(
@@ -79,35 +69,19 @@ const ChatBotToggle: React.FC<ChatBotToggleProps> = ({
             )}
           />
         </span>
-        {showPromptCue && !isOpen && (
-          <span
-            className={cn(
-              'pointer-events-none absolute -right-0.5 -top-0.5 grid size-4 place-items-center rounded-full',
-              'border border-background bg-card text-primary shadow-sm',
-              'transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
-              'contrast-more:border-2 contrast-more:border-primary'
-            )}
-            aria-hidden="true"
-          >
-            <Sparkles className="h-2.5 w-2.5 stroke-[2]" />
-          </span>
-        )}
       </Button>
 
       {isMinimized && (
         <span
           className={cn(
             'absolute -top-8 right-0 whitespace-nowrap rounded-md',
-            'bg-card px-2.5 py-1 text-xs font-medium text-foreground shadow-md border border-border',
-            'animate-in fade-in slide-in-from-bottom-1 duration-150 motion-reduce:animate-none',
+            'bg-card px-2.5 py-1 text-xs font-medium text-foreground shadow-sm border border-border',
+            'animate-in fade-in duration-150 motion-reduce:animate-none',
             'contrast-more:border-2'
           )}
           aria-hidden="true"
         >
-          <span className="flex items-center gap-1.5">
-            <Sparkles className="h-3 w-3 text-primary" aria-hidden="true" />
-            Portfolio Assistant
-          </span>
+          Portfolio Assistant
         </span>
       )}
     </div>

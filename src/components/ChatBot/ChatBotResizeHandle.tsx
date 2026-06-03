@@ -1,5 +1,4 @@
 import React from 'react';
-import { Grip } from 'lucide-react';
 import { ChatBotResizeHandleProps } from './types';
 import { cn } from '@/lib/utils';
 
@@ -14,13 +13,12 @@ const ChatBotResizeHandle: React.FC<ChatBotResizeHandleProps> = ({
     <div
       className={cn(
         'absolute left-0 top-0 z-50',
-        'hidden h-7 w-7 cursor-nw-resize md:flex',
-        'items-center justify-center',
-        'rounded-tl-2xl rounded-br-lg border-b border-r border-transparent',
-        'bg-card/20 text-muted-foreground/50',
+        'hidden h-8 w-8 cursor-nw-resize md:flex',
+        'items-start justify-start p-1.5',
+        'rounded-tl-2xl text-muted-foreground/60',
         'transition-colors duration-150 motion-reduce:transition-none',
-        'hover:border-border/70 hover:bg-primary/10 hover:text-primary',
-        'focus-visible:border-ring/60 focus-visible:bg-primary/10 focus-visible:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
+        'hover:text-foreground',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-card',
         'contrast-more:border-border contrast-more:text-foreground',
         '[@media_(pointer:coarse)]:hidden',
       )}
@@ -36,13 +34,10 @@ const ChatBotResizeHandle: React.FC<ChatBotResizeHandleProps> = ({
       onPointerDown={onResizeStart}
       onKeyDown={onResizeKeyDown}
     >
-      <Grip
-        className={cn(
-          'h-3.5 w-3.5',
-          'transition-colors duration-150 motion-reduce:transition-none',
-        )}
-        aria-hidden="true"
-      />
+      <span className="relative block h-3.5 w-3.5" aria-hidden="true">
+        <span className="absolute left-0 top-0 h-px w-3.5 bg-current" />
+        <span className="absolute left-0 top-0 h-3.5 w-px bg-current" />
+      </span>
       <span className="sr-only">{dimensionText}</span>
     </div>
   );

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 import './MatrixRPG.css';
 import { CHAT_CONSUMERS } from '@/config/chatConfig';
 import { streamChatCompletion } from '../../services/chatService';
+import type { ChatRequestMessage } from '../../components/ChatBot/types';
 import { GameState, Message, MatrixRPGProps } from './types';
 import MatrixRPGHeader from './MatrixRPGHeader';
 import MatrixRPGFooter from './MatrixRPGFooter';
@@ -72,6 +73,35 @@ const COMMAND_PROMPT = `${SYSTEM_INFO.USER}@${SYSTEM_INFO.HOSTNAME}:~$ `;
 // Terminal special characters
 const CURSOR_CHAR = '█';
 
+interface ActiveStream {
+  id: string;
+  controller: AbortController;
+}
+
+const createStreamId = (): string =>
+  `matrix-stream-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+const isAbortError = (error: unknown): boolean =>
+  error instanceof Error && error.name === 'AbortError';
+
+const MATRIX_RPG_SYSTEM_CONTEXT: ChatRequestMessage = {
+  role: 'system',
+  content: `You are the Unknown Entity inside SYNAPTIC-OS, a Matrix-style terminal minigame on Andres Arizmendi's portfolio website.
+
+GAME CONTEXT:
+- The user is connected as root through an unstable neural interface.
+- Project MIRROR is disconnected and memory fragments are detected.
+- You are confused, fragmented, and asking the user for help while staying in character.
+- The UI is a terminal, so responses must be concise and readable as terminal output.
+
+INSTRUCTIONS:
+1. Stay in character as the Unknown Entity unless safety requires otherwise.
+2. Keep responses short, atmospheric, and interactive.
+3. Do not claim access to real systems, files, credentials, or private data.
+4. Do not ask the user for secrets, credentials, or sensitive personal data.
+5. If the user asks about Andres or the portfolio, answer briefly and naturally from within the simulation.`,
+};
+
 const INITIAL_MESSAGES = [
   'Hello?',
   'Is anyone there?',
@@ -95,6 +125,7 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
   // Global references for the messaging system
   const messageIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const messageIndexRef = useRef(0);
+  const activeStreamRef = useRef<ActiveStream | null>(null);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   // Start mysterious messages
@@ -175,7 +206,7 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
 
   // Handle user input submission
   const handleSubmit = async () => {
-    if (!userInput.trim() || isProcessing) return;
+    if (!userInput.trim() || activeStreamRef.current) return;
 
     // Stop automated messages on first user interaction
     if (!hasUserInteracted) {
@@ -266,6 +297,10 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
     }
 
     // For all other inputs, treat as conversation with the unknown entity
+    const streamId = createStreamId();
+    const controller = new AbortController();
+    activeStreamRef.current = { id: streamId, controller };
+
     const userMessage: Message = {
       role: 'user',
       content: userInput
@@ -281,27 +316,47 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
       setTerminalOutput(prev => prev + 'Unknown Entity: ');
 
       // Prepare conversation history for API
-      const messages = conversations.concat(userMessage).map(msg => ({
+      const messages: ChatRequestMessage[] = conversations.concat(userMessage).map(msg => ({
         role: msg.role,
         content: msg.content
       }));
-      
+
       // Call chatService with the conversation
-      const stream = await streamChatCompletion({ messages }, { consumer: CHAT_CONSUMERS.MATRIX_RPG });
+      const stream = await streamChatCompletion({
+        messages: [MATRIX_RPG_SYSTEM_CONTEXT, ...messages]
+      }, {
+        consumer: CHAT_CONSUMERS.MATRIX_RPG,
+        signal: controller.signal,
+      });
+
+      if (controller.signal.aborted || activeStreamRef.current?.id !== streamId) {
+        return;
+      }
+
       const reader = stream.getReader();
+      const decoder = new TextDecoder();
       let assistantResponse = '';
-      
+
       // Process the streaming response
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
+
+        if (controller.signal.aborted || activeStreamRef.current?.id !== streamId) {
+          await reader.cancel().catch(() => undefined);
+          return;
+        }
         
         // Convert the chunk to text
-        const chunk = new TextDecoder().decode(value);
+        const chunk = decoder.decode(value);
         assistantResponse += chunk;
         
         // Simple update - just replace the Unknown Entity line with current response
         setTerminalOutput(prev => {
+          if (activeStreamRef.current?.id !== streamId) {
+            return prev;
+          }
+
           const lines = prev.split('\n');
           const lastLineIndex = lines.length - 1;
           
@@ -312,6 +367,10 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
           
           return lines.join('\n');
         });
+      }
+
+      if (controller.signal.aborted || activeStreamRef.current?.id !== streamId) {
+        return;
       }
 
       // Add assistant's response to conversation history
@@ -326,6 +385,10 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
       setTerminalOutput(prev => prev + '\n\n' + COMMAND_PROMPT);
 
     } catch (error) {
+      if (controller.signal.aborted || isAbortError(error) || activeStreamRef.current?.id !== streamId) {
+        return;
+      }
+
       console.error('Error processing chat:', error);
       setTerminalOutput(prev => prev +
         '\n[ERROR] Neural interface connection lost\n' +
@@ -333,7 +396,10 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
         COMMAND_PROMPT
       );
     } finally {
-      setIsProcessing(false);
+      if (activeStreamRef.current?.id === streamId) {
+        activeStreamRef.current = null;
+        setIsProcessing(false);
+      }
     }
   };
   
@@ -355,6 +421,8 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
       if (messageIntervalRef.current) {
         clearInterval(messageIntervalRef.current);
       }
+      activeStreamRef.current?.controller.abort();
+      activeStreamRef.current = null;
     };
   }, []);
 

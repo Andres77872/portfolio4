@@ -34,16 +34,16 @@ const ChatBotHeader: React.FC<ChatBotHeaderProps> = ({
   };
 
   return (
-    <div className="relative z-30 flex items-center justify-between gap-3 rounded-t-xl border-b border-border/70 bg-card/80 px-3.5 py-2.5 text-card-foreground backdrop-blur supports-[backdrop-filter]:bg-card/65 contrast-more:border-foreground/60 max-md:px-3 max-md:py-2">
+    <div className="relative z-30 flex items-center justify-between gap-3 border-b border-border bg-card px-3.5 py-2.5 text-card-foreground contrast-more:border-foreground/60 max-md:px-3 max-md:py-2">
       <div className="flex items-center gap-2.5">
-        <div className="flex h-7 w-7 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary shadow-sm shadow-primary/10 contrast-more:border-primary/70">
+        <div className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-muted text-primary contrast-more:border-primary/70">
           <Bot className="h-4 w-4 text-primary" />
         </div>
         <div className="flex flex-col gap-0.5">
           <h3 id={titleId} className="text-sm font-semibold text-foreground">Portfolio Assistant</h3>
           <div className="flex items-center gap-1.5">
             <span
-              className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_0_3px_hsl(var(--primary)/0.14)] animate-pulse motion-reduce:animate-none contrast-more:ring-1 contrast-more:ring-primary"
+              className="h-1.5 w-1.5 rounded-full bg-primary contrast-more:ring-1 contrast-more:ring-primary"
               aria-hidden="true"
             />
             <span className="text-xs text-muted-foreground">Online</span>
