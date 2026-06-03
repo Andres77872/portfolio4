@@ -79,12 +79,18 @@ export interface GameSettings {
   
   // Velocity limits
   MAX_VELOCITY: number;
+  MAX_VELOCITY_CAP: number;
   MIN_VELOCITY: number;
   VELOCITY_DECAY: number;
   
   // Game config
   NODE_COUNT: number;
+  MAX_NODE_COUNT: number;
+  MAX_DIFFICULTY_LEVEL: number;
+  MIN_SCORING_RANGE: number;
   PARTICLE_COUNT: number;
+  MAX_PARTICLES: number;
+  COMBO_FEEDBACK_PARTICLES: number;
   COMBO_THRESHOLD: number;
   LEVEL_UP_SCORE: number;
 }
@@ -114,11 +120,17 @@ export const DEFAULT_SETTINGS: GameSettings = {
   OUTSIDE_BOOST: 2.5,
   
   MAX_VELOCITY: 0.7,
+  MAX_VELOCITY_CAP: 1.05,
   MIN_VELOCITY: 0.05,
   VELOCITY_DECAY: 0.97,
   
   NODE_COUNT: 18,
+  MAX_NODE_COUNT: 24,
+  MAX_DIFFICULTY_LEVEL: 8,
+  MIN_SCORING_RANGE: 64,
   PARTICLE_COUNT: 25,
+  MAX_PARTICLES: 42,
+  COMBO_FEEDBACK_PARTICLES: 6,
   COMBO_THRESHOLD: 3,
   LEVEL_UP_SCORE: 500,
 };
