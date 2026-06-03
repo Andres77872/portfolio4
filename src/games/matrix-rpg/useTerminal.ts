@@ -31,12 +31,12 @@ export const findClosestCommand = (input: string, commands: TerminalCommand[]): 
   if (!token || /\s/.test(token)) return null;
 
   let best: { command: TerminalCommand; distance: number } | null = null;
-  commands.forEach(command => {
+  for (const command of commands) {
     const distance = damerauLevenshtein(token, command.name);
     if (!best || distance < best.distance) {
       best = { command, distance };
     }
-  });
+  }
 
   return best && best.distance <= Math.max(1, Math.floor(best.command.name.length / 3)) ? best.command : null;
 };

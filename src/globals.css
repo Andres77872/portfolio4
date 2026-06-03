@@ -5,24 +5,24 @@
 
 /* ===== Light Theme (Default per shadcn convention) ===== */
 :root {
-  --background: hsl(0 0% 98%);
+  --background: hsl(240 20% 96%);
   --foreground: hsl(240 10% 4%);
-  --card: hsl(240 5% 96%);
+  --card: hsl(0 0% 99%);
   --card-foreground: hsl(240 10% 4%);
-  --popover: hsl(0 0% 98%);
+  --popover: hsl(0 0% 99%);
   --popover-foreground: hsl(240 10% 4%);
   --primary: hsl(239 84% 67%);
   --primary-foreground: hsl(0 0% 98%);
-  --secondary: hsl(240 5% 96%);
+  --secondary: hsl(240 14% 92%);
   --secondary-foreground: hsl(240 10% 4%);
-  --muted: hsl(240 5% 96%);
-  --muted-foreground: hsl(240 4% 46%);
-  --accent: hsl(240 5% 96%);
+  --muted: hsl(240 14% 92%);
+  --muted-foreground: hsl(240 5% 38%);
+  --accent: hsl(240 14% 92%);
   --accent-foreground: hsl(240 10% 4%);
   --destructive: hsl(0 84% 60%);
   --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(240 6% 90%);
-  --input: hsl(240 6% 90%);
+  --border: hsl(240 10% 84%);
+  --input: hsl(240 10% 84%);
   --ring: hsl(239 84% 67%);
   --radius: 0.75rem;
 

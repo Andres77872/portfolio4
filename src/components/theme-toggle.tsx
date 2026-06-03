@@ -1,21 +1,18 @@
-import { Moon, Sun, Monitor } from "lucide-react"
+import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 
-const THEME_CYCLE = ["system", "light", "dark"] as const;
-const THEME_LABELS = {
-  system: "System theme",
-  light: "Light theme",
-  dark: "Dark theme",
-} as const;
+type ResolvedTheme = "light" | "dark"
+
+function getResolvedTheme(theme: string | undefined, resolvedTheme: string | undefined): ResolvedTheme {
+  if (resolvedTheme === "dark" || resolvedTheme === "light") return resolvedTheme
+  if (theme === "dark" || theme === "light") return theme
+
+  return "light"
+}
 
 export function ThemeToggle() {
   const { theme, setTheme, resolvedTheme } = useTheme()
@@ -26,65 +23,45 @@ export function ThemeToggle() {
     setMounted(true)
   }, [])
 
-  const cycleTheme = () => {
-    const currentIndex = THEME_CYCLE.indexOf(theme as typeof THEME_CYCLE[number])
-    const nextIndex = (currentIndex + 1) % THEME_CYCLE.length
-    setTheme(THEME_CYCLE[nextIndex])
-  }
+  const currentTheme = mounted ? getResolvedTheme(theme, resolvedTheme) : "light"
+  const isDark = currentTheme === "dark"
 
-  // Determine which icon to show based on current theme
-  const getIconState = () => {
-    if (!mounted) return { sun: true, moon: false, monitor: false }
-    
-    if (theme === "system") {
-      // Show monitor icon when system theme is active
-      return { sun: false, moon: false, monitor: true }
-    }
-    
-    // Show sun/moon based on resolved theme for light/dark
-    const isDark = resolvedTheme === "dark"
-    return { sun: !isDark, moon: isDark, monitor: false }
-  }
+  const toggleTheme = () => {
+    const nextTheme = getResolvedTheme(theme, resolvedTheme) === "dark" ? "light" : "dark"
 
-  const iconState = getIconState()
+    setTheme(nextTheme)
+  }
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={cycleTheme}
-          className="relative h-9 w-9 rounded-none"
-          aria-label={`Current: ${THEME_LABELS[theme as keyof typeof THEME_LABELS]}. Click to change.`}
-        >
-          <Sun 
-            className={cn(
-              "size-4 transition-all duration-200",
-              iconState.sun ? "rotate-0 scale-100" : "-rotate-90 scale-0"
-            )} 
-          />
-          <Moon 
-            className={cn(
-              "absolute size-4 transition-all duration-200",
-              iconState.monitor ? "-rotate-90 scale-0" : "",
-              iconState.moon ? "rotate-0 scale-100" : "rotate-90 scale-0"
-            )} 
-          />
-          <Monitor 
-            className={cn(
-              "absolute size-4 transition-all duration-200",
-              iconState.monitor ? "rotate-0 scale-100" : "rotate-90 scale-0"
-            )} 
-          />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent side="bottom" sideOffset={8}>
-        <p className="text-xs font-medium">
-          {mounted ? THEME_LABELS[theme as keyof typeof THEME_LABELS] : "Loading..."}
-        </p>
-      </TooltipContent>
-    </Tooltip>
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon"
+      className={cn(
+        "ml-1 size-8 rounded-full p-0 text-muted-foreground",
+        "transition-colors duration-200",
+        "hover:bg-accent/45 hover:text-foreground",
+        "focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-1",
+        "dark:hover:bg-accent/35 contrast-more:text-foreground",
+      )}
+      aria-label={mounted ? `Toggle theme. Current: ${currentTheme}.` : "Toggle theme"}
+      aria-pressed={mounted ? isDark : undefined}
+      onClick={toggleTheme}
+    >
+      <span className="relative flex size-4 items-center justify-center" aria-hidden="true">
+        <Sun
+          className={cn(
+            "size-4 transition-all duration-200",
+            isDark ? "-rotate-90 scale-0" : "rotate-0 scale-100",
+          )}
+        />
+        <Moon
+          className={cn(
+            "absolute size-4 transition-all duration-200",
+            isDark ? "rotate-0 scale-100" : "rotate-90 scale-0",
+          )}
+        />
+      </span>
+    </Button>
   )
 }

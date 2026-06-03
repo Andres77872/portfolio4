@@ -15,12 +15,12 @@ export function GameSelector({
       className={cn(
         'absolute -bottom-7 left-1/2 -translate-x-1/2',
         'flex items-center gap-2 py-1.5 px-3',
-        'bg-black/55 backdrop-blur-2xl',
-        'rounded-full border border-foreground/[0.07]',
+        'bg-background/75 dark:bg-black/55 backdrop-blur-2xl',
+        'rounded-full border border-border/70 dark:border-foreground/[0.07]',
         'transition-all duration-200',
-        'hover:bg-black/70 hover:border-foreground/10',
+        'hover:bg-background/90 hover:border-border dark:hover:bg-black/70 dark:hover:border-foreground/10',
         'hover:-translate-x-1/2 hover:-translate-y-px',
-        'hover:shadow-[0_4px_16px_hsl(0_0%_0%/0.25)]',
+        'shadow-sm shadow-black/5 hover:shadow-[0_4px_16px_hsl(0_0%_0%/0.18)] dark:hover:shadow-[0_4px_16px_hsl(0_0%_0%/0.25)]',
         'max-xs:-bottom-2 max-xs:gap-1 max-xs:py-1 max-xs:px-2',
         className,
       )}
@@ -40,10 +40,10 @@ export function GameSelector({
               'w-[7px] h-[7px] rounded-full border-none p-0 cursor-pointer',
               'bg-foreground/30 transition-all duration-200',
               'hover:bg-foreground/55 hover:scale-130',
-              'focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-1',
+              'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background',
               'max-xs:w-1.5 max-xs:h-1.5',
               index === currentGameIndex && [
-                'bg-indigo-400 scale-115',
+                'bg-primary scale-115',
                 'shadow-[0_0_8px_hsl(234_89%_74%/0.45)]',
               ],
             )}

@@ -59,8 +59,10 @@ const ProjectLinkButtons: React.FC<ProjectLinkButtonsProps> = ({
                     asChild
                     className={cn(
                         "gap-1.5 text-xs font-medium tracking-wide",
-                        "bg-[hsl(217_60%_50%/0.12)] border-[hsl(217_60%_50%/0.18)] text-[hsl(213_80%_72%)]",
-                        "hover:bg-[hsl(217_60%_50%/0.2)] hover:border-[hsl(217_60%_50%/0.3)] hover:-translate-y-px",
+                        "bg-[hsl(217_72%_45%/0.10)] border-[hsl(217_72%_45%/0.24)] text-[hsl(217_72%_34%)]",
+                        "hover:bg-[hsl(217_72%_45%/0.16)] hover:border-[hsl(217_72%_45%/0.36)] hover:-translate-y-px",
+                        "dark:bg-[hsl(217_60%_50%/0.12)] dark:border-[hsl(217_60%_50%/0.18)] dark:text-[hsl(213_80%_72%)]",
+                        "dark:hover:bg-[hsl(217_60%_50%/0.2)] dark:hover:border-[hsl(217_60%_50%/0.3)]",
                         "transition-all duration-150",
                     )}
                 >
@@ -86,8 +88,10 @@ const ProjectLinkButtons: React.FC<ProjectLinkButtonsProps> = ({
                     asChild
                     className={cn(
                         "gap-1.5 text-xs font-medium tracking-wide",
-                        "bg-[hsl(142_50%_45%/0.12)] border-[hsl(142_50%_45%/0.18)] text-[hsl(142_60%_68%)]",
-                        "hover:bg-[hsl(142_50%_45%/0.2)] hover:border-[hsl(142_50%_45%/0.3)] hover:-translate-y-px",
+                        "bg-[hsl(142_55%_36%/0.10)] border-[hsl(142_55%_36%/0.24)] text-[hsl(142_60%_26%)]",
+                        "hover:bg-[hsl(142_55%_36%/0.16)] hover:border-[hsl(142_55%_36%/0.36)] hover:-translate-y-px",
+                        "dark:bg-[hsl(142_50%_45%/0.12)] dark:border-[hsl(142_50%_45%/0.18)] dark:text-[hsl(142_60%_68%)]",
+                        "dark:hover:bg-[hsl(142_50%_45%/0.2)] dark:hover:border-[hsl(142_50%_45%/0.3)]",
                         "transition-all duration-150",
                     )}
                 >

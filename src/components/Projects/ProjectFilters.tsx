@@ -74,6 +74,7 @@ const ProjectFilters: React.FC<ProjectFiltersProps> = ({
                         "bg-transparent border-none",
                         "text-foreground placeholder:text-muted-foreground/60",
                         "focus-visible:ring-0 focus-visible:ring-offset-0",
+                        "focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2",
                     )}
                     aria-label="Search projects"
                 />
@@ -85,6 +86,7 @@ const ProjectFilters: React.FC<ProjectFiltersProps> = ({
                             "text-muted-foreground hover:text-foreground",
                             "hover:bg-muted/50",
                             "transition-all duration-150",
+                            "focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2",
                         )}
                         onClick={() => onSearchChange('')}
                         aria-label="Clear search"

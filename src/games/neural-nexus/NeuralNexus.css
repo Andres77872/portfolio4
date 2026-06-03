@@ -46,9 +46,22 @@
     --nn-indigo: hsl(239 84% 67%);
     --nn-indigo-light: hsl(234 89% 74%);
     --nn-border: var(--border);
+    --nn-muted-bg: hsl(240 5% 96%);
+    --nn-muted-hover: hsl(240 5% 92%);
+    --nn-hud-bg: hsl(0 0% 98% / 0.86);
+    --nn-canvas-bg: hsl(240 10% 7%);
+    --nn-overlay-bg: hsl(0 0% 98% / 0.62);
+    --nn-tutorial-bg: hsl(0 0% 98% / 0.54);
+    --nn-mono: var(--default-mono-font-family);
+  }
+
+  .dark .neural-nexus-game {
     --nn-muted-bg: hsl(240 4% 16%);
     --nn-muted-hover: hsl(240 4% 20%);
-    --nn-mono: var(--default-mono-font-family);
+    --nn-hud-bg: hsl(240 10% 6% / 0.85);
+    --nn-canvas-bg: hsl(240 10% 3%);
+    --nn-overlay-bg: hsl(240 10% 4% / 0.6);
+    --nn-tutorial-bg: hsl(240 10% 4% / 0.5);
   }
 
   /* ===== Base Game Container ===== */
@@ -82,7 +95,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: hsl(240 10% 6% / 0.85);
+    background: var(--nn-hud-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: var(--radius-md);
@@ -239,7 +252,7 @@
     position: relative;
     border-radius: var(--radius-md);
     overflow: hidden;
-    background: hsl(240 10% 3%);
+    background: var(--nn-canvas-bg);
     border: 1px solid var(--nn-border);
     box-sizing: border-box;
     /* Use parent container dimensions */
@@ -264,7 +277,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: hsl(240 10% 4% / 0.6);
+    background: var(--nn-overlay-bg);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: 10;
@@ -278,7 +291,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: hsl(240 10% 4% / 0.5);
+    background: var(--nn-tutorial-bg);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     z-index: 10;
@@ -447,7 +460,7 @@
   .neural-nexus-status-item.hint kbd {
     display: inline-block;
     padding: 0.05rem 0.2rem;
-    background: hsl(240 4% 20%);
+    background: var(--nn-muted-hover);
     border: 1px solid var(--nn-border);
     border-radius: var(--radius-xs);
     font-family: var(--nn-mono);

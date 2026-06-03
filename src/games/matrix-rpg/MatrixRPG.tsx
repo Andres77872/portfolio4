@@ -347,7 +347,8 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
 
       if (controller.signal.aborted || activeStreamRef.current?.id !== streamId) return;
 
-      setConversations(prev => [...prev, { role: 'assistant', content: assistantResponse }].slice(-MAX_CONVERSATION_MESSAGES));
+      const assistantMessage: Message = { role: 'assistant', content: assistantResponse };
+      setConversations(prev => [...prev, assistantMessage].slice(-MAX_CONVERSATION_MESSAGES));
       setTerminalOutput(prev => `${stripStreamMarkers(replaceStreamBlock(prev, marker, assistantResponse))}\n\n${COMMAND_PROMPT}`);
       setTerminalStatus('idle');
     } catch (error) {
