@@ -1,9 +1,37 @@
+import type React from 'react';
+
+import type { ChatConsumer } from '@/config/chatConfig';
+
 // ChatBot type definitions
 
+export type ChatMessageRole = 'user' | 'assistant' | 'system';
+
+export type ChatMessageStatus = 'streaming' | 'complete' | 'error';
+
+export type ChatBotMode = 'closed' | 'open' | 'minimized';
+
 export interface Message {
-  role: 'user' | 'assistant' | 'system';
+  id: string;
+  role: ChatMessageRole;
   content: string;
-  timestamp?: Date;
+  timestamp: Date;
+  status?: ChatMessageStatus;
+  errorMessage?: string;
+  retryForMessageId?: string;
+}
+
+export interface ChatRequestMessage {
+  role: ChatMessageRole;
+  content: string;
+}
+
+export interface ChatRequest {
+  messages: ChatRequestMessage[];
+}
+
+export interface ChatServiceOptions {
+  signal?: AbortSignal;
+  consumer?: ChatConsumer;
 }
 
 export interface SuggestedQuery {
@@ -17,13 +45,41 @@ export interface ChatBotDimensions {
   height: number;
 }
 
-export interface ChatBotState {
-  isOpen: boolean;
-  isMinimized: boolean;
+export interface ChatBotUiState {
+  mode: ChatBotMode;
+  showResetConfirmation: boolean;
+}
+
+export type ChatBotUiAction =
+  | { type: 'OPEN' }
+  | { type: 'MINIMIZE' }
+  | { type: 'CLOSE' }
+  | { type: 'TOGGLE_FROM_TRIGGER' }
+  | { type: 'SHOW_RESET_CONFIRMATION' }
+  | { type: 'HIDE_RESET_CONFIRMATION' };
+
+export interface ChatBotState extends ChatBotUiState {
   dimensions: ChatBotDimensions;
   isResizing: boolean;
-  showHeyAnimation: boolean;
-  showResetConfirmation: boolean;
+  showPromptCue: boolean;
+}
+
+export interface UseChatStreamResult {
+  messages: Message[];
+  input: string;
+  setInput: (value: string) => void;
+  isStreaming: boolean;
+  sendMessage: (content: string) => Promise<void>;
+  retryLastFailed: () => Promise<void>;
+  resetConversation: () => void;
+  cancelActiveStream: () => void;
+}
+
+export interface UseChatResizeResult {
+  dimensions: ChatBotDimensions;
+  isResizing: boolean;
+  startPointerResize: (event: React.PointerEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => void;
+  handleResizeKeyDown: (event: React.KeyboardEvent) => void;
 }
 
 export interface ChatBotProps {
@@ -33,8 +89,9 @@ export interface ChatBotProps {
 export interface ChatBotToggleProps {
   isOpen: boolean;
   isMinimized: boolean;
-  showHeyAnimation: boolean;
+  showPromptCue: boolean;
   onClick: () => void;
+  rootRef?: React.RefObject<HTMLDivElement>;
 }
 
 export interface ChatBotWindowProps {
@@ -42,14 +99,14 @@ export interface ChatBotWindowProps {
   isMinimized: boolean;
   dimensions: ChatBotDimensions;
   isResizing: boolean;
-  onClose: () => void;
-  onMinimize: () => void;
-  onResetConfirm: () => void;
-  onResizeStart: (e: React.MouseEvent) => void;
+  titleId: string;
+  panelRef?: React.RefObject<HTMLDivElement>;
+  onEscapeKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   children: React.ReactNode;
 }
 
 export interface ChatBotHeaderProps {
+  titleId: string;
   onClose: () => void;
   onMinimize: () => void;
   onResetClick: () => void;
@@ -61,9 +118,8 @@ export interface ChatBotHeaderProps {
 
 export interface ChatBotMessagesProps {
   messages: Message[];
-  isLoading: boolean;
-  hasMessages: boolean;
-  onBackToStart: () => void;
+  isStreaming: boolean;
+  onRetryLastFailed?: () => void;
 }
 
 export interface ChatBotWelcomeProps {
@@ -74,12 +130,14 @@ export interface ChatBotWelcomeProps {
 
 export interface ChatBotInputProps {
   input: string;
-  isLoading: boolean;
+  isStreaming: boolean;
   onInputChange: (value: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
-  inputRef: React.RefObject<HTMLInputElement>;
+  onSubmitMessage: (value: string) => void;
+  inputRef: React.RefObject<HTMLTextAreaElement>;
 }
 
 export interface ChatBotResizeHandleProps {
-  onResizeStart: (e: React.MouseEvent) => void;
-} 
+  onResizeStart: (event: React.PointerEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => void;
+  onResizeKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  dimensions: ChatBotDimensions;
+}

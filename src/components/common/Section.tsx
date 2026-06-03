@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import '../../css/components/common/Section.css';
+import { cn } from '@/lib/utils';
 
 interface SectionProps {
   id?: string;
@@ -17,25 +17,41 @@ const Section: React.FC<SectionProps> = ({
   className = '',
 }) => {
   return (
-    <section id={id} className={`section ${className}`}>
-      <div className="section__container">
+    <section
+      id={id}
+      className={cn(
+        "py-20 relative",
+        "max-md:py-16",
+        className,
+      )}
+    >
+      <div className="max-w-[1200px] mx-auto px-6 relative max-md:px-4">
         {(title || description) && (
-          <div className="section__header">
+          <div className="text-center mb-16">
             {title && (
               <>
-                <h2 className="section__title">{title}</h2>
-                <div className="section__title-underline"></div>
+                <h2 className={cn(
+                  "font-sans font-bold tracking-tight leading-tight text-foreground mb-3 inline-block",
+                  "text-[clamp(2rem,4vw,3rem)]",
+                  "max-xs:text-[1.75rem]",
+                )}>
+                  {title}
+                </h2>
+                <div className="w-12 h-0.5 bg-primary mx-auto mt-4 mb-6 rounded-full opacity-60" />
               </>
             )}
             {description && (
-              <div className="section__description">
+              <div className={cn(
+                "text-lg leading-relaxed text-muted-foreground max-w-[600px] mx-auto",
+                "max-xs:text-base",
+              )}>
                 {typeof description === 'string' ? <p>{description}</p> : description}
               </div>
             )}
           </div>
         )}
         
-        <div className="section__content">
+        <div className="relative">
           {children}
         </div>
       </div>

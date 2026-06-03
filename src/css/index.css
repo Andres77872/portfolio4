@@ -1,7 +1,0 @@
-/* Main CSS Entry Point */
-
-/* Import all CSS variable definitions first */
-@import './variables/index.css';
-
-/* Import all component-specific styles */
-@import './components/index.css';

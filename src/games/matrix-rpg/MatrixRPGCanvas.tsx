@@ -53,7 +53,10 @@ export default function MatrixRPGCanvas({
   const LINE_HEIGHT = 18;
   const PADDING = 16;
   const FONT_SIZE = 15;
-  const MAX_CHARS = 65; // Fixed max characters per line (fits in 680px monitor)
+  // Calculate MAX_CHARS dynamically based on available width
+  // Approximate char width for Courier New at 15px is ~9.6px
+  const CHAR_WIDTH = 9.6;
+  const MAX_CHARS = Math.max(40, Math.floor((width - PADDING * 2) / CHAR_WIDTH));
   const FONT_FAMILY = `${FONT_SIZE}px "Courier New", "Liberation Mono", monospace`;
   
   // Check if line contains box drawing characters (should not be wrapped)
@@ -129,7 +132,7 @@ export default function MatrixRPGCanvas({
       }
     });
     return totalLines * LINE_HEIGHT + PADDING * 2;
-  }, [gameState, userInput, isBoxLine]);
+  }, [gameState, userInput, isBoxLine, MAX_CHARS]);
 
   const getLineColor = useCallback((line: string): { color: string; glow: string; intensity: number } => {
     if (line.startsWith('[ OK ]')) {
@@ -147,7 +150,7 @@ export default function MatrixRPGCanvas({
     if (line.startsWith('[SYSTEM]')) {
       return { color: CRT_COLORS.amber, glow: CRT_COLORS.amberGlow, intensity: 1.4 };
     }
-    if (line.startsWith('Unknown Entity:') || line.match(/^               /)) {
+    if (line.startsWith('Unknown Entity:') || line.startsWith(' '.repeat(15))) {
       return { color: CRT_COLORS.magenta, glow: CRT_COLORS.magentaGlow, intensity: 1.6 };
     }
     if (line.includes('@') && line.includes('$')) {
@@ -252,7 +255,7 @@ export default function MatrixRPGCanvas({
         });
       }
     });
-  }, [height, gameState, userInput, isFocused, cursorVisible, getLineColor, wrapLine]);
+  }, [height, gameState, userInput, isFocused, cursorVisible, getLineColor, wrapLine, MAX_CHARS, FONT_FAMILY]);
 
   const drawCRTEffects = useCallback(() => {
     const effectCanvas = effectCanvasRef.current;

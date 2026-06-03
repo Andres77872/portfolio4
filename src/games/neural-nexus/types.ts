@@ -65,6 +65,13 @@ export interface GameSettings {
   RANDOM_MOVEMENT: number;
   EDGE_REPULSION: number;
   
+  // Node-to-node interaction
+  MIN_NODE_DISTANCE: number;       // Minimum distance between nodes
+  NODE_REPULSION_FORCE: number;    // Base repulsion between close nodes
+  NODE_AWARENESS_RANGE: number;    // Range to detect nearby nodes
+  CLUSTER_THRESHOLD: number;       // Number of close nodes to trigger explosion
+  CLUSTER_EXPLOSION_FORCE: number; // Explosive repulsion when clustered
+  
   // Distance thresholds
   EDGE_MIN_DISTANCE: number;
   EDGE_MAX_DISTANCE: number;
@@ -94,6 +101,13 @@ export const DEFAULT_SETTINGS: GameSettings = {
   REJECTION_FORCE: 0.005,
   RANDOM_MOVEMENT: 0.002,
   EDGE_REPULSION: 0.002,
+  
+  // Node-to-node interaction - NEW
+  MIN_NODE_DISTANCE: 25,           // Nodes keep at least 25px apart
+  NODE_REPULSION_FORCE: 0.08,      // Strong repulsion when too close
+  NODE_AWARENESS_RANGE: 60,        // Detect nodes within 60px
+  CLUSTER_THRESHOLD: 3,            // 3+ close nodes = explosion
+  CLUSTER_EXPLOSION_FORCE: 0.25,   // Explosive burst when clustered
   
   EDGE_MIN_DISTANCE: 50,
   EDGE_MAX_DISTANCE: 200,

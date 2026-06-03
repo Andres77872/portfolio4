@@ -290,17 +290,96 @@ export default function NeuralNexus({ className = '', width, height }: CanvasPro
 
       // Update nodes with game physics
       nodesRef.current.forEach((node, i) => {
-        // Apply random movement forces
-        node.vx += (Math.random() - 0.5) * settings.RANDOM_MOVEMENT;
-        node.vy += (Math.random() - 0.5) * settings.RANDOM_MOVEMENT;
-        node.vz += (Math.random() - 0.5) * settings.RANDOM_MOVEMENT * 0.5;
-        
         const distToCursor = mouseX >= 0 && mouseY >= 0 ? 
           Math.sqrt((mouseX - node.x) ** 2 + (mouseY - node.y) ** 2) : 
           Infinity;
         const insideCursorArea = distToCursor <= settings.ATTRACTION_RANGE;
         
-        // Edge distance maximization when outside cursor areas
+        // === NODE AWARENESS: Detect nearby nodes ===
+        let closeNodesCount = 0;
+        const avgCloseNodeDir = { x: 0, y: 0 };
+        let minDistToOther = Infinity;
+        
+        nodesRef.current.forEach((otherNode, j) => {
+          if (i === j) return;
+          
+          const dx = otherNode.x - node.x;
+          const dy = otherNode.y - node.y;
+          const dz = otherNode.z - node.z;
+          const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+          
+          if (distance < settings.NODE_AWARENESS_RANGE && distance > 0) {
+            closeNodesCount++;
+            avgCloseNodeDir.x += dx / distance;
+            avgCloseNodeDir.y += dy / distance;
+            
+            if (distance < minDistToOther) {
+              minDistToOther = distance;
+            }
+          }
+        });
+        
+        // Normalize average direction
+        if (closeNodesCount > 0) {
+          const mag = Math.sqrt(avgCloseNodeDir.x ** 2 + avgCloseNodeDir.y ** 2);
+          if (mag > 0) {
+            avgCloseNodeDir.x /= mag;
+            avgCloseNodeDir.y /= mag;
+          }
+        }
+        
+        // === SMART RANDOM MOVEMENT: Avoid moving toward close nodes ===
+        let randomX = (Math.random() - 0.5) * settings.RANDOM_MOVEMENT;
+        let randomY = (Math.random() - 0.5) * settings.RANDOM_MOVEMENT;
+        const randomZ = (Math.random() - 0.5) * settings.RANDOM_MOVEMENT * 0.5;
+        
+        // If there are close nodes, bias random movement away from them
+        if (closeNodesCount > 0 && minDistToOther < settings.MIN_NODE_DISTANCE * 1.5) {
+          // Strong bias away from cluster center
+          randomX -= avgCloseNodeDir.x * settings.RANDOM_MOVEMENT * 2;
+          randomY -= avgCloseNodeDir.y * settings.RANDOM_MOVEMENT * 2;
+        }
+        
+        node.vx += randomX;
+        node.vy += randomY;
+        node.vz += randomZ;
+        
+        // === NODE-TO-NODE REPULSION: Keep minimum distance ===
+        nodesRef.current.forEach((otherNode, j) => {
+          if (i === j) return;
+          
+          const dx = otherNode.x - node.x;
+          const dy = otherNode.y - node.y;
+          const dz = otherNode.z - node.z;
+          const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+          
+          if (distance > 0 && distance < settings.MIN_NODE_DISTANCE) {
+            // Strong repulsion when too close - inverse square law
+            const overlap = settings.MIN_NODE_DISTANCE - distance;
+            const force = settings.NODE_REPULSION_FORCE * (overlap / settings.MIN_NODE_DISTANCE) ** 2;
+            
+            node.vx -= (dx / distance) * force;
+            node.vy -= (dy / distance) * force;
+            node.vz -= (dz / distance) * force * 0.3;
+          }
+        });
+        
+        // === CLUSTER EXPLOSION: Explosive repulsion when clustered outside cursor ===
+        if (!insideCursorArea && closeNodesCount >= settings.CLUSTER_THRESHOLD) {
+          // Calculate explosion force based on cluster density
+          const clusterDensity = closeNodesCount / settings.CLUSTER_THRESHOLD;
+          const explosionForce = settings.CLUSTER_EXPLOSION_FORCE * clusterDensity;
+          
+          // Apply explosive force away from cluster center
+          node.vx -= avgCloseNodeDir.x * explosionForce;
+          node.vy -= avgCloseNodeDir.y * explosionForce;
+          
+          // Add some randomness to explosion for more dynamic movement
+          node.vx += (Math.random() - 0.5) * explosionForce * 0.3;
+          node.vy += (Math.random() - 0.5) * explosionForce * 0.3;
+        }
+        
+        // === Edge distance maximization when outside cursor areas ===
         if (!insideCursorArea) {
           nodesRef.current.forEach((otherNode, j) => {
             if (i === j) return;
@@ -332,44 +411,27 @@ export default function NeuralNexus({ className = '', width, height }: CanvasPro
               }
             }
           });
-
-          // General separation
-          nodesRef.current.forEach((otherNode, j) => {
-            if (i === j) return;
-            
-            const dx = otherNode.x - node.x;
-            const dy = otherNode.y - node.y;
-            const dz = otherNode.z - node.z;
-            const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-            
-            if (distance > 0 && distance < settings.EDGE_MAX_DISTANCE * 0.7) {
-              const force = (settings.EDGE_REPULSION * 0.3) / Math.max(1, distance * 0.2);
-              node.vx -= (dx / distance) * force;
-              node.vy -= (dy / distance) * force;
-              node.vz -= (dz / distance) * force;
-            }
-          });
         }
         
-        // Handle mouse interaction
+        // === Handle mouse interaction ===
         if (mouseX >= 0 && mouseY >= 0) {
           const dx = mouseX - node.x;
           const dy = mouseY - node.y;
           
           if (distToCursor < settings.REPULSION_RANGE) {
-            // Strong repulsion
+            // Strong repulsion in danger zone
             const force = settings.REPULSION_FORCE * (1 - distToCursor / settings.REPULSION_RANGE);
             node.vx -= (dx / distToCursor) * force;
             node.vy -= (dy / distToCursor) * force;
             node.activity = 1;
           } else if (distToCursor < settings.ATTRACTION_RANGE) {
-            // Attraction
+            // Attraction in safe zone
             const force = settings.ATTRACTION_FORCE * (1 - distToCursor / settings.ATTRACTION_RANGE);
             node.vx += (dx / distToCursor) * force;
             node.vy += (dy / distToCursor) * force;
             node.activity = Math.min(1, 0.3 + (1 - distToCursor / settings.ATTRACTION_RANGE) * 0.7);
           } else if (distToCursor > settings.REJECTION_RANGE) {
-            // Rejection
+            // Rejection when far away
             const force = settings.REJECTION_FORCE;
             node.vx -= (dx / distToCursor) * force;
             node.vy -= (dy / distToCursor) * force;

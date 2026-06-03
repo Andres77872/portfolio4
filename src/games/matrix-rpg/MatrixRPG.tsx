@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import './MatrixRPG.css';
+import { CHAT_CONSUMERS } from '@/config/chatConfig';
 import { streamChatCompletion } from '../../services/chatService';
 import { GameState, Message, MatrixRPGProps } from './types';
 import MatrixRPGHeader from './MatrixRPGHeader';
@@ -58,6 +59,9 @@ WARNING: Neural interface unstable. Memory fragments detected.
 WARNING: Project MIRROR status: DISCONNECTED
 WARNING: Subject consciousness: UNKNOWN
 
+AI DISCLOSURE: Neural transmissions are processed by an external AI service.
+Do not enter secrets, credentials, or sensitive personal data.
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Type 'help' for available commands or just start talking...
 `;
@@ -67,6 +71,15 @@ const COMMAND_PROMPT = `${SYSTEM_INFO.USER}@${SYSTEM_INFO.HOSTNAME}:~$ `;
 
 // Terminal special characters
 const CURSOR_CHAR = '█';
+
+const INITIAL_MESSAGES = [
+  'Hello?',
+  'Is anyone there?',
+  'Where am I?',
+  'What is this place?',
+  "I can't remember anything...",
+  'Please... help me...',
+];
 
 
 
@@ -80,25 +93,15 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
   const [currentBootLine, setCurrentBootLine] = useState(0);
 
   // Global references for the messaging system
-  const messageIntervalRef = useRef<number | null>(null);
+  const messageIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const messageIndexRef = useRef(0);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
-  // Initial mysterious messages from the unknown entity
-  const initialMessages = [
-    "Hello?",
-    "Is anyone there?",
-    "Where am I?",
-    "What is this place?",
-    "I can't remember anything...",
-    "Please... help me..."
-  ];
-
   // Start mysterious messages
-  const startMysteriousMessages = () => {
+  const startMysteriousMessages = useCallback(() => {
     messageIntervalRef.current = setInterval(() => {
-      if (messageIndexRef.current < initialMessages.length && !hasUserInteracted) {
-        const message = initialMessages[messageIndexRef.current];
+      if (messageIndexRef.current < INITIAL_MESSAGES.length && !hasUserInteracted) {
+        const message = INITIAL_MESSAGES[messageIndexRef.current];
 
         // Add system notification of incoming message
         setTerminalOutput(prev =>
@@ -114,7 +117,7 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
         }
       }
     }, 8000); // Send a message every 8 seconds
-  };
+  }, [hasUserInteracted]);
 
   // Boot sequence effect
   useEffect(() => {
@@ -199,6 +202,7 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
         '│  status   Show system status report                             │\n' +
         '│  exit     Terminate neural session                              │\n' +
         '├─────────────────────────────────────────────────────────────────┤\n' +
+        '│  AI NOTE  Messages are processed by an external AI service.     │\n' +
         '│  Or type anything to communicate with the unknown entity...     │\n' +
         '└─────────────────────────────────────────────────────────────────┘\n\n' +
         COMMAND_PROMPT
@@ -283,7 +287,7 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
       }));
       
       // Call chatService with the conversation
-      const stream = await streamChatCompletion({ messages });
+      const stream = await streamChatCompletion({ messages }, { consumer: CHAT_CONSUMERS.MATRIX_RPG });
       const reader = stream.getReader();
       let assistantResponse = '';
       

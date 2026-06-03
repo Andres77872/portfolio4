@@ -1,111 +1,153 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { Menu } from 'lucide-react';
+
+const NAV_ITEMS = [
+  { href: '#about', label: 'About' },
+  { href: '#projects', label: 'Projects' },
+  { href: '#contact', label: 'Contact' },
+] as const;
+
+const INTERSECTION_THRESHOLD = 0.3;
+const HEADER_OFFSET = 100;
 
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navRef = useRef<HTMLDivElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Function to determine which section is currently in view and close menu on scroll
+  // Use IntersectionObserver for better performance and accuracy
   useEffect(() => {
-    const handleScroll = () => {
-      // Close menu when scrolling
-      if (isMenuOpen) {
-        setIsMenuOpen(false);
-      }
-
-      // Determine active section
-      const sections = ['about', 'projects', 'contact'];
-      const currentSection = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 150 && rect.bottom >= 150;
+    const sections = NAV_ITEMS.map(item => document.getElementById(item.href.replace('#', '')));
+    
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        // Find the section that's most visible
+        const visibleEntries = entries.filter(entry => entry.isIntersecting);
+        if (visibleEntries.length > 0) {
+          // Sort by intersection ratio and pick the most visible one
+          const mostVisible = visibleEntries.sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+          setActiveSection(mostVisible.target.id);
         }
-        return false;
-      });
-
-      setActiveSection(currentSection || '');
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial check
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isMenuOpen]);
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (navRef.current && !navRef.current.contains(event.target as Node) && isMenuOpen) {
-        setIsMenuOpen(false);
+      },
+      {
+        rootMargin: `-${HEADER_OFFSET}px 0px -50% 0px`,
+        threshold: [INTERSECTION_THRESHOLD],
       }
-    };
+    );
 
-    document.addEventListener('mousedown', handleClickOutside);
+    sections.forEach(section => {
+      if (section) observerRef.current?.observe(section);
+    });
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isMenuOpen]);
+    return () => observerRef.current?.disconnect();
+  }, []);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const closeMenu = () => {
+  // Close menu on navigation
+  const handleNavClick = useCallback(() => {
     setIsMenuOpen(false);
-  };
+  }, []);
 
   return (
-    <nav className="navbar" aria-label="Main navigation">
-      <div className="navbar__container" ref={navRef}>
-        <button 
-          className={`navbar__toggle ${isMenuOpen ? 'navbar__toggle--active' : ''}`}
-          onClick={toggleMenu}
-          aria-expanded={isMenuOpen}
-          aria-controls="navbar-menu"
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        >
-          <span className="navbar__toggle-bar"></span>
-          <span className="navbar__toggle-bar"></span>
-          <span className="navbar__toggle-bar"></span>
-        </button>
-
-        <ul 
-          id="navbar-menu"
-          className={`navbar__list ${isMenuOpen ? 'navbar__list--open' : ''}`}
-        >
-          <li className="navbar__item">
-            <a 
-              className={`navbar__link ${activeSection === 'about' ? 'navbar__link--active' : ''}`} 
-              href="#about"
-              onClick={closeMenu}
-              aria-current={activeSection === 'about' ? 'page' : undefined}
-            >
-              About
-            </a>
-          </li>
-          <li className="navbar__item">
-            <a 
-              className={`navbar__link ${activeSection === 'projects' ? 'navbar__link--active' : ''}`} 
-              href="#projects"
-              onClick={closeMenu}
-              aria-current={activeSection === 'projects' ? 'page' : undefined}
-            >
-              Projects
-            </a>
-          </li>
-          <li className="navbar__item">
-            <a 
-              className={`navbar__link ${activeSection === 'contact' ? 'navbar__link--active' : ''}`} 
-              href="#contact"
-              onClick={closeMenu}
-              aria-current={activeSection === 'contact' ? 'page' : undefined}
-            >
-              Contact
-            </a>
-          </li>
+    <nav className="relative z-[110] mx-auto h-full" aria-label="Main navigation">
+      <div className="flex items-center justify-center h-full">
+        {/* Desktop Navigation */}
+        <ul className="hidden md:flex list-none gap-0.5 m-0 p-1 items-center">
+          {NAV_ITEMS.map(({ href, label }) => {
+            const sectionId = href.replace('#', '');
+            const isActive = activeSection === sectionId;
+            return (
+              <li key={href} className="relative">
+                <a
+                  className={cn(
+                    "flex font-sans text-sm font-medium no-underline",
+                    "py-2 px-3.5 rounded-lg",
+                    "transition-colors duration-200",
+                    "text-muted-foreground",
+                    "hover:text-foreground hover:bg-accent/50",
+                    "focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2",
+                    "motion-reduce:transition-none",
+                    "contrast-more:border contrast-more:border-current",
+                    isActive && [
+                      "text-primary",
+                      "bg-primary/10",
+                      "contrast-more:bg-primary contrast-more:text-primary-foreground",
+                    ],
+                  )}
+                  href={href}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {label}
+                </a>
+              </li>
+            );
+          })}
         </ul>
+
+        {/* Mobile Menu */}
+        <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+          <SheetTrigger asChild className="md:hidden">
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Open navigation menu"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <Menu className="size-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            className={cn(
+              "w-[280px] max-w-[85vw]",
+              "bg-background/95 backdrop-blur-xl",
+              "border-l border-border/50",
+            )}
+          >
+            <SheetHeader className="pb-4">
+              <SheetTitle className="text-left text-lg font-semibold">Navigation</SheetTitle>
+            </SheetHeader>
+            <nav className="flex flex-col gap-1.5" id="navbar-menu">
+              {NAV_ITEMS.map(({ href, label }) => {
+                const sectionId = href.replace('#', '');
+                const isActive = activeSection === sectionId;
+                return (
+                  <a
+                    key={href}
+                    className={cn(
+                      "flex font-sans text-sm font-medium no-underline",
+                      "w-full py-3 px-4 rounded-lg",
+                      "transition-colors duration-200",
+                      "text-muted-foreground",
+                      "hover:text-foreground hover:bg-accent/50",
+                      "focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2",
+                      "motion-reduce:transition-none",
+                      "contrast-more:border contrast-more:border-current",
+                      isActive && [
+                        "text-primary",
+                        "bg-primary/10",
+                        "contrast-more:bg-primary contrast-more:text-primary-foreground",
+                      ],
+                    )}
+                    href={href}
+                    onClick={handleNavClick}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
+                    {label}
+                  </a>
+                );
+              })}
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
     </nav>
   );

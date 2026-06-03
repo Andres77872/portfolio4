@@ -41,14 +41,27 @@ The chatbot system has been optimized to prevent image re-fetching and improve o
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Start development server
-npm run dev
+pnpm run dev
 
 # Build for production
-npm run build
+pnpm run build
 ```
+
+## Environment Variables
+
+Create a local `.env.local` file with the Vite public variables used by the browser client:
+
+```bash
+VITE_CHAT_API_URL=https://magic.arz.ai/chat/openai/v1/completion
+VITE_CHAT_PORTFOLIO_AGENT_ID=agt-your-portfolio-assistant-agent-id
+VITE_CHAT_MATRIX_RPG_AGENT_ID=agt-your-matrix-rpg-agent-id
+VITE_CHAT_API_KEY=
+```
+
+The chat API is called anonymously by default. `VITE_CHAT_API_KEY` is optional, client-visible, and only intended for public/sentinel tokens; real secrets do not belong in Vite variables.
 
 ## Tech Stack
 

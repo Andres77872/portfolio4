@@ -9,6 +9,8 @@ export { default as ChatBotWelcome } from './ChatBotWelcome';
 export { default as ChatBotMessages } from './ChatBotMessages';
 export { default as ChatBotInput } from './ChatBotInput';
 export { default as ChatBotResizeHandle } from './ChatBotResizeHandle';
+export { default as ChatAvatar } from './ChatAvatar';
+export { default as TypingIndicator } from './TypingIndicator';
 
 // Export all types for external use
 export * from './types'; 
