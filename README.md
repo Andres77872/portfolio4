@@ -55,7 +55,7 @@ pnpm run build
 Create a local `.env.local` file with the Vite public variables used by the browser client:
 
 ```bash
-VITE_CHAT_API_URL=https://magic.arz.ai/chat/openai/v1/completion
+VITE_CHAT_API_URL=https://llm.arz.ai/v1/completions
 VITE_CHAT_PORTFOLIO_AGENT_ID=agt-your-portfolio-assistant-agent-id
 VITE_CHAT_MATRIX_RPG_AGENT_ID=agt-your-matrix-rpg-agent-id
 VITE_CHAT_API_KEY=

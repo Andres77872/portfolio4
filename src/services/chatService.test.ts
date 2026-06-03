@@ -47,7 +47,7 @@ describe('streamChatCompletion', () => {
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://magic.arz.ai/chat/openai/v1/completion',
+      'https://llm.arz.ai/v1/completions',
       expect.objectContaining({
         method: 'POST',
         body: JSON.stringify({

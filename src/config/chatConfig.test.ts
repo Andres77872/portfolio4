@@ -9,7 +9,7 @@ describe('resolveChatServiceConfig', () => {
       VITE_CHAT_MATRIX_RPG_AGENT_ID: 'agt-matrix',
     });
 
-    expect(config.endpoint).toBe('https://magic.arz.ai/chat/openai/v1/completion');
+    expect(config.endpoint).toBe('https://llm.arz.ai/v1/completions');
   });
 
   it('uses the configured endpoint override', () => {

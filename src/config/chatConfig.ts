@@ -15,7 +15,7 @@ export const CHAT_CONSUMERS = {
   MATRIX_RPG: 'matrix-rpg',
 } as const satisfies Record<string, ChatConsumer>;
 
-const DEFAULT_CHAT_API_URL = 'https://magic.arz.ai/chat/openai/v1/completion';
+const DEFAULT_CHAT_API_URL = 'https://llm.arz.ai/v1/completions';
 
 type ChatEnv = Pick<
   ImportMetaEnv,
