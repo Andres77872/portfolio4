@@ -53,15 +53,26 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent
                 className={cn(
-                    'max-w-[950px] max-h-[90vh] p-0 gap-0 overflow-hidden',
+                    'max-w-[950px] h-[min(90dvh,calc(100dvh-2rem))] p-0 gap-0 overflow-hidden',
                     'bg-background/95 backdrop-blur-xl border-border/50',
                     'shadow-2xl shadow-primary/5',
-                    'max-xs:max-w-full max-xs:max-h-[100dvh] max-xs:rounded-none max-xs:border-x-0'
+                    'max-xs:max-w-full max-xs:h-[100dvh] max-xs:rounded-none max-xs:border-x-0'
                 )}
                 showCloseButton={true}
                 aria-labelledby="modal-title"
             >
-                <ScrollArea className="max-h-[90vh] max-xs:max-h-[100dvh]">
+                <ScrollArea
+                    className={cn(
+                        'h-full min-h-0 overflow-hidden',
+                        '[&_[data-slot=scroll-area-scrollbar]]:right-1',
+                        '[&_[data-slot=scroll-area-scrollbar]]:w-1.5',
+                        '[&_[data-slot=scroll-area-scrollbar]]:py-2',
+                        '[&_[data-slot=scroll-area-scrollbar]]:opacity-60',
+                        '[&_[data-slot=scroll-area-scrollbar]]:transition-opacity',
+                        'hover:[&_[data-slot=scroll-area-scrollbar]]:opacity-100',
+                        '[&_[data-slot=scroll-area-thumb]]:bg-border/70'
+                    )}
+                >
                     {/* Hero Section */}
                     <ProjectHero project={project} />
 
@@ -71,8 +82,8 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                             'sticky top-0 z-10',
                             'bg-background/80 backdrop-blur-lg',
                             'border-b border-border/50',
-                            'px-6 py-4',
-                            'max-xs:px-4'
+                            'px-6 py-4 pr-14',
+                            'max-xs:px-4 max-xs:pr-14'
                         )}
                     >
                         <DialogHeader className="gap-3">

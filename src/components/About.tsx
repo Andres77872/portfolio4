@@ -2,7 +2,9 @@ import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import type { Project } from '@/components/Projects/types';
 import aboutData from '../data/about.json';
+import projectsData from '../data/projects.json';
 import Section from './common/Section';
 
 interface Skill {
@@ -23,6 +25,50 @@ interface AboutData {
   skills: Skill[];
   contactLinks: ContactLink[];
 }
+
+interface ExpertiseGroup {
+  title: string;
+  description: string;
+  projectTitles: string[];
+  technologies: string[];
+}
+
+const projects = projectsData as Project[];
+const projectLabels = new Set(
+  projects
+    .flatMap((project) => [...(project.tags ?? []), ...(project.language ?? [])])
+    .map((label) => label.toLowerCase()),
+);
+
+const getAvailableTechnologies = (technologies: string[]) =>
+  technologies.filter((technology) => projectLabels.has(technology.toLowerCase()));
+
+const expertiseGroups: ExpertiseGroup[] = [
+  {
+    title: 'AI retrieval & multimodal systems',
+    description: 'Search, RAG, image understanding, and captioning work backed by shipped projects instead of abstract skill claims.',
+    projectTitles: ['FindIT', 'ColWrite', 'Colpali-Arxiv Chat', 'SmolVLM-500M-Anime-Caption'],
+    technologies: getAvailableTechnologies(['LLM', 'RAG', 'COLPALI', 'QDRANT', 'OPENCLIP', 'SIGLIP', 'FINE-TUNING']),
+  },
+  {
+    title: 'Agent workflows & LLM infrastructure',
+    description: 'Node-graph assistants, provider wrappers, and agent frameworks for composing LLM workflows across products and libraries.',
+    projectTitles: ['Novus Talk', 'magic-agents', 'magic-llm', 'Magic Slider', 'Magic Worlds'],
+    technologies: getAvailableTechnologies(['MAGIC-LLM', 'MAGIC-AGENTS', 'AGENTS', 'NODE GRAPH', 'OPENAI', 'ANTHROPIC', 'AWS BEDROCK']),
+  },
+  {
+    title: 'Product frontend & interactive UX',
+    description: 'React/Vite applications, graph visualizations, presentation tools, and canvas-driven interfaces tied directly to portfolio projects.',
+    projectTitles: ['spyder.findit', 'Magic Slider', 'Portfolio', 'Magic Worlds'],
+    technologies: getAvailableTechnologies(['REACT', 'VITE', 'THREE.JS', 'REACT-FORCE-GRAPH-3D', 'REVEALJS', 'CANVAS']),
+  },
+  {
+    title: 'APIs, auth & secure product backends',
+    description: 'FastAPI services, encrypted sharing, authentication, and RBAC systems that support real deployed applications.',
+    projectTitles: ['Magic Auth', 'JustAnotherFileStorage', 'FindIT', 'Novus Talk'],
+    technologies: getAvailableTechnologies(['FASTAPI', 'MYSQL', 'JWT', 'RBAC', 'AUTHENTICATION', 'ENCRYPTION', 'HTTPX']),
+  },
+];
 
 // Default data in case the JSON file is empty or missing
 const defaultData: AboutData = {
@@ -114,128 +160,92 @@ export default function About() {
         </div>
       </div>
 
-      {/* Skills Section */}
-      {data.skills && data.skills.length > 0 && (
-        <div className="mb-16">
-          {/* Skills Header */}
-          <div
-            className="text-center mb-12 animate-fade-in-up"
-            style={{ animationDelay: '0.6s' }}
+      {/* Project-backed Expertise Section */}
+      <div>
+        <div className="text-center mb-12">
+          <h3
+            className={cn(
+              "bg-linear-to-r from-indigo-400 to-indigo-300",
+              "bg-clip-text text-transparent",
+              "text-[clamp(1.5rem,3vw,2rem)] font-bold",
+            )}
+            style={{ WebkitBackgroundClip: 'text' }}
           >
-            <h3
-              className={cn(
-                "bg-linear-to-r from-indigo-400 to-indigo-300",
-                "bg-clip-text text-transparent",
-                "text-[clamp(1.5rem,3vw,2rem)] font-bold",
-              )}
-              style={{ WebkitBackgroundClip: 'text' }}
-            >
-              Technical Expertise
-            </h3>
-            <p className="text-lg text-muted-foreground mt-3 mx-auto max-w-[560px]">
-              Technologies and frameworks I work with
-            </p>
-          </div>
+            Technical Expertise
+          </h3>
+          <p className="text-lg text-muted-foreground mt-3 mx-auto max-w-[680px]">
+            Project-backed areas of work derived from the technologies and domains represented in the portfolio.
+          </p>
+        </div>
 
-          {/* Skill Group Grid */}
-          <div className={cn(
-            "grid gap-8",
-            "grid-cols-[repeat(auto-fit,minmax(300px,1fr))]",
-            "max-md:grid-cols-1 max-md:gap-6",
-          )}>
-            {data.skills.map((skillGroup, index) => (
-              <Card
-                key={index}
-                className={cn(
-                  "bg-foreground/[0.03] border-border",
-                  "transition-all duration-200",
-                  "hover:-translate-y-0.5 hover:border-foreground/[0.14]",
-                  "animate-fade-in-up",
-                  "max-xs:p-5",
-                )}
-                style={{ animationDelay: `${0.8 + index * 0.1}s` }}
-              >
-                <CardHeader className="flex-row items-center justify-between">
-                  <CardTitle className={cn(
-                    "text-xl font-bold text-foreground",
-                    "max-xs:text-lg",
-                  )}>
-                    {skillGroup.category}
-                  </CardTitle>
-                  <span className={cn(
-                    "bg-foreground/[0.06] text-muted-foreground text-sm font-medium",
-                    "py-0.5 px-3 rounded-full border border-border",
-                    "min-w-6 text-center",
-                  )}>
-                    {skillGroup.items.length}
-                  </span>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {skillGroup.items.map((skill, skillIndex) => (
+        <div className={cn(
+          "grid gap-6",
+          "grid-cols-[repeat(auto-fit,minmax(320px,1fr))]",
+          "max-md:grid-cols-1",
+        )}>
+          {expertiseGroups.map((group) => (
+            <Card
+              key={group.title}
+              className={cn(
+                "bg-foreground/[0.03] border-border h-full",
+                "max-xs:p-5",
+              )}
+            >
+              <CardHeader className="space-y-3">
+                <CardTitle className={cn(
+                  "text-xl font-bold text-foreground leading-tight",
+                  "max-xs:text-lg",
+                )}>
+                  {group.title}
+                </CardTitle>
+                <p className="text-sm text-muted-foreground leading-relaxed m-0">
+                  {group.description}
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-5">
+                <div>
+                  <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-3">
+                    Project evidence
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {group.projectTitles.map((projectTitle) => (
                       <Badge
-                        key={skillIndex}
+                        key={projectTitle}
                         variant="outline"
                         className={cn(
-                          "bg-foreground/[0.05] text-muted-foreground",
-                          "border-border rounded-md",
-                          "py-1 px-3 text-sm font-medium",
-                          "transition-all duration-200",
-                          "hover:border-indigo-500 hover:text-foreground",
-                          "animate-slide-in-bottom",
+                          "bg-indigo-500/10 text-foreground border-indigo-400/30",
+                          "rounded-md py-1 px-3 text-sm font-medium",
                         )}
-                        style={{
-                          animationDelay: `${skillIndex * 0.15}s`,
-                        }}
                       >
-                        {skill}
+                        {projectTitle}
                       </Badge>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      )}
+                </div>
 
-      {/* Stats Section */}
-      <div
-        className={cn(
-          "grid grid-cols-3 gap-6 text-center",
-          "animate-fade-in-up",
-          "max-md:grid-cols-1 max-md:gap-6",
-        )}
-        style={{ animationDelay: '1s' }}
-      >
-        {[
-          { number: '3+', label: 'Years Experience' },
-          { number: '10+', label: 'AI Projects' },
-          { number: '5+', label: 'Technologies' },
-        ].map((stat) => (
-          <div
-            key={stat.label}
-            className={cn(
-              "bg-foreground/[0.03] border border-border rounded-lg p-8",
-              "transition-all duration-200",
-              "hover:-translate-y-0.5 hover:border-foreground/[0.14]",
-              "max-xs:p-6",
-            )}
-          >
-            <div
-              className={cn(
-                "text-[clamp(2rem,4vw,3rem)] font-extrabold leading-none mb-2",
-                "bg-linear-to-br from-indigo-400 to-indigo-300 bg-clip-text text-transparent",
-              )}
-              style={{ WebkitBackgroundClip: 'text' }}
-            >
-              {stat.number}
-            </div>
-            <div className="text-base text-muted-foreground font-medium">
-              {stat.label}
-            </div>
-          </div>
-        ))}
+                <div>
+                  <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-3">
+                    Technologies in use
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {group.technologies.map((technology) => (
+                      <Badge
+                        key={technology}
+                        variant="outline"
+                        className={cn(
+                          "bg-foreground/[0.05] text-muted-foreground border-border",
+                          "rounded-md py-1 px-3 text-sm font-medium",
+                        )}
+                      >
+                        {technology}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </Section>
   );

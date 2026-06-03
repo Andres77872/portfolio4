@@ -47,6 +47,32 @@
     }
   },
   {
+    "title": "Magic Auth",
+    "description": "Enterprise-grade 3-tier authentication system with Root/Admin/Consumer user types and complete RBAC capabilities. Multi-project support with hierarchical access control and advanced security features.",
+    "descriptionMD": "**Magic Auth: Enterprise 3-Tier Authentication System**\n\nA comprehensive authentication platform designed for enterprise-grade access control with sophisticated user management and multi-project capabilities.\n\n**3-Tier User Architecture:**\n*   **ROOT USERS:** Unrestricted global access and system administration\n*   **ADMIN USERS:** Multi-project administration with complete project isolation\n*   **CONSUMER USERS:** RBAC-based access through user groups and permissions\n\n**Core Features:**\n*   **Advanced Authentication:** JWT-based sessions with HTTP-only cookie support and Bearer token fallback\n*   **Complete RBAC Management:** Granular permissions, role assignments, and real-time validation\n*   **Multi-Project Support:** Project isolation with hierarchical access control\n*   **Enterprise Security:** UUID-based identification, audit trails, and multi-layer security\n*   **Production Ready:** Scalable design with Redis caching and performance optimization\n\n**Technology Stack:**\n*   **Backend:** High-performance API built with **FastAPI** and **MySQL** database\n*   **Frontend:** Modern interface developed with **React + Vite**\n*   **Security:** JWT tokens, secure cookies, and comprehensive access control\n\nMagic Auth provides the foundation for complex organizational structures requiring sophisticated access management and enterprise-level security.",
+    "url": "https://auth-ui.arz.ai/",
+    "apiUrl": "https://auth-v2.arz.ai/",
+    "image": "https://img.arz.ai/0whA6FF1",
+    "repoUrl": "https://github.com/Andres77872/magic-auth-dashboard",
+    "tags": [
+      "FASTAPI",
+      "MYSQL",
+      "REACT",
+      "VITE",
+      "AUTHENTICATION",
+      "RBAC",
+      "JWT"
+    ],
+    "status": "production",
+    "license": "Apache 2.0",
+    "language": ["Python", "TypeScript", "React", "MySQL"],
+    "releaseDate": "2025-06-28",
+    "auth": {
+      "login": true,
+      "register": false
+    }
+  },
+  {
     "title": "JustAnotherFileStorage",
     "description": "Temporal file sharing system creating unique, encrypted file links. Decryption key is part of the URL; URLs are not stored, making recovery impossible. FastAPI backend, React frontend.",
     "descriptionMD": "**JustAnotherFileStorage (JAFS): Secure & Ephemeral File Sharing**\n\nShare files with an emphasis on privacy and security using JAFS. This system generates unique, encrypted links for your files, offering a temporal sharing solution.\n\n**Security by Design:**\n*   **Client-Side Encryption:** Files are encrypted in your browser before upload.\n*   **Key in URL:** The decryption key is embedded directly within the shared link's fragment identifier (hash).\n*   **Zero Knowledge (Server-Side):** The server never sees the decryption key, and the links themselves are not stored, making file recovery impossible if the link is lost. This ensures maximum privacy.\n\n**Technology Stack:**\n*   **Frontend:** Interactive and user-friendly interface built with **React**.\n*   **Backend:** High-performance and secure API developed with **FastAPI**.\n\nJAFS is ideal for sharing sensitive information that requires a self-destructing mechanism or when you want to ensure that only the recipient with the exact link can access the content.",
@@ -88,6 +114,53 @@
     "releaseDate": "2025-05-29",
     "auth": {
       "login": false,
+      "register": false
+    }
+  },
+  {
+    "title": "Magic Slider",
+    "description": "AI-powered slide creator that generates RevealJS presentations through LLM prompts. Integrates with talk.novus.chat backend API for intelligent content generation. Built with React + Vite, featuring RAG and agentic capabilities through magic-agents. Proof-of-concept for automated presentation creation.",
+    "descriptionMD": "**Magic Slider: AI-Powered Presentation Creator**\n\nTransform your ideas into compelling presentations effortlessly with Magic Slider, an innovative **Proof-of-Concept (POC)** that leverages AI to generate professional slides from simple prompts.\n\n**Core Features:**\n*   **LLM-Driven Content Generation:** Simply describe your presentation topic, and let AI create structured, engaging slides for you.\n*   **RevealJS Integration:** Generates modern, interactive presentations using the powerful RevealJS framework.\n*   **Intelligent Backend:** Powered by the **talk.novus.chat API** for sophisticated content processing and generation.\n*   **Advanced AI Capabilities:** Incorporates **RAG (Retrieval-Augmented Generation)** and **agentic workflows** through the **magic-agents** framework.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for fast development and optimal performance.\n*   **AI Framework:** Utilizes **magic-agents** for sophisticated AI-driven content creation.\n*   **Presentation Engine:** **RevealJS** for creating beautiful, interactive slide presentations.\n\n**Current Status:**\n*   **Proof-of-Concept** demonstrating the potential of AI-assisted presentation creation.\n\nMagic Slider represents the future of presentation design, where creativity meets artificial intelligence to streamline content creation.",
+    "url": "https://magic-slider.novus.chat/",
+    "image": "https://img.arz.ai/vGqCivS9",
+    "apiUrl": "https://magic.arz.ai/docs#/Chat/completion_chat_openai_v1_completion_post",
+    "repoUrl": "https://github.com/Andres77872/magic-slider",
+    "tags": [
+      "REACT",
+      "VITE",
+      "REVEALJS",
+      "LLM",
+      "RAG",
+      "MAGIC-AGENTS"
+    ],
+    "status": "production",
+    "license": "Apache 2.0",
+    "language": ["TypeScript", "React", "RevealJS"],
+    "releaseDate": "2025-06-07",
+    "auth": {
+      "login": false,
+      "register": false
+    }
+  },
+    {
+    "title": "Magic Worlds",
+    "description": "Role-Play with AI designed to create characters, worlds, and adventures using artificial intelligence. Build and explore immersive stories with AI-generated content and interactive narratives.",
+    "descriptionMD": "**Magic Worlds: AI-Powered Role-Playing Experience**\n\nDive into limitless storytelling possibilities with Magic Worlds, an innovative platform that leverages AI to create rich, immersive role-playing experiences.\n\n**Core Features:**\n*   **Character Creation:** Design unique characters with AI assistance, developing detailed backstories and personalities.\n*   **World Building:** Craft intricate worlds, settings, and environments that respond to your creative input.\n*   **Adventure Generation:** Create engaging narratives and interactive adventures that adapt to player choices.\n*   **Collaborative Storytelling:** Work alongside AI to develop plots, dialogue, and scenarios that bring your stories to life.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for a responsive and immersive user experience.\n*   **AI Integration:** Powered by advanced language models through the **magic-assistant** framework.\n*   **Backend:** Utilizes the robust API from **magic.arz.ai** for intelligent content generation.\n\nMagic Worlds represents the intersection of traditional role-playing games and cutting-edge AI technology, offering an ever-expanding canvas for your imagination.",
+    "url": "https://magic-worlds.novus.chat/",
+    "apiUrl": "https://magic.arz.ai/docs#/Chat/completion_chat_openai_v1_completion_post",
+    "image": "https://img.arz.ai/lO8Bbe-p",
+    "repoUrl": "https://github.com/Andres77872/magic-worlds",
+    "tags": [
+      "REACT",
+      "VITE",
+      "MAGIC-ASSISTANT"
+    ],
+    "status": "production",
+    "license": "Apache 2.0",
+    "language": ["TypeScript", "React"],
+    "releaseDate": "2025-06-14",
+    "auth": {
+      "login": true,
       "register": false
     }
   },
@@ -137,79 +210,6 @@
     "license": "Apache 2.0",
     "language": ["TypeScript", "React", "Python"],
     "releaseDate": "2025-06-18",
-    "auth": {
-      "login": true,
-      "register": false
-    }
-  },
-  {
-    "title": "Magic Worlds",
-    "description": "Role-Play with AI designed to create characters, worlds, and adventures using artificial intelligence. Build and explore immersive stories with AI-generated content and interactive narratives.",
-    "descriptionMD": "**Magic Worlds: AI-Powered Role-Playing Experience**\n\nDive into limitless storytelling possibilities with Magic Worlds, an innovative platform that leverages AI to create rich, immersive role-playing experiences.\n\n**Core Features:**\n*   **Character Creation:** Design unique characters with AI assistance, developing detailed backstories and personalities.\n*   **World Building:** Craft intricate worlds, settings, and environments that respond to your creative input.\n*   **Adventure Generation:** Create engaging narratives and interactive adventures that adapt to player choices.\n*   **Collaborative Storytelling:** Work alongside AI to develop plots, dialogue, and scenarios that bring your stories to life.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for a responsive and immersive user experience.\n*   **AI Integration:** Powered by advanced language models through the **magic-assistant** framework.\n*   **Backend:** Utilizes the robust API from **magic.arz.ai** for intelligent content generation.\n\nMagic Worlds represents the intersection of traditional role-playing games and cutting-edge AI technology, offering an ever-expanding canvas for your imagination.",
-    "url": "https://magic-worlds.novus.chat/",
-    "apiUrl": "https://magic.arz.ai/docs#/Chat/completion_chat_openai_v1_completion_post",
-    "image": "https://img.arz.ai/lO8Bbe-p",
-    "repoUrl": "https://github.com/Andres77872/magic-worlds",
-    "tags": [
-      "REACT",
-      "VITE",
-      "MAGIC-ASSISTANT"
-    ],
-    "status": "production",
-    "license": "Apache 2.0",
-    "language": ["TypeScript", "React"],
-    "releaseDate": "2025-06-14",
-    "auth": {
-      "login": true,
-      "register": false
-    }
-  },
-  {
-    "title": "Magic Slider",
-    "description": "AI-powered slide creator that generates RevealJS presentations through LLM prompts. Integrates with talk.novus.chat backend API for intelligent content generation. Built with React + Vite, featuring RAG and agentic capabilities through magic-agents. Proof-of-concept for automated presentation creation.",
-    "descriptionMD": "**Magic Slider: AI-Powered Presentation Creator**\n\nTransform your ideas into compelling presentations effortlessly with Magic Slider, an innovative **Proof-of-Concept (POC)** that leverages AI to generate professional slides from simple prompts.\n\n**Core Features:**\n*   **LLM-Driven Content Generation:** Simply describe your presentation topic, and let AI create structured, engaging slides for you.\n*   **RevealJS Integration:** Generates modern, interactive presentations using the powerful RevealJS framework.\n*   **Intelligent Backend:** Powered by the **talk.novus.chat API** for sophisticated content processing and generation.\n*   **Advanced AI Capabilities:** Incorporates **RAG (Retrieval-Augmented Generation)** and **agentic workflows** through the **magic-agents** framework.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for fast development and optimal performance.\n*   **AI Framework:** Utilizes **magic-agents** for sophisticated AI-driven content creation.\n*   **Presentation Engine:** **RevealJS** for creating beautiful, interactive slide presentations.\n\n**Current Status:**\n*   **Proof-of-Concept** demonstrating the potential of AI-assisted presentation creation.\n\nMagic Slider represents the future of presentation design, where creativity meets artificial intelligence to streamline content creation.",
-    "url": "https://magic-slider.novus.chat/",
-    "image": "https://img.arz.ai/vGqCivS9",
-    "apiUrl": "https://magic.arz.ai/docs#/Chat/completion_chat_openai_v1_completion_post",
-    "repoUrl": "https://github.com/Andres77872/magic-slider",
-    "tags": [
-      "REACT",
-      "VITE",
-      "REVEALJS",
-      "LLM",
-      "RAG",
-      "MAGIC-AGENTS"
-    ],
-    "status": "production",
-    "license": "Apache 2.0",
-    "language": ["TypeScript", "React", "RevealJS"],
-    "releaseDate": "2025-06-07",
-    "auth": {
-      "login": false,
-      "register": false
-    }
-  },
-  {
-    "title": "Magic Auth",
-    "description": "Enterprise-grade 3-tier authentication system with Root/Admin/Consumer user types and complete RBAC capabilities. Multi-project support with hierarchical access control and advanced security features.",
-    "descriptionMD": "**Magic Auth: Enterprise 3-Tier Authentication System**\n\nA comprehensive authentication platform designed for enterprise-grade access control with sophisticated user management and multi-project capabilities.\n\n**3-Tier User Architecture:**\n*   **ROOT USERS:** Unrestricted global access and system administration\n*   **ADMIN USERS:** Multi-project administration with complete project isolation\n*   **CONSUMER USERS:** RBAC-based access through user groups and permissions\n\n**Core Features:**\n*   **Advanced Authentication:** JWT-based sessions with HTTP-only cookie support and Bearer token fallback\n*   **Complete RBAC Management:** Granular permissions, role assignments, and real-time validation\n*   **Multi-Project Support:** Project isolation with hierarchical access control\n*   **Enterprise Security:** UUID-based identification, audit trails, and multi-layer security\n*   **Production Ready:** Scalable design with Redis caching and performance optimization\n\n**Technology Stack:**\n*   **Backend:** High-performance API built with **FastAPI** and **MySQL** database\n*   **Frontend:** Modern interface developed with **React + Vite**\n*   **Security:** JWT tokens, secure cookies, and comprehensive access control\n\nMagic Auth provides the foundation for complex organizational structures requiring sophisticated access management and enterprise-level security.",
-    "url": "https://auth-ui.arz.ai/",
-    "apiUrl": "https://auth-v2.arz.ai/",
-    "image": "https://img.arz.ai/0whA6FF1",
-    "repoUrl": "https://github.com/Andres77872/magic-auth-dashboard",
-    "tags": [
-      "FASTAPI",
-      "MYSQL",
-      "REACT",
-      "VITE",
-      "AUTHENTICATION",
-      "RBAC",
-      "JWT"
-    ],
-    "status": "production",
-    "license": "Apache 2.0",
-    "language": ["Python", "TypeScript", "React", "MySQL"],
-    "releaseDate": "2025-06-28",
     "auth": {
       "login": true,
       "register": false
