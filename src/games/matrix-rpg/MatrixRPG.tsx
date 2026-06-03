@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './MatrixRPG.css';
 import { CHAT_CONSUMERS } from '@/config/chatConfig';
+import { useCrtIntensity } from '@/hooks/useCrtIntensity';
 import { streamChatCompletion } from '../../services/chatService';
 import type { ChatRequestMessage } from '../../components/ChatBot/types';
-import { GameState, Message, MatrixRPGProps } from './types';
+import type { GameState, MatrixRPGProps, Message, TerminalStatus } from './types';
 import MatrixRPGHeader from './MatrixRPGHeader';
 import MatrixRPGFooter from './MatrixRPGFooter';
 import MatrixRPGTerminal from './MatrixRPGTerminal';
+import { findClosestCommand, type TerminalCommand } from './useTerminal';
 
-// System information for terminal authenticity
 const SYSTEM_INFO = {
   OS: 'SYNAPTIC-OS v3.7.9',
   KERNEL: 'Neural-Core 5.14.0-matrix',
@@ -16,10 +17,9 @@ const SYSTEM_INFO = {
   MEMORY: '128GB Neural RAM',
   HOSTNAME: 'nxterm-37912',
   USER: 'root',
-  SHELL: '/bin/neurosh'
+  SHELL: '/bin/neurosh',
 };
 
-// Terminal boot sequence - authentic POST/boot style
 const BOOT_SEQUENCE = [
   '',
   '╔════════════════════════════════════════════════════╗',
@@ -40,10 +40,9 @@ const BOOT_SEQUENCE = [
   '[ OK ] Starting Project MIRROR daemon',
   '[ ERROR ] Consciousness transfer: connection lost',
   '[ INFO ] Engaging emergency neural mode...',
-  ''
+  '',
 ];
 
-// Terminal welcome message
 const WELCOME_MESSAGE = `
 ┌────────────────────────────────────────────────────┐
 │ Welcome to ${SYSTEM_INFO.OS}                      │
@@ -64,25 +63,24 @@ AI DISCLOSURE: Neural transmissions are processed by an external AI service.
 Do not enter secrets, credentials, or sensitive personal data.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Type 'help' for available commands or just start talking...
+Type 'help' or press '?' for commands/settings, or just start talking...
 `;
 
-// Terminal command prompt
 const COMMAND_PROMPT = `${SYSTEM_INFO.USER}@${SYSTEM_INFO.HOSTNAME}:~$ `;
-
-// Terminal special characters
 const CURSOR_CHAR = '█';
+const MAX_CONVERSATION_MESSAGES = 12;
 
 interface ActiveStream {
   id: string;
   controller: AbortController;
+  marker: string;
+  reader?: ReadableStreamDefaultReader<Uint8Array>;
 }
 
-const createStreamId = (): string =>
-  `matrix-stream-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-
-const isAbortError = (error: unknown): boolean =>
-  error instanceof Error && error.name === 'AbortError';
+const createStreamId = (): string => `matrix-stream-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+const createStreamMarker = (streamId: string) => `\uE000${streamId}\uE001`;
+const stripStreamMarkers = (content: string) => content.replace(/\uE000matrix-stream-[^\uE001]+\uE001/g, '');
+const isAbortError = (error: unknown): boolean => error instanceof Error && error.name === 'AbortError';
 
 const MATRIX_RPG_SYSTEM_CONTEXT: ChatRequestMessage = {
   role: 'system',
@@ -111,117 +109,107 @@ const INITIAL_MESSAGES = [
   'Please... help me...',
 ];
 
+const COMMANDS: TerminalCommand[] = [
+  { name: 'help', description: 'Display command and AI safety help' },
+  { name: 'clear', description: 'Clear terminal screen' },
+  { name: 'whoami', description: 'Display current user information' },
+  { name: 'ps', description: 'List running neural processes' },
+  { name: 'status', description: 'Show system status report' },
+  { name: 'exit', description: 'Terminate neural session affordance' },
+];
 
+const appendPrompt = (content = '') => `${content}${content.endsWith('\n') || content.length === 0 ? '' : '\n'}${COMMAND_PROMPT}`;
+
+const replaceStreamBlock = (previous: string, marker: string, response: string) => {
+  const start = previous.indexOf(marker);
+  if (start === -1) return previous;
+  return `${previous.slice(0, start + marker.length)}Unknown Entity: ${response}`;
+};
 
 export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
   const [gameState, setGameState] = useState<GameState>('initializing');
   const [terminalOutput, setTerminalOutput] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const [userInput, setUserInput] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [terminalStatus, setTerminalStatus] = useState<TerminalStatus>('idle');
   const [conversations, setConversations] = useState<Message[]>([]);
-  const [currentBootLine, setCurrentBootLine] = useState(0);
+  const [isPoweringOn, setIsPoweringOn] = useState(false);
 
-  // Global references for the messaging system
+  const crt = useCrtIntensity();
   const messageIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const bootTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bootLineTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const readyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const interactiveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const powerTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const messageIndexRef = useRef(0);
   const activeStreamRef = useRef<ActiveStream | null>(null);
-  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const hasUserInteractedRef = useRef(false);
+  const isMountedRef = useRef(false);
 
-  // Start mysterious messages
+  const isProcessing = terminalStatus === 'connecting' || terminalStatus === 'streaming';
+
+  const clearMysteriousMessages = useCallback(() => {
+    if (messageIntervalRef.current) {
+      clearInterval(messageIntervalRef.current);
+      messageIntervalRef.current = null;
+    }
+  }, []);
+
+  const markUserInteracted = useCallback(() => {
+    if (hasUserInteractedRef.current) return;
+    hasUserInteractedRef.current = true;
+    clearMysteriousMessages();
+  }, [clearMysteriousMessages]);
+
   const startMysteriousMessages = useCallback(() => {
+    if (hasUserInteractedRef.current || messageIntervalRef.current || gameState !== 'interactive') return;
+
     messageIntervalRef.current = setInterval(() => {
-      if (messageIndexRef.current < INITIAL_MESSAGES.length && !hasUserInteracted) {
-        const message = INITIAL_MESSAGES[messageIndexRef.current];
-
-        // Add system notification of incoming message
-        setTerminalOutput(prev =>
-          prev + '\n[SYSTEM] Incoming neural transmission...\n' +
-          `Unknown Entity: ${message}\n\n` + COMMAND_PROMPT
-        );
-
-        messageIndexRef.current++;
-      } else {
-        if (messageIntervalRef.current) {
-          clearInterval(messageIntervalRef.current);
-          messageIntervalRef.current = null;
-        }
+      if (hasUserInteractedRef.current || messageIndexRef.current >= INITIAL_MESSAGES.length) {
+        clearMysteriousMessages();
+        return;
       }
-    }, 8000); // Send a message every 8 seconds
-  }, [hasUserInteracted]);
 
-  // Boot sequence effect
-  useEffect(() => {
-    if (gameState === 'loading' && currentBootLine < BOOT_SEQUENCE.length) {
-      const timer = setTimeout(() => {
-        setTerminalOutput(prev => prev + BOOT_SEQUENCE[currentBootLine] + '\n');
-        setCurrentBootLine(prev => prev + 1);
+      const message = INITIAL_MESSAGES[messageIndexRef.current];
+      setTerminalOutput(prev => `${prev}\n[SYSTEM] Incoming neural transmission...\nUnknown Entity: ${message}\n\n${COMMAND_PROMPT}`);
+      messageIndexRef.current++;
+    }, 8000);
+  }, [clearMysteriousMessages, gameState]);
 
-        // When boot sequence is complete, show welcome message
-        if (currentBootLine + 1 >= BOOT_SEQUENCE.length) {
-          setTimeout(() => {
-            setGameState('ready');
-            setTerminalOutput(prev => prev + WELCOME_MESSAGE + '\n');
-
-            // Transition to interactive mode
-            setTimeout(() => {
-              setGameState('interactive');
-              setTerminalOutput(prev => prev + COMMAND_PROMPT);
-
-              // Start mysterious messages from the unknown entity
-              startMysteriousMessages();
-            }, 2000);
-          }, 1000);
-        }
-      }, 80 + Math.random() * 120); // Faster boot timing for authenticity
-
-      return () => clearTimeout(timer);
-    }
-  }, [gameState, currentBootLine, startMysteriousMessages]);
-
-  // Initialize terminal on mount with CRT power-on effect
-  useEffect(() => {
-    // Start boot sequence after brief CRT warmup
-    const timer = setTimeout(() => {
-      setGameState('loading');
-      setTerminalOutput('Initializing Synaptic Neural Interface...\n\n');
-    }, 500);
-
-    return () => clearTimeout(timer);
+  const clearBootTimers = useCallback(() => {
+    [bootTimerRef, bootLineTimerRef, readyTimerRef, interactiveTimerRef, powerTimerRef].forEach(ref => {
+      if (ref.current) {
+        clearTimeout(ref.current);
+        ref.current = null;
+      }
+    });
   }, []);
 
-  // Blinking cursor effect
-  useEffect(() => {
-    const cursorInterval = setInterval(() => {
-      setShowCursor(prev => !prev);
-    }, 500);
+  const handleAbort = useCallback(() => {
+    markUserInteracted();
+    const activeStream = activeStreamRef.current;
 
-    return () => clearInterval(cursorInterval);
-  }, []);
-
-  // Handle user input change
-  const handleInputChange = (input: string) => {
-    setUserInput(input);
-  };
-
-  // Handle user input submission
-  const handleSubmit = async () => {
-    if (!userInput.trim() || activeStreamRef.current) return;
-
-    // Stop automated messages on first user interaction
-    if (!hasUserInteracted) {
-      setHasUserInteracted(true);
-      if (messageIntervalRef.current) {
-        clearInterval(messageIntervalRef.current);
-        messageIntervalRef.current = null;
-      }
+    if (activeStream) {
+      activeStream.controller.abort();
+      activeStream.reader?.cancel().catch(() => undefined);
+      activeStreamRef.current = null;
+      setTerminalStatus('aborted');
+      setTerminalOutput(prev => `${stripStreamMarkers(prev)}\n^C\n[SYSTEM] Neural transmission interrupted.\n\n${COMMAND_PROMPT}`);
+      setUserInput('');
+      return;
     }
 
-    // Add user input to terminal output
-    setTerminalOutput(prev => prev + userInput + '\n');
+    if (userInput.trim()) {
+      setTerminalOutput(prev => `${prev}${userInput}\n^C\n${COMMAND_PROMPT}`);
+      setUserInput('');
+    }
+  }, [markUserInteracted, userInput]);
 
-    // Handle terminal commands
-    if (userInput.toLowerCase() === 'help') {
+  const runCommand = useCallback((command: string): boolean => {
+    const normalized = command.toLowerCase();
+
+    if (normalized === 'help') {
       setTerminalOutput(prev => prev +
         '\n┌─────────────────────────────────────────────────────────────────┐\n' +
         '│ AVAILABLE COMMANDS                                              │\n' +
@@ -233,36 +221,31 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
         '│  status   Show system status report                             │\n' +
         '│  exit     Terminate neural session                              │\n' +
         '├─────────────────────────────────────────────────────────────────┤\n' +
+        '│  ?        Open help/settings overlay                            │\n' +
+        '│  Tab      Complete commands or show matches                     │\n' +
+        '│  ↑/↓      Navigate command history                              │\n' +
+        '│  Ctrl+C   Interrupt active neural transmission                  │\n' +
         '│  AI NOTE  Messages are processed by an external AI service.     │\n' +
-        '│  Or type anything to communicate with the unknown entity...     │\n' +
-        '└─────────────────────────────────────────────────────────────────┘\n\n' +
-        COMMAND_PROMPT
-      );
-      setUserInput('');
-      return;
+        '└─────────────────────────────────────────────────────────────────┘\n\n' + COMMAND_PROMPT);
+      return true;
     }
 
-    if (userInput.toLowerCase() === 'clear') {
+    if (normalized === 'clear') {
       setTerminalOutput(COMMAND_PROMPT);
-      setUserInput('');
-      return;
+      return true;
     }
 
-    if (userInput.toLowerCase() === 'whoami') {
-      setTerminalOutput(prev => prev +
-        '\n' +
+    if (normalized === 'whoami') {
+      setTerminalOutput(prev => prev + '\n' +
         `User.......... ${SYSTEM_INFO.USER}\n` +
-        `Session....... Neural Interface Terminal\n` +
-        `Access........ ROOT (Emergency Protocol)\n` +
-        `UID........... 0\n` +
-        `Groups........ root, neural, mirror, cortex\n\n` +
-        COMMAND_PROMPT
-      );
-      setUserInput('');
-      return;
+        'Session....... Neural Interface Terminal\n' +
+        'Access........ ROOT (Emergency Protocol)\n' +
+        'UID........... 0\n' +
+        'Groups........ root, neural, mirror, cortex\n\n' + COMMAND_PROMPT);
+      return true;
     }
 
-    if (userInput.toLowerCase() === 'ps') {
+    if (normalized === 'ps') {
       setTerminalOutput(prev => prev +
         '\n  PID  TTY      STAT   TIME COMMAND\n' +
         '    1  ?        Ss     0:03 /sbin/init --neural\n' +
@@ -271,14 +254,11 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
         '  512  ?        R     12:33 consciousness-monitor --watch\n' +
         ' 1024  ?        Sl    45:21 project-mirror-daemon\n' +
         ' 2048  pts/0    S+     8:17 unknown-entity-handler\n' +
-        ' 3072  pts/0    R+     0:00 ps aux\n\n' +
-        COMMAND_PROMPT
-      );
-      setUserInput('');
-      return;
+        ' 3072  pts/0    R+     0:00 ps aux\n\n' + COMMAND_PROMPT);
+      return true;
     }
 
-    if (userInput.toLowerCase() === 'status') {
+    if (normalized === 'status') {
       setTerminalOutput(prev => prev +
         '\n┌─ SYSTEM STATUS REPORT ──────────────────────────────────────────┐\n' +
         '│                                                                 │\n' +
@@ -289,155 +269,211 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
         '│  Unknown Entity.............. ████████████ ACTIVE               │\n' +
         '│  Emergency Protocol.......... ████████████ ENGAGED              │\n' +
         '│                                                                 │\n' +
-        '└─────────────────────────────────────────────────────────────────┘\n\n' +
-        COMMAND_PROMPT
-      );
-      setUserInput('');
+        '└─────────────────────────────────────────────────────────────────┘\n\n' + COMMAND_PROMPT);
+      return true;
+    }
+
+    if (normalized === 'exit') {
+      setTerminalOutput(prev => prev + '\n[SYSTEM] Session termination request ignored. Emergency neural bridge remains active.\n\n' + COMMAND_PROMPT);
+      return true;
+    }
+
+    return false;
+  }, []);
+
+  const handleSubmit = useCallback(async () => {
+    const submittedInput = userInput.trim();
+    if (!submittedInput || activeStreamRef.current) return;
+
+    markUserInteracted();
+    setTerminalStatus('idle');
+    setTerminalOutput(prev => prev + submittedInput + '\n');
+    setUserInput('');
+
+    if (runCommand(submittedInput)) return;
+
+    const closestCommand = findClosestCommand(submittedInput, COMMANDS);
+    if (closestCommand) {
+      setTerminalOutput(prev => `${prev}\n[HINT] Unknown command '${submittedInput}'. Did you mean '${closestCommand.name}'?\n\n${COMMAND_PROMPT}`);
       return;
     }
 
-    // For all other inputs, treat as conversation with the unknown entity
     const streamId = createStreamId();
+    const marker = createStreamMarker(streamId);
     const controller = new AbortController();
-    activeStreamRef.current = { id: streamId, controller };
+    activeStreamRef.current = { id: streamId, controller, marker };
 
-    const userMessage: Message = {
-      role: 'user',
-      content: userInput
-    };
-    
-    setConversations(prev => [...prev, userMessage]);
-    setUserInput('');
-    setIsProcessing(true);
-    
+    const userMessage: Message = { role: 'user', content: submittedInput };
+    const boundedMessages = [...conversations, userMessage].slice(-MAX_CONVERSATION_MESSAGES);
+    setConversations(boundedMessages);
+    setTerminalStatus('connecting');
+
     try {
-      // Show AI is responding
-      setTerminalOutput(prev => prev + '[SYSTEM] Establishing neural link...\n');
-      setTerminalOutput(prev => prev + 'Unknown Entity: ');
+      setTerminalOutput(prev => `${prev}[SYSTEM] Establishing neural link... Ctrl+C to interrupt.\n${marker}Unknown Entity: `);
 
-      // Prepare conversation history for API
-      const messages: ChatRequestMessage[] = conversations.concat(userMessage).map(msg => ({
-        role: msg.role,
-        content: msg.content
+      const messages: ChatRequestMessage[] = boundedMessages.map(message => ({
+        role: message.role,
+        content: message.content,
       }));
 
-      // Call chatService with the conversation
       const stream = await streamChatCompletion({
-        messages: [MATRIX_RPG_SYSTEM_CONTEXT, ...messages]
+        messages: [MATRIX_RPG_SYSTEM_CONTEXT, ...messages],
       }, {
         consumer: CHAT_CONSUMERS.MATRIX_RPG,
         signal: controller.signal,
       });
 
-      if (controller.signal.aborted || activeStreamRef.current?.id !== streamId) {
-        return;
-      }
+      if (controller.signal.aborted || activeStreamRef.current?.id !== streamId) return;
 
       const reader = stream.getReader();
+      activeStreamRef.current.reader = reader;
       const decoder = new TextDecoder();
       let assistantResponse = '';
+      setTerminalStatus('streaming');
 
-      // Process the streaming response
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
         if (controller.signal.aborted || activeStreamRef.current?.id !== streamId) {
           await reader.cancel().catch(() => undefined);
           return;
         }
-        
-        // Convert the chunk to text
-        const chunk = decoder.decode(value);
-        assistantResponse += chunk;
-        
-        // Simple update - just replace the Unknown Entity line with current response
-        setTerminalOutput(prev => {
-          if (activeStreamRef.current?.id !== streamId) {
-            return prev;
-          }
 
-          const lines = prev.split('\n');
-          const lastLineIndex = lines.length - 1;
-          
-          // Update the last line if it starts with Unknown Entity
-          if (lines[lastLineIndex].startsWith('Unknown Entity:')) {
-            lines[lastLineIndex] = 'Unknown Entity: ' + assistantResponse;
-          }
-          
-          return lines.join('\n');
-        });
+        assistantResponse += decoder.decode(value, { stream: true });
+        setTerminalOutput(prev => replaceStreamBlock(prev, marker, assistantResponse));
       }
 
-      if (controller.signal.aborted || activeStreamRef.current?.id !== streamId) {
-        return;
-      }
+      assistantResponse += decoder.decode();
 
-      // Add assistant's response to conversation history
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: assistantResponse
-      };
-      
-      setConversations(prev => [...prev, assistantMessage]);
+      if (controller.signal.aborted || activeStreamRef.current?.id !== streamId) return;
 
-      // Add new command prompt
-      setTerminalOutput(prev => prev + '\n\n' + COMMAND_PROMPT);
-
+      setConversations(prev => [...prev, { role: 'assistant', content: assistantResponse }].slice(-MAX_CONVERSATION_MESSAGES));
+      setTerminalOutput(prev => `${stripStreamMarkers(replaceStreamBlock(prev, marker, assistantResponse))}\n\n${COMMAND_PROMPT}`);
+      setTerminalStatus('idle');
     } catch (error) {
-      if (controller.signal.aborted || isAbortError(error) || activeStreamRef.current?.id !== streamId) {
-        return;
-      }
+      if (controller.signal.aborted || isAbortError(error) || activeStreamRef.current?.id !== streamId) return;
 
-      console.error('Error processing chat:', error);
-      setTerminalOutput(prev => prev +
-        '\n[ERROR] Neural interface connection lost\n' +
-        '[SYSTEM] Attempting to reconnect...\n\n' +
-        COMMAND_PROMPT
-      );
+      console.error('Error processing Matrix RPG chat:', error);
+      setTerminalStatus('error');
+      setTerminalOutput(prev => `${stripStreamMarkers(prev)}\n[ERROR] Neural interface connection lost\n[SYSTEM] Attempting to reconnect...\n\n${COMMAND_PROMPT}`);
     } finally {
       if (activeStreamRef.current?.id === streamId) {
         activeStreamRef.current = null;
-        setIsProcessing(false);
       }
     }
-  };
-  
-  // Render the terminal content based on game state
-  const renderTerminalContent = () => {
-    let content = terminalOutput;
+  }, [conversations, markUserInteracted, runCommand, userInput]);
 
-    // Add cursor for non-interactive states
-    if (gameState !== 'interactive') {
-      content += showCursor ? CURSOR_CHAR : ' ';
-    }
-
-    return content;
-  };
-
-  // Cleanup on unmount
   useEffect(() => {
+    isMountedRef.current = true;
+    bootTimerRef.current = setTimeout(() => {
+      if (!isMountedRef.current) return;
+      setGameState('loading');
+      setTerminalOutput('Initializing Synaptic Neural Interface...\n\n');
+    }, 500);
+
     return () => {
-      if (messageIntervalRef.current) {
-        clearInterval(messageIntervalRef.current);
-      }
+      isMountedRef.current = false;
+      clearBootTimers();
+      clearMysteriousMessages();
       activeStreamRef.current?.controller.abort();
+      activeStreamRef.current?.reader?.cancel().catch(() => undefined);
       activeStreamRef.current = null;
     };
+  }, [clearBootTimers, clearMysteriousMessages]);
+
+  useEffect(() => {
+    if (crt.effectiveIntensity === 0 || crt.overrideReason === 'reduced-motion') {
+      setIsPoweringOn(false);
+      return;
+    }
+
+    setIsPoweringOn(true);
+    powerTimerRef.current = setTimeout(() => setIsPoweringOn(false), 900);
+
+    return () => {
+      if (powerTimerRef.current) {
+        clearTimeout(powerTimerRef.current);
+        powerTimerRef.current = null;
+      }
+    };
+    // Power-on is intentionally a mount animation, not replayed on intensity changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (gameState !== 'loading') return;
+
+    let line = 0;
+    const tick = () => {
+      if (!isMountedRef.current) return;
+
+      setTerminalOutput(prev => prev + BOOT_SEQUENCE[line] + '\n');
+      line++;
+
+      if (line < BOOT_SEQUENCE.length) {
+        bootLineTimerRef.current = setTimeout(tick, 80 + Math.random() * 120);
+        return;
+      }
+
+      readyTimerRef.current = setTimeout(() => {
+        if (!isMountedRef.current) return;
+        setGameState('ready');
+        setTerminalOutput(prev => prev + WELCOME_MESSAGE + '\n');
+
+        interactiveTimerRef.current = setTimeout(() => {
+          if (!isMountedRef.current) return;
+          setGameState('interactive');
+          setTerminalOutput(prev => appendPrompt(prev));
+        }, 2000);
+      }, 1000);
+    };
+
+    bootLineTimerRef.current = setTimeout(tick, 80 + Math.random() * 120);
+
+    return () => {
+      if (bootLineTimerRef.current) clearTimeout(bootLineTimerRef.current);
+    };
+  }, [gameState]);
+
+  useEffect(() => {
+    if (gameState === 'interactive') startMysteriousMessages();
+  }, [gameState, startMysteriousMessages]);
+
+  useEffect(() => {
+    const cursorInterval = setInterval(() => setShowCursor(prev => !prev), 500);
+    return () => clearInterval(cursorInterval);
+  }, []);
+
+  const renderedContent = useMemo(() => {
+    let content = stripStreamMarkers(terminalOutput);
+    if (gameState !== 'interactive') content += showCursor ? CURSOR_CHAR : ' ';
+    return content;
+  }, [gameState, showCursor, terminalOutput]);
+
   return (
-    <div className="matrix-rpg-game">
-      <MatrixRPGHeader gameState={gameState} />
+    <div className={`matrix-rpg-game ${isPoweringOn ? 'matrix-rpg-game--power-on' : ''}`}>
+      <MatrixRPGHeader
+        gameState={gameState}
+        crtIntensity={crt.effectiveIntensity}
+        isCrtOverridden={crt.isOverriddenByOs}
+      />
 
       <div className={`matrix-rpg-container ${className}`}>
         <MatrixRPGTerminal
-          content={renderTerminalContent()}
+          content={renderedContent}
           gameState={gameState}
+          terminalStatus={terminalStatus}
           userInput={userInput}
           isProcessing={isProcessing}
-          onInputChange={handleInputChange}
+          commands={COMMANDS}
+          preferredIntensity={crt.preferredIntensity}
+          effectiveIntensity={crt.effectiveIntensity}
+          isCrtOverridden={crt.isOverriddenByOs}
+          crtOverrideReason={crt.overrideReason}
+          onInputChange={setUserInput}
           onSubmit={handleSubmit}
+          onAbort={handleAbort}
+          onCycleIntensity={crt.cycleIntensity}
         />
       </div>
 
