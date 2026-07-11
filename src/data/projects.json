@@ -142,7 +142,7 @@
       "register": false
     }
   },
-    {
+  {
     "title": "Magic Worlds",
     "description": "Role-Play with AI designed to create characters, worlds, and adventures using artificial intelligence. Build and explore immersive stories with AI-generated content and interactive narratives.",
     "descriptionMD": "**Magic Worlds: AI-Powered Role-Playing Experience**\n\nDive into limitless storytelling possibilities with Magic Worlds, an innovative platform that leverages AI to create rich, immersive role-playing experiences.\n\n**Core Features:**\n*   **Character Creation:** Design unique characters with AI assistance, developing detailed backstories and personalities.\n*   **World Building:** Craft intricate worlds, settings, and environments that respond to your creative input.\n*   **Adventure Generation:** Create engaging narratives and interactive adventures that adapt to player choices.\n*   **Collaborative Storytelling:** Work alongside AI to develop plots, dialogue, and scenarios that bring your stories to life.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for a responsive and immersive user experience.\n*   **AI Integration:** Powered by advanced language models through the **magic-assistant** framework.\n*   **Backend:** Utilizes the robust API from **llm.arz.ai** for intelligent content generation.\n\nMagic Worlds represents the intersection of traditional role-playing games and cutting-edge AI technology, offering an ever-expanding canvas for your imagination.",
@@ -161,6 +161,31 @@
     "releaseDate": "2025-06-14",
     "auth": {
       "login": true,
+      "register": false
+    }
+  },
+  {
+    "title": "Yellow Rooms",
+    "description": "Browser-based first-person liminal-horror game built with Three.js. Deterministic, infinitely streamed procedural world, custom deferred renderer with raw GLSL shaders, two AI-driven enemies, and full mobile support. Pure client-side WebGL2 — no framework, no backend.",
+    "descriptionMD": "**Yellow Rooms: A Liminal Descent**\n\nYou've no-clipped out of reality into an endless yellow labyrinth. Find the exit. Don't let it reach you.\n\n**Key Features:**\n*   **Deterministic Infinite World:** Procedurally generated from a text seed with streamed chunks, domain-warped macro regions, and distinct architectural styles — office districts, warehouse bays, and pillar halls — stacked into a multi-floor vertical world connected by walkable stairways.\n*   **Custom Deferred Renderer:** Raw **GLSL** pipeline on **Three.js**/WebGL2 — G-buffer, SSAO, shadow mapping, bloom, FXAA, volumetric light, and an ink/outline pass for an anime-inspired cel-shaded look.\n*   **Two AI Enemies:** A teleporting Stalker that A*-pathfinds around corners on line of sight, and a relentless Pursuer that tracks you across floors and can't be frozen by the flashlight.\n*   **Survival Mechanics:** Manage stamina, battery, sanity, and exposure — staring at the entity with your flashlight freezes it, but drains your sanity.\n*   **Full Mobile Support:** Virtual joystick, drag-to-look, and immersive fullscreen alongside desktop WASD + pointer-lock controls.\n\n**Technology Stack:**\n*   **Engine:** **Three.js** with a hand-rolled deferred rendering pipeline in vanilla JavaScript — no UI framework.\n*   **Build & Testing:** **Vite** and **Vitest**, with deterministic golden tests validating world generation.\n*   **Architecture:** Fully client-side — a single procedural topology drives rendering, collision, AI pathfinding, and the minimap.",
+    "url": "https://yr.arz.ai/",
+    "image": "https://img.arz.ai/s0yCNwzV",
+    "repoUrl": "https://github.com/Andres77872/yellow-rooms",
+    "tags": [
+      "THREE.JS",
+      "WEBGL2",
+      "GLSL",
+      "VITE",
+      "PROCEDURAL GENERATION",
+      "GAME",
+      "DEFERRED RENDERING"
+    ],
+    "status": "production",
+    "license": "",
+    "language": ["JavaScript", "Three.js", "GLSL"],
+    "releaseDate": "2026-06-29",
+    "auth": {
+      "login": false,
       "register": false
     }
   },

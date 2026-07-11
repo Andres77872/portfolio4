@@ -31,6 +31,7 @@ export const LANGUAGE_COLORS: Record<string, string> = {
   angular: '#DD0031',
   threejs: '#000000',
   'three.js': '#000000',
+  glsl: '#5686a5',
 };
 
 /**

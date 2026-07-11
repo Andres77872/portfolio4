@@ -58,9 +58,9 @@ const expertiseGroups: ExpertiseGroup[] = [
   },
   {
     title: 'Product frontend & interactive UX',
-    description: 'React/Vite applications, graph visualizations, presentation tools, and canvas-driven interfaces tied directly to portfolio projects.',
-    projectTitles: ['spyder.findit', 'Magic Slider', 'Portfolio', 'Magic Worlds'],
-    technologies: getAvailableTechnologies(['REACT', 'VITE', 'THREE.JS', 'REACT-FORCE-GRAPH-3D', 'REVEALJS', 'CANVAS']),
+    description: 'React/Vite applications, graph visualizations, presentation tools, canvas-driven interfaces, and 3D game experiences tied directly to portfolio projects.',
+    projectTitles: ['spyder.findit', 'Magic Slider', 'Portfolio', 'Magic Worlds', 'Yellow Rooms'],
+    technologies: getAvailableTechnologies(['REACT', 'VITE', 'THREE.JS', 'REACT-FORCE-GRAPH-3D', 'REVEALJS', 'CANVAS', 'WEBGL2', 'GLSL', 'PROCEDURAL GENERATION']),
   },
   {
     title: 'APIs, auth & secure product backends',
