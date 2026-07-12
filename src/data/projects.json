@@ -291,6 +291,31 @@
     }
   },
   {
+    "title": "OpenCode Dashboard",
+    "description": "Local analytics for AI coding-assistant usage — one Go binary with both a web SPA and a terminal UI. Reads OpenCode, Claude Code, and Codex usage data read-only, tracking sessions, costs, tokens, models, tools, and subscription quotas. Fully offline and local-only.",
+    "descriptionMD": "**OpenCode Dashboard: Local Analytics for AI Coding Assistants**\n\nOne binary, web or terminal, works offline. OpenCode Dashboard turns your local **OpenCode**, **Claude Code**, and **Codex** usage data into rich analytics — without uploading a byte.\n\n**Key Features:**\n*   **Dual Interface, One Binary:** A browser SPA and a full-keyboard **Bubble Tea** terminal UI share seven analytics surfaces — Overview, Daily, Models, Tools, Projects, Sessions, and Config — with live source switching and flexible time-range presets.\n*   **Cross-Source Overview:** Merges every source into combined totals for sessions, messages, and tokens while keeping costs per-source, respecting each provider's cost provenance.\n*   **Self-Maintaining SQLite Cache:** Background sync consolidates aggregates while serving live raw data, with incremental resync and clear-and-rebuild from the web UI.\n*   **Subscription Quota Tracking:** Monitors Codex, Claude Code, and MiniMax rate limits using only official surfaces — including a statusline hook that captures Claude Code Pro/Max quotas.\n*   **Full JSON API:** Everything the UIs show is available under `/api/v1` — sources, overview, daily, models, tools, projects, sessions, messages, config, and quotas.\n\n**Technology Stack:**\n*   **Backend:** **Go** single binary (CGO-free) with pure-Go **SQLite**, serving the API and the embedded frontend.\n*   **Frontend:** **React 19 + Vite + TypeScript** SPA built on an in-house component system with pure-SVG charts.\n*   **TUI:** **Bubble Tea** + Lip Gloss terminal interface.\n\nPrivacy by design: read-only data sources, local-only storage, and a clean uninstall that removes only dashboard-owned files.",
+    "image": "https://img.arz.ai/iBoCguaJ",
+    "repoUrl": "https://github.com/Andres77872/opencode-dashboard",
+    "tags": [
+      "GO",
+      "SQLITE",
+      "REACT",
+      "VITE",
+      "BUBBLE TEA",
+      "TUI",
+      "ANALYTICS",
+      "CLI"
+    ],
+    "status": "repo",
+    "license": "Apache 2.0",
+    "language": ["Go", "TypeScript", "React", "SQLite"],
+    "releaseDate": "2026-03-31",
+    "auth": {
+      "login": false,
+      "register": false
+    }
+  },
+  {
     "title": "Portfolio",
     "description": "Interactive personal portfolio showcasing projects and skills. Features an AI chatbot for portfolio exploration and a terminal-based canvas RPG game powered by LLM technology.",
     "descriptionMD": "**Portfolio: Interactive Developer Showcase**\n\nA modern and engaging portfolio that demonstrates technical skills and creative projects through interactive elements and AI integration.\n\n**Key Features:**\n*   **AI Chatbot Assistant:** Engage with an intelligent chatbot that provides information about projects, skills, and experience in an interactive format.\n*   **Terminal RPG Game:** Experience a unique mini-game with a terminal interface rendered on canvas, using LLM technology to simulate an immersive role-playing experience.\n*   **Project Showcase:** Comprehensive display of development projects with detailed information and visual elements.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for optimal performance and development experience.\n*   **AI Integration:** Incorporates LLM technology for interactive elements and game simulation.\n*   **Canvas Rendering:** Utilizes HTML5 Canvas for creative visual elements and the terminal-based game interface.\n\nThis portfolio represents both a showcase of technical skills and a demonstration of creative application development.",

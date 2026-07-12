@@ -23,6 +23,7 @@ export const LANGUAGE_COLORS: Record<string, string> = {
   r: '#198CE7',
   scala: '#c22d40',
   mysql: '#00758F',
+  sqlite: '#003B57',
   postgresql: '#336791',
   mongodb: '#47A248',
   graphql: '#E10098',
