@@ -24,7 +24,7 @@ export function MetadataSection({ project }: MetadataSectionProps) {
       )}
     >
       {project.language && project.language.length > 0 && (
-        <MetadataCard icon={<Code className="w-4 h-4" />} label="Languages" accentColor="indigo">
+        <MetadataCard icon={<Code className="w-4 h-4" />} label="Languages">
           <div className="flex flex-wrap gap-2 mt-2">
             {project.language.map((lang, index) => (
               <span
@@ -43,7 +43,7 @@ export function MetadataSection({ project }: MetadataSectionProps) {
       )}
 
       {project.license && (
-        <MetadataCard icon={<BookOpen className="w-4 h-4" />} label="License" accentColor="emerald">
+        <MetadataCard icon={<BookOpen className="w-4 h-4" />} label="License">
           <span className="text-sm text-foreground/80 mt-2 font-medium">
             {project.license}
           </span>
@@ -51,7 +51,7 @@ export function MetadataSection({ project }: MetadataSectionProps) {
       )}
 
       {project.releaseDate && (
-        <MetadataCard icon={<Calendar className="w-4 h-4" />} label="Released" accentColor="violet">
+        <MetadataCard icon={<Calendar className="w-4 h-4" />} label="Released">
           <span className="text-sm text-foreground/80 mt-2">
             {project.releaseDate}
           </span>
@@ -59,7 +59,7 @@ export function MetadataSection({ project }: MetadataSectionProps) {
       )}
 
       {project.auth && (
-        <MetadataCard icon={<Lock className="w-4 h-4" />} label="Authentication" accentColor="amber">
+        <MetadataCard icon={<Lock className="w-4 h-4" />} label="Authentication">
           <div className="flex items-center gap-3 mt-2">
             <AuthBadge active={project.auth.login} label="Login" />
             <AuthBadge active={project.auth.register} label="Register" />

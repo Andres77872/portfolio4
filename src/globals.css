@@ -21,6 +21,8 @@
   --accent-foreground: hsl(240 10% 4%);
   --destructive: hsl(0 84% 60%);
   --destructive-foreground: hsl(0 0% 98%);
+  --success: hsl(158 74% 33%);
+  --info: hsl(217 72% 42%);
   --border: hsl(240 10% 84%);
   --input: hsl(240 10% 84%);
   --ring: hsl(239 84% 67%);
@@ -58,6 +60,8 @@
   --accent-foreground: hsl(0 0% 98%);
   --destructive: hsl(0 72% 51%);
   --destructive-foreground: hsl(0 0% 98%);
+  --success: hsl(158 64% 52%);
+  --info: hsl(213 80% 68%);
   --border: hsl(240 4% 16%);
   --input: hsl(240 4% 16%);
   --ring: hsl(239 84% 67%);
@@ -89,6 +93,8 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-info: var(--info);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -126,89 +132,40 @@
   --breakpoint-xl: 1200px;
   --breakpoint-2xl: 1400px;
 
-  /* Custom animations */
-  --animate-shimmer: shimmer 2s linear infinite;
-  --animate-float: float 3s ease-in-out infinite;
-  --animate-gradient-shift: gradientShift 6s ease-in-out infinite;
-  --animate-badge-pulse: badgePulse 2s ease-in-out infinite;
-  --animate-header-slide-in: headerSlideIn 0.5s cubic-bezier(0, 0, 0.2, 1)
-    forwards;
-  --animate-card-fade-in: cardFadeIn 0.4s cubic-bezier(0, 0, 0.2, 1) forwards;
-
-  /* Hero section animations */
-  --animate-wave: wave 2.4s ease-in-out infinite;
-  --animate-bounce-arrow: bounce 2.2s ease-in-out infinite;
-  --animate-slide-in-left: slideInFromLeft 0.6s cubic-bezier(0, 0, 0.2, 1) both;
-  --animate-slide-in-right: slideInFromRight 0.6s cubic-bezier(0, 0, 0.2, 1)
-    both;
-  --animate-slide-in-bottom: slideInFromBottom 0.6s cubic-bezier(0, 0, 0.2, 1)
-    both;
+  /* Animations — one entrance pattern, a few small ambient loops */
   --animate-fade-in-up: fadeInUp 0.6s cubic-bezier(0, 0, 0.2, 1) both;
+  --animate-header-slide-in: headerSlideIn 0.5s cubic-bezier(0, 0, 0.2, 1)
+    both;
+  --animate-wave: wave 2.4s ease-in-out infinite;
+  --animate-bounce-arrow: bounceArrow 2.2s ease-in-out infinite;
+  --animate-status-pulse: statusPulse 2s ease-in-out infinite;
 }
 
-/* ===== Custom Keyframes ===== */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
+/* ===== Keyframes ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
   }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes gradientShift {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes badgePulse {
-  0%,
-  100% {
+  to {
     opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
+    transform: translateY(0);
   }
 }
 
+/* Header entrance: animates opacity/Y only — horizontal centering lives on
+   the element (-translate-x-1/2) so reduced-motion stays centered. */
 @keyframes headerSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px) translateX(-50%);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) translateX(-50%);
+    transform: translateY(0);
   }
 }
 
-@keyframes cardFadeIn {
-  from {
-    opacity: 0;
-    translate: 0 10px;
-  }
-  to {
-    opacity: 1;
-    translate: 0 0;
-  }
-}
-
-/* ===== Hero Keyframes ===== */
 @keyframes wave {
   0%,
   20%,
@@ -227,40 +184,7 @@
   }
 }
 
-@keyframes slideInFromLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInFromRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInFromBottom {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes bounce {
+@keyframes bounceArrow {
   0%,
   20%,
   50%,
@@ -276,18 +200,6 @@
   }
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ===== Contact pulse keyframe ===== */
 @keyframes statusPulse {
   0%,
   100% {

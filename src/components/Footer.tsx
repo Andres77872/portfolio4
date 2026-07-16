@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 
@@ -28,8 +29,6 @@ export default function Footer() {
       className={cn(
         "bg-card border-t border-border relative",
         "pt-8 pb-3",
-        "animate-card-fade-in",
-        "motion-reduce:animate-none",
         "contrast-more:border-t-2 contrast-more:border-foreground",
         "max-md:pt-6",
       )}
@@ -56,18 +55,7 @@ export default function Footer() {
             <div className="flex flex-col gap-0.5">
               <div className="flex items-baseline font-sans text-xl font-bold leading-tight -tracking-[0.025em]">
                 <span className="text-foreground font-semibold">arz</span>
-                <span
-                  className={cn(
-                    "font-extrabold bg-clip-text text-transparent",
-                    "bg-gradient-to-br from-primary to-indigo-400",
-                    "bg-[length:200%_200%] animate-gradient-shift",
-                    "motion-reduce:animate-none",
-                    "contrast-more:bg-none contrast-more:text-primary",
-                    "max-xs:text-lg",
-                  )}
-                >
-                  .ai
-                </span>
+                <span className="font-extrabold text-primary max-xs:text-lg">.ai</span>
               </div>
               <p className={cn(
                 "text-sm text-muted-foreground m-0 max-w-[300px] leading-relaxed font-sans tracking-normal",
@@ -216,7 +204,7 @@ export default function Footer() {
               "focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2",
             )}
           >
-            <span className="text-sm motion-reduce:animate-none" aria-hidden="true">⚡</span>
+            <Zap className="size-3.5 text-primary" aria-hidden="true" />
             <p className="m-0 text-sm text-muted-foreground">
               Built with React & TypeScript
             </p>

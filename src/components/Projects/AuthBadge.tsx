@@ -16,7 +16,7 @@ export function AuthBadge({ active, label }: AuthBadgeProps) {
         'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium',
         'transition-colors duration-150',
         active
-          ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25'
+          ? 'bg-success/15 text-success border border-success/25'
           : 'bg-muted/50 text-muted-foreground border border-border'
       )}
     >

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { Inbox, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import projectsData from '../../data/projects.json';
 import { Project } from './types';
@@ -84,13 +85,13 @@ const Projects: React.FC = () => {
                 </div>
             )}
 
-            {/* Empty State - Modern design */}
+            {/* Empty State */}
             {filteredProjects.length === 0 && (
                 <div className={cn(
                     "flex flex-col items-center justify-center",
                     "py-16 px-6",
                     "rounded-xl",
-                    "bg-muted/20 backdrop-blur-sm",
+                    "bg-muted/20",
                     "border border-border/40",
                 )}>
                     <div className={cn(
@@ -98,10 +99,7 @@ const Projects: React.FC = () => {
                         "w-16 h-16 rounded-full",
                         "bg-muted/50 mb-4",
                     )}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16" className="text-muted-foreground/50">
-                            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.793 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                            <path d="M5 6a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 5 6zm0 2a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 5 8z"/>
-                        </svg>
+                        <Inbox className="size-8 text-muted-foreground/50" />
                     </div>
                     <h3 className="text-base font-medium text-foreground mb-2">
                         No projects found
@@ -121,13 +119,10 @@ const Projects: React.FC = () => {
                             "bg-primary/10 text-primary",
                             "border border-primary/20",
                             "hover:bg-primary/20 hover:border-primary/30",
-                            "transition-all duration-200",
+                            "transition-colors duration-200",
                         )}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
-                            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
-                        </svg>
+                        <RotateCcw className="size-4" />
                         Reset filters
                     </button>
                 </div>

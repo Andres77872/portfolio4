@@ -1,16 +1,16 @@
 import { cn } from '@/lib/utils';
-import { STATUS_CONFIG, ProjectStatus } from './constants';
+import { ProjectStatus } from './constants';
 
 interface StatusBadgeProps {
   status: ProjectStatus;
+  className?: string;
 }
 
 /**
- * Status badge displayed on hero section
- * Shows production/repository status with animated indicator
+ * Project status pill shown over project imagery.
+ * Production projects use the success token, repositories the primary token.
  */
-export function StatusBadge({ status }: StatusBadgeProps) {
-  const config = STATUS_CONFIG[status];
+export function StatusBadge({ status, className }: StatusBadgeProps) {
   const isProduction = status === 'production';
 
   return (
@@ -22,20 +22,17 @@ export function StatusBadge({ status }: StatusBadgeProps) {
         'text-xs font-medium tracking-wide',
         'bg-background/80 backdrop-blur-md',
         'border border-border/50 shadow-sm',
-        isProduction
-          ? 'text-emerald-600 dark:text-emerald-400'
-          : 'text-indigo-600 dark:text-indigo-400'
+        isProduction ? 'text-success' : 'text-primary',
+        className
       )}
     >
-      <span className={cn('relative w-2 h-2 rounded-full', isProduction ? 'bg-emerald-500' : 'bg-indigo-500')}>
-        <span
-          className={cn(
-            'absolute inset-0 rounded-full animate-ping',
-            isProduction ? 'bg-emerald-500/40' : 'bg-indigo-500/40'
-          )}
-        />
-      </span>
-      {config.label}
+      <span
+        className={cn(
+          'w-2 h-2 rounded-full',
+          isProduction ? 'bg-success' : 'bg-primary'
+        )}
+      />
+      {isProduction ? 'Live' : 'Repo'}
     </div>
   );
 }

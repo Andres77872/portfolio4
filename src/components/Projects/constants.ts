@@ -42,41 +42,6 @@ export const getLanguageColor = (lang: string): string =>
   LANGUAGE_COLORS[lang.toLowerCase()] ?? 'rgba(255, 255, 255, 0.35)';
 
 /**
- * Accent color configurations for metadata cards
+ * Project deployment status shown by StatusBadge
  */
-export const ACCENT_COLORS = {
-  indigo: {
-    icon: 'text-indigo-500',
-    ring: 'ring-indigo-500/20',
-  },
-  emerald: {
-    icon: 'text-emerald-500',
-    ring: 'ring-emerald-500/20',
-  },
-  violet: {
-    icon: 'text-violet-500',
-    ring: 'ring-violet-500/20',
-  },
-  amber: {
-    icon: 'text-amber-500',
-    ring: 'ring-amber-500/20',
-  },
-} as const;
-
-export type AccentColor = keyof typeof ACCENT_COLORS;
-
-/**
- * Status configuration for project status badges
- */
-export const STATUS_CONFIG = {
-  production: {
-    label: 'Production',
-    color: 'emerald',
-  },
-  repo: {
-    label: 'Repository',
-    color: 'indigo',
-  },
-} as const;
-
-export type ProjectStatus = keyof typeof STATUS_CONFIG;
+export type ProjectStatus = 'production' | 'repo';

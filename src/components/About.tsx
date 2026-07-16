@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { FlaskConical, Rocket, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -137,22 +138,24 @@ export default function About() {
           "max-md:order-2",
         )}>
           {[
-            { icon: '🚀', title: 'Innovation Focus', desc: 'Transforming cutting-edge AI research into real-world applications' },
-            { icon: '🔬', title: 'Research & Development', desc: 'Bridging the gap between academic research and production systems' },
-            { icon: '⚡', title: 'End-to-End Solutions', desc: 'From concept to deployment, creating comprehensive AI ecosystems' },
+            { icon: Rocket, title: 'Innovation Focus', desc: 'Transforming cutting-edge AI research into real-world applications' },
+            { icon: FlaskConical, title: 'Research & Development', desc: 'Bridging the gap between academic research and production systems' },
+            { icon: Zap, title: 'End-to-End Solutions', desc: 'From concept to deployment, creating comprehensive AI ecosystems' },
           ].map((card, index) => (
             <div
               key={card.title}
               className={cn(
                 "bg-foreground/[0.03] border border-border rounded-lg p-6",
-                "transition-all duration-200",
-                "hover:-translate-y-0.5 hover:border-foreground/[0.15]",
+                "transition-colors duration-200",
+                "hover:border-foreground/[0.15]",
                 "animate-fade-in-up",
                 "max-xs:p-5",
               )}
               style={{ animationDelay: `${0.5 + index * 0.1}s` }}
             >
-              <div className="text-[1.75rem] mb-3 block">{card.icon}</div>
+              <div className="flex items-center justify-center w-9 h-9 rounded-md bg-primary/10 text-primary mb-3">
+                <card.icon className="size-4.5" />
+              </div>
               <h3 className="text-lg font-bold text-foreground mb-1">{card.title}</h3>
               <p className="text-base text-muted-foreground m-0 leading-relaxed">{card.desc}</p>
             </div>
@@ -163,14 +166,7 @@ export default function About() {
       {/* Project-backed Expertise Section */}
       <div>
         <div className="text-center mb-12">
-          <h3
-            className={cn(
-              "bg-linear-to-r from-indigo-400 to-indigo-300",
-              "bg-clip-text text-transparent",
-              "text-[clamp(1.5rem,3vw,2rem)] font-bold",
-            )}
-            style={{ WebkitBackgroundClip: 'text' }}
-          >
+          <h3 className="text-[clamp(1.5rem,3vw,2rem)] font-bold tracking-tight text-foreground">
             Technical Expertise
           </h3>
           <p className="text-lg text-muted-foreground mt-3 mx-auto max-w-[680px]">
@@ -213,7 +209,7 @@ export default function About() {
                         key={projectTitle}
                         variant="outline"
                         className={cn(
-                          "bg-indigo-500/10 text-foreground border-indigo-400/30",
+                          "bg-primary/10 text-foreground border-primary/30",
                           "rounded-md py-1 px-3 text-sm font-medium",
                         )}
                       >

@@ -1,5 +1,6 @@
 import { Component, Suspense, lazy, useEffect, useState } from 'react';
 import type { ComponentType, ErrorInfo, ReactNode } from 'react';
+import { ArrowDown, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { GameSelector, GameInfo } from '@/components/games';
@@ -123,7 +124,7 @@ export default function Hero() {
           <div
             className={cn(
               "inline-flex items-center gap-2 text-base font-medium text-muted-foreground tracking-wide",
-              "animate-slide-in-left",
+              "animate-fade-in-up",
               "max-md:justify-center",
             )}
             style={{ animationDelay: '0.15s' }}
@@ -138,7 +139,7 @@ export default function Hero() {
               className={cn(
                 "block font-sans font-bold text-foreground mb-0.5",
                 "text-[clamp(2.25rem,4.5vw,3.75rem)]",
-                "animate-slide-in-left",
+                "animate-fade-in-up",
                 "max-xs:text-[1.85rem]",
               )}
               style={{ animationDelay: '0.3s' }}
@@ -149,16 +150,13 @@ export default function Hero() {
               className={cn(
                 "block font-sans font-extrabold tracking-tighter",
                 "text-[clamp(2.5rem,5vw,4.25rem)]",
-                "bg-linear-to-br from-indigo-400 via-indigo-300 to-indigo-400",
-                "bg-[length:200%_200%] bg-clip-text text-transparent",
-                "animate-slide-in-left animate-gradient-shift",
+                "bg-linear-to-br from-indigo-600 to-indigo-500",
+                "dark:from-indigo-400 dark:to-indigo-300",
+                "bg-clip-text text-transparent",
+                "animate-fade-in-up",
                 "max-xs:text-[2rem]",
               )}
-              style={{
-                animationDelay: '0.45s',
-                WebkitBackgroundClip: 'text',
-                animation: 'slideInFromLeft 0.6s cubic-bezier(0,0,0.2,1) 0.45s both, gradientShift 6s ease-in-out infinite',
-              }}
+              style={{ animationDelay: '0.45s', WebkitBackgroundClip: 'text' }}
             >
               Artificial Intelligence
             </span>
@@ -168,7 +166,7 @@ export default function Hero() {
           <div
             className={cn(
               "flex items-center gap-2 text-lg font-medium min-h-9",
-              "animate-slide-in-left",
+              "animate-fade-in-up",
               "max-md:justify-center",
               "max-xs:text-base",
             )}
@@ -177,7 +175,8 @@ export default function Hero() {
             <span className="text-muted-foreground">I'm a </span>
             <span
               className={cn(
-                "bg-linear-to-br from-indigo-400 to-indigo-300 bg-clip-text text-transparent font-semibold",
+                "bg-linear-to-br from-indigo-600 to-indigo-500 dark:from-indigo-400 dark:to-indigo-300",
+                "bg-clip-text text-transparent font-semibold",
                 "transition-all duration-250 ease-out",
                 isAnimating && "opacity-0 translate-y-2",
               )}
@@ -192,7 +191,7 @@ export default function Hero() {
           <p
             className={cn(
               "text-base leading-relaxed text-muted-foreground max-w-[480px]",
-              "animate-slide-in-left",
+              "animate-fade-in-up",
               "max-md:max-w-[420px]",
               "max-xs:text-sm",
             )}
@@ -206,7 +205,7 @@ export default function Hero() {
           <div
             className={cn(
               "flex gap-3 mt-3",
-              "animate-slide-in-left",
+              "animate-fade-in-up",
               "max-md:flex-col max-md:items-center",
             )}
             style={{ animationDelay: '0.9s' }}
@@ -214,28 +213,24 @@ export default function Hero() {
             <Button
               onClick={() => scrollToSection('projects')}
               className={cn(
-                "bg-indigo-500 text-primary-foreground border border-indigo-500",
-                "shadow-[0_1px_2px_hsl(0_0%_0%/0.05)]",
-                "hover:bg-indigo-600 hover:border-indigo-600",
-                "hover:-translate-y-px hover:shadow-[0_4px_12px_hsl(239_84%_67%/0.2)]",
-                "active:translate-y-0 active:shadow-[0_1px_2px_hsl(0_0%_0%/0.05)]",
+                "shadow-sm",
+                "hover:-translate-y-px hover:shadow-md",
+                "active:translate-y-0 active:shadow-sm",
                 "transition-all duration-200",
                 "max-md:w-full max-md:max-w-60 max-md:justify-center",
               )}
               size="lg"
             >
               View My Work
-              <span className="text-[0.875em] transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+              <ArrowRight />
             </Button>
             <Button
               variant="ghost"
               onClick={() => scrollToSection('contact')}
               className={cn(
-                "bg-foreground/[0.04] text-foreground",
-                "border border-foreground/[0.08]",
-                "backdrop-blur-sm",
+                "bg-foreground/[0.04] border border-foreground/[0.08]",
                 "hover:bg-foreground/[0.08] hover:border-foreground/[0.12]",
-                "hover:-translate-y-px hover:shadow-[0_4px_12px_hsl(0_0%_0%/0.15)]",
+                "hover:-translate-y-px hover:shadow-sm",
                 "active:translate-y-0",
                 "transition-all duration-200",
                 "max-md:w-full max-md:max-w-60 max-md:justify-center",
@@ -288,7 +283,7 @@ export default function Hero() {
       <div
         className={cn(
           "absolute bottom-6 left-1/2 -translate-x-1/2",
-          "animate-slide-in-bottom",
+          "animate-fade-in-up",
         )}
         style={{ animationDelay: '1.1s' }}
       >
@@ -296,13 +291,13 @@ export default function Hero() {
           className={cn(
             "flex flex-col items-center gap-1.5",
             "text-muted-foreground cursor-pointer",
-            "transition-all duration-200",
-            "hover:text-indigo-400 hover:-translate-y-0.5",
+            "transition-colors duration-200",
+            "hover:text-foreground",
           )}
           onClick={() => scrollToSection('about')}
         >
           <span className="text-xs font-medium tracking-wide">Scroll to explore</span>
-          <div className="text-base animate-bounce-arrow">↓</div>
+          <ArrowDown className="size-4 animate-bounce-arrow" />
         </div>
       </div>
     </section>

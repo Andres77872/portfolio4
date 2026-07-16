@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Project } from './types';
+import { StatusBadge } from './StatusBadge';
 import ProjectLinkButtons from './ProjectLinkButtons';
 
 interface ProjectCardProps {
@@ -17,25 +18,24 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick, onTagCl
     const handleCardClick = () => {
         onCardClick(project);
     };
-    
+
     const handleTagClick = (tag: string, e: React.MouseEvent) => {
         e.stopPropagation();
         onTagClick(tag);
     };
 
     const isSelected = project.tags?.some(tag => selectedTags.includes(tag.toUpperCase()));
-    const isLive = !!project.url;
-    
+    const status = project.status ?? (project.url ? 'production' : 'repo');
+
     return (
-        <Card 
+        <Card
             className={cn(
                 "group relative flex flex-col gap-0 p-0 overflow-hidden cursor-pointer",
-                "bg-card/60 backdrop-blur-sm border-border/50",
-                "transition-all duration-300 ease-out",
-                "hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5",
-                "hover:border-primary/30 hover:bg-card/80",
-                isSelected && "border-primary/40 bg-primary/5",
-                "animate-card-fade-in",
+                "bg-card border-border",
+                "transition-all duration-200 ease-out",
+                "hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md",
+                isSelected && "border-primary/40",
+                "animate-fade-in-up",
                 "motion-reduce:animate-none motion-reduce:transition-none",
             )}
             style={{ animationDelay: `${index * 0.05}s` }}
@@ -45,52 +45,20 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick, onTagCl
             onKeyDown={(e) => e.key === 'Enter' && handleCardClick()}
             aria-label={`View ${project.title} project details`}
         >
-            {/* Selected state indicator */}
-            {isSelected && (
-                <div className={cn(
-                    "absolute top-0 left-0 right-0 h-1 z-[2]",
-                    "bg-gradient-to-r from-primary via-primary/80 to-primary",
-                )} />
-            )}
+            {/* Status Badge */}
+            <StatusBadge status={status} className="top-3 right-3 bottom-auto left-auto" />
 
-            {/* Status Badge - Glassmorphism style */}
-            <div className={cn(
-                "absolute top-3 right-3 z-[3]",
-                "flex items-center gap-2",
-                "px-3 py-1.5 rounded-full",
-                "text-xs font-medium tracking-wide",
-                "bg-background/80 backdrop-blur-md",
-                "border border-border/50 shadow-sm",
-                "transition-all duration-200",
-                "group-hover:bg-background/90 group-hover:shadow-md",
-            )}>
-                <span className={cn(
-                    "relative w-2 h-2 rounded-full",
-                    isLive ? "bg-emerald-500" : "bg-indigo-500",
-                )}>
-                    <span className={cn(
-                        "absolute inset-0 rounded-full animate-ping",
-                        isLive ? "bg-emerald-500/40" : "bg-indigo-500/40",
-                    )} />
-                </span>
-                <span className={cn(
-                    isLive ? "text-emerald-600 dark:text-emerald-400" : "text-indigo-600 dark:text-indigo-400",
-                )}>
-                    {isLive ? 'Live' : 'Repo'}
-                </span>
-            </div>
-
-            {/* Image Container with sophisticated overlay */}
+            {/* Image Container */}
             <div className="relative aspect-[16/10] overflow-hidden bg-muted/30">
                 {project.image ? (
-                    <img 
-                        src={project.image} 
-                        alt={project.title} 
-                        loading="lazy" 
+                    <img
+                        src={project.image}
+                        alt={project.title}
+                        loading="lazy"
                         className={cn(
                             "w-full h-full object-cover",
-                            "transition-transform duration-500 ease-out",
-                            "group-hover:scale-[1.05]",
+                            "transition-transform duration-300 ease-out",
+                            "group-hover:scale-[1.03]",
                         )}
                     />
                 ) : (
@@ -101,23 +69,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick, onTagCl
                         )}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16" className="opacity-40">
                                 <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                                <path d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z"/>
+                                <path d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l-2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0-.708-.708l3 3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708z"/>
                             </svg>
                             <span className="text-xs font-medium">No preview</span>
                         </div>
                     </div>
                 )}
-                {/* Multi-layer gradient overlay */}
-                <div className={cn(
-                    "absolute inset-0 z-[1]",
-                    "bg-gradient-to-t from-background/90 via-background/20 to-transparent",
-                )} />
-                {/* Hover shine effect */}
-                <div className={cn(
-                    "absolute inset-0 z-[2] opacity-0 group-hover:opacity-100",
-                    "transition-opacity duration-500",
-                    "bg-gradient-to-br from-white/10 via-transparent to-transparent",
-                )} />
             </div>
 
             {/* Content Section */}
@@ -167,11 +124,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onCardClick, onTagCl
 
             {/* Action Buttons */}
             <CardFooter className="p-4 pt-2">
-                <ProjectLinkButtons 
-                    repoUrl={project.repoUrl} 
-                    apiUrl={project.apiUrl} 
-                    url={project.url} 
-                    stopPropagation={true} 
+                <ProjectLinkButtons
+                    repoUrl={project.repoUrl}
+                    apiUrl={project.apiUrl}
+                    url={project.url}
+                    stopPropagation={true}
                 />
             </CardFooter>
         </Card>
