@@ -1,154 +1,114 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useEffect, useState } from 'react';
+import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import { Menu } from 'lucide-react';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 const NAV_ITEMS = [
-  { href: '#about', label: 'About' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#contact', label: 'Contact' },
+  { id: 'projects', label: 'Work' },
+  { id: 'playground', label: 'Playground' },
+  { id: 'about', label: 'About' },
 ] as const;
 
-const INTERSECTION_THRESHOLD = 0.3;
-const HEADER_OFFSET = 100;
+type SectionId = (typeof NAV_ITEMS)[number]['id'];
 
-export default function Navbar() {
-  const [activeSection, setActiveSection] = useState('');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const observerRef = useRef<IntersectionObserver | null>(null);
+/** Tracks which nav section currently crosses the upper third of the viewport. */
+function useActiveSection(): SectionId | null {
+  const [active, setActive] = useState<SectionId | null>(null);
 
-  // Use IntersectionObserver for better performance and accuracy
   useEffect(() => {
-    const sections = NAV_ITEMS.map(item => document.getElementById(item.href.replace('#', '')));
-    
-    observerRef.current = new IntersectionObserver(
+    if (typeof IntersectionObserver === 'undefined') return;
+
+    const crossing = new Set<string>();
+    const observer = new IntersectionObserver(
       (entries) => {
-        // Find the section that's most visible
-        const visibleEntries = entries.filter(entry => entry.isIntersecting);
-        if (visibleEntries.length > 0) {
-          // Sort by intersection ratio and pick the most visible one
-          const mostVisible = visibleEntries.sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-          setActiveSection(mostVisible.target.id);
+        for (const entry of entries) {
+          if (entry.isIntersecting) crossing.add(entry.target.id);
+          else crossing.delete(entry.target.id);
         }
+        // Null while the intro (or a gap between sections) is under the band.
+        setActive(NAV_ITEMS.find(({ id }) => crossing.has(id))?.id ?? null);
       },
-      {
-        rootMargin: `-${HEADER_OFFSET}px 0px -50% 0px`,
-        threshold: [INTERSECTION_THRESHOLD],
-      }
+      // A thin band a third of the way down: at most one section crosses it at a time.
+      { rootMargin: '-33% 0px -66% 0px' },
     );
 
-    sections.forEach(section => {
-      if (section) observerRef.current?.observe(section);
-    });
-
-    return () => observerRef.current?.disconnect();
+    for (const { id } of NAV_ITEMS) {
+      const section = document.getElementById(id);
+      if (section) observer.observe(section);
+    }
+    return () => observer.disconnect();
   }, []);
 
-  // Close menu on navigation
-  const handleNavClick = useCallback(() => {
-    setIsMenuOpen(false);
-  }, []);
+  return active;
+}
+
+export default function Navbar() {
+  const active = useActiveSection();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const linkClasses = (isActive: boolean) =>
+    cn(
+      'rounded-full text-sm font-medium no-underline transition-colors duration-150',
+      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+      'motion-reduce:transition-none',
+      isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
+    );
 
   return (
-    <nav className="relative z-[110] mx-auto h-full" aria-label="Main navigation">
-      <div className="flex items-center justify-center h-full">
-        {/* Desktop Navigation */}
-        <ul className="hidden md:flex list-none gap-0.5 m-0 p-1 items-center">
-          {NAV_ITEMS.map(({ href, label }) => {
-            const sectionId = href.replace('#', '');
-            const isActive = activeSection === sectionId;
-            return (
-              <li key={href} className="relative">
-                <a
-                  className={cn(
-                    "flex font-sans text-sm font-medium no-underline",
-                    "py-2 px-3.5 rounded-lg",
-                    "transition-colors duration-200",
-                    "text-muted-foreground",
-                    "hover:text-foreground hover:bg-accent/50",
-                    "focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2",
-                    "motion-reduce:transition-none",
-                    "contrast-more:border contrast-more:border-current",
-                    isActive && [
-                      "text-primary",
-                      "bg-primary/10",
-                      "contrast-more:bg-primary contrast-more:text-primary-foreground",
-                    ],
-                  )}
-                  href={href}
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  {label}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
+    <nav aria-label="Main navigation">
+      <ul className="flex items-center gap-1 max-md:hidden">
+        {NAV_ITEMS.map(({ id, label }) => {
+          const isActive = active === id;
+          return (
+            <li key={id}>
+              <a
+                href={`#${id}`}
+                aria-current={isActive ? 'location' : undefined}
+                className={cn(linkClasses(isActive), 'relative px-3 py-1.5', isActive && 'bg-accent/70')}
+              >
+                {label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
 
-        {/* Mobile Menu */}
-        <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-          <SheetTrigger asChild className="md:hidden">
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              aria-label="Open navigation menu"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <Menu className="size-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent
-            side="right"
-            className={cn(
-              "w-[280px] max-w-[85vw]",
-              "bg-background/95 backdrop-blur-xl",
-              "border-l border-border/50",
-            )}
-          >
-            <SheetHeader className="pb-4">
-              <SheetTitle className="text-left text-lg font-semibold">Navigation</SheetTitle>
-            </SheetHeader>
-            <nav className="flex flex-col gap-1.5" id="navbar-menu">
-              {NAV_ITEMS.map(({ href, label }) => {
-                const sectionId = href.replace('#', '');
-                const isActive = activeSection === sectionId;
-                return (
+      <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+        <SheetTrigger asChild>
+          <Button variant="ghost" size="icon-sm" aria-label="Open navigation menu" className="text-muted-foreground hover:text-foreground md:hidden">
+            <Menu className="size-5" />
+          </Button>
+        </SheetTrigger>
+        {/* z-[160]: above the fixed Header (z-100) and the chat sheet (z-150), below project modals (z-200). */}
+        <SheetContent
+          side="right"
+          overlayClassName="z-[160]"
+          className="z-[160] w-[280px] max-w-[85vw] border-l border-border/60 bg-background/95 backdrop-blur-xl"
+        >
+          <SheetHeader>
+            <SheetTitle className="text-left text-lg font-semibold">Navigate</SheetTitle>
+            <SheetDescription className="sr-only">Jump to a section of the page</SheetDescription>
+          </SheetHeader>
+          <ul className="flex flex-col gap-1 px-4">
+            {NAV_ITEMS.map(({ id, label }) => {
+              const isActive = active === id;
+              return (
+                <li key={id}>
                   <a
-                    key={href}
-                    className={cn(
-                      "flex font-sans text-sm font-medium no-underline",
-                      "w-full py-3 px-4 rounded-lg",
-                      "transition-colors duration-200",
-                      "text-muted-foreground",
-                      "hover:text-foreground hover:bg-accent/50",
-                      "focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2",
-                      "motion-reduce:transition-none",
-                      "contrast-more:border contrast-more:border-current",
-                      isActive && [
-                        "text-primary",
-                        "bg-primary/10",
-                        "contrast-more:bg-primary contrast-more:text-primary-foreground",
-                      ],
-                    )}
-                    href={href}
-                    onClick={handleNavClick}
-                    aria-current={isActive ? 'page' : undefined}
+                    href={`#${id}`}
+                    onClick={() => setIsMenuOpen(false)}
+                    aria-current={isActive ? 'location' : undefined}
+                    className={cn(linkClasses(isActive), 'flex rounded-lg px-4 py-3', isActive && 'bg-accent/70')}
                   >
                     {label}
                   </a>
-                );
-              })}
-            </nav>
-          </SheetContent>
-        </Sheet>
-      </div>
+                </li>
+              );
+            })}
+          </ul>
+        </SheetContent>
+      </Sheet>
     </nav>
   );
 }

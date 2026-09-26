@@ -16,6 +16,7 @@ export const LANGUAGE_COLORS: Record<string, string> = {
   c: '#555555',
   'c++': '#f34b7d',
   'c#': '#178600',
+  cuda: '#3A4E3A',
   html: '#e34c26',
   css: '#563d7c',
   shell: '#89e051',
@@ -30,18 +31,20 @@ export const LANGUAGE_COLORS: Record<string, string> = {
   react: '#61DAFB',
   vue: '#4FC08D',
   angular: '#DD0031',
-  threejs: '#000000',
-  'three.js': '#000000',
+  threejs: '#049EF4',
+  'three.js': '#049EF4',
   glsl: '#5686a5',
+  pytorch: '#EE4C2C',
+  transformers: '#FFD21E',
+  streamlit: '#FF4B4B',
+  jinja2: '#a52a22',
+  networkx: '#2C7FB8',
+  revealjs: '#F2E142',
+  canvas: '#e34c26',
 };
 
 /**
  * Get language color with fallback
  */
 export const getLanguageColor = (lang: string): string =>
-  LANGUAGE_COLORS[lang.toLowerCase()] ?? 'rgba(255, 255, 255, 0.35)';
-
-/**
- * Project deployment status shown by StatusBadge
- */
-export type ProjectStatus = 'production' | 'repo';
+  LANGUAGE_COLORS[lang.toLowerCase()] ?? 'var(--muted-foreground)';

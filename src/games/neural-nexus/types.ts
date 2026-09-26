@@ -72,6 +72,10 @@ export interface GameSettings {
   CLUSTER_THRESHOLD: number;       // Number of close nodes to trigger explosion
   CLUSTER_EXPLOSION_FORCE: number; // Explosive repulsion when clustered
   
+  // Soft walls keeping nodes off the canvas edges
+  WALL_MARGIN: number;
+  WALL_FORCE: number;
+
   // Distance thresholds
   EDGE_MIN_DISTANCE: number;
   EDGE_MAX_DISTANCE: number;
@@ -115,6 +119,9 @@ export const DEFAULT_SETTINGS: GameSettings = {
   CLUSTER_THRESHOLD: 3,            // 3+ close nodes = explosion
   CLUSTER_EXPLOSION_FORCE: 0.25,   // Explosive burst when clustered
   
+  WALL_MARGIN: 36,
+  WALL_FORCE: 0.03,
+
   EDGE_MIN_DISTANCE: 50,
   EDGE_MAX_DISTANCE: 200,
   OUTSIDE_BOOST: 2.5,

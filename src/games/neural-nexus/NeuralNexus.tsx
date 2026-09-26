@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useInViewport } from '@/hooks/useInViewport';
 import './NeuralNexus.css';
 import { Node, Particle, ScorePopup, DEFAULT_SETTINGS, CanvasProps, GameSettings } from './types';
 
@@ -33,6 +34,28 @@ interface Difficulty {
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
+// localStorage throws in some privacy modes (e.g. Safari with all cookies blocked); a
+// best score is not worth crashing the game over.
+const readStoredNumber = (key: string): number => {
+  try {
+    return Number.parseInt(window.localStorage.getItem(key) ?? '0', 10) || 0;
+  } catch {
+    return 0;
+  }
+};
+
+const writeStoredNumber = (key: string, value: number) => {
+  try {
+    window.localStorage.setItem(key, String(value));
+  } catch {
+    // Storage unavailable: the record simply is not persisted.
+  }
+};
+
+const isEditableTarget = (target: EventTarget | null) =>
+  target instanceof HTMLElement &&
+  (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
+
 const isValidCanvasSize = ({ width, height }: CanvasSize) => Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0;
 
 function getDifficulty(level: number, settings: GameSettings): Difficulty {
@@ -51,7 +74,10 @@ function getDifficulty(level: number, settings: GameSettings): Difficulty {
 }
 
 export default function NeuralNexus({ className = '', width, height }: CanvasProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const pointerInsideRef = useRef(false);
+  const inViewportRef = useRef(true);
   const canvasSizeRef = useRef<CanvasSize>({ width: 0, height: 0, dpr: 1 });
   const animationRef = useRef<number>();
   const pendingResizeFrameRef = useRef<number>();
@@ -69,8 +95,8 @@ export default function NeuralNexus({ className = '', width, height }: CanvasPro
   
   // Game state
   const [gameState, setGameState] = useState<GameState>(() => {
-    const highScore = parseInt(localStorage.getItem('neuralNexusHighScore') || '0', 10);
-    const maxCombo = parseInt(localStorage.getItem('neuralNexusMaxCombo') || '0', 10);
+    const highScore = readStoredNumber('neuralNexusHighScore');
+    const maxCombo = readStoredNumber('neuralNexusMaxCombo');
     persistedHighScoreRef.current = highScore;
     persistedMaxComboRef.current = maxCombo;
 
@@ -88,6 +114,16 @@ export default function NeuralNexus({ className = '', width, height }: CanvasPro
   });
 
   const [showTutorial, setShowTutorial] = useState(true);
+  const inViewport = useInViewport(rootRef);
+
+  // Scrolling the game out of view pauses it (like switching tabs does), and the
+  // render loop skips frames while nobody can see the canvas.
+  useEffect(() => {
+    inViewportRef.current = inViewport;
+    if (!inViewport && isActiveRef.current && !isPausedRef.current) {
+      setGameState(prev => ({ ...prev, isPaused: true }));
+    }
+  }, [inViewport]);
 
   // Sync refs so the animation loop reads latest values without re-running the effect
   useEffect(() => {
@@ -98,14 +134,14 @@ export default function NeuralNexus({ className = '', width, height }: CanvasPro
 
   useEffect(() => {
     if (gameState.highScore > persistedHighScoreRef.current) {
-      localStorage.setItem('neuralNexusHighScore', gameState.highScore.toString());
+      writeStoredNumber('neuralNexusHighScore', gameState.highScore);
       persistedHighScoreRef.current = gameState.highScore;
     }
   }, [gameState.highScore]);
 
   useEffect(() => {
     if (gameState.maxCombo > persistedMaxComboRef.current) {
-      localStorage.setItem('neuralNexusMaxCombo', gameState.maxCombo.toString());
+      writeStoredNumber('neuralNexusMaxCombo', gameState.maxCombo);
       persistedMaxComboRef.current = gameState.maxCombo;
     }
   }, [gameState.maxCombo]);
@@ -407,7 +443,7 @@ export default function NeuralNexus({ className = '', width, height }: CanvasPro
         return;
       }
 
-      if (isPausedRef.current) {
+      if (isPausedRef.current || !inViewportRef.current) {
         animationRef.current = requestAnimationFrame(animate);
         return;
       }
@@ -649,6 +685,12 @@ export default function NeuralNexus({ className = '', width, height }: CanvasPro
           node.isScoring = false;
         }
         
+        // === Soft walls: ease nodes off the edges so they don't pile up in corners ===
+        const wallPush = (distance: number) =>
+          distance < settings.WALL_MARGIN ? settings.WALL_FORCE * (1 - distance / settings.WALL_MARGIN) : 0;
+        node.vx += wallPush(node.x) - wallPush(drawWidth - node.x);
+        node.vy += wallPush(node.y) - wallPush(drawHeight - node.y);
+
         // Apply velocity decay
         node.vx *= settings.VELOCITY_DECAY;
         node.vy *= settings.VELOCITY_DECAY;
@@ -922,13 +964,20 @@ export default function NeuralNexus({ className = '', width, height }: CanvasPro
     };
   }, [width, height, initNodes, initParticles, reconcileEntitiesWithinBounds, growNodesToDifficulty, addScorePopup, addComboFeedbackParticles, settings]);
 
-  // Keyboard controls
+  // Keyboard controls. They only apply while the player is engaged with the game
+  // (pointer over it or focus inside it), never while typing elsewhere on the page.
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
+      if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || isEditableTarget(e.target)) return;
+      const root = rootRef.current;
+      const engaged = pointerInsideRef.current || (root !== null && root.contains(document.activeElement));
+      if (!engaged) return;
+
+      if (e.key === 'p' || e.key === 'P') {
         togglePause();
-      }
-      if (e.key === 'r' || e.key === 'R') {
+      } else if (e.key === 'Escape') {
+        if (isActiveRef.current && !isPausedRef.current) togglePause();
+      } else if (e.key === 'r' || e.key === 'R') {
         resetGame();
       }
     };
@@ -940,7 +989,16 @@ export default function NeuralNexus({ className = '', width, height }: CanvasPro
   const comboMultiplier = Math.floor(gameState.combo / 10) + 1;
 
   return (
-    <div className={`neural-nexus-game ${gameState.isPaused ? 'paused' : ''}`}>
+    <div
+      ref={rootRef}
+      className={`neural-nexus-game ${gameState.isPaused ? 'paused' : ''}`}
+      onPointerEnter={() => {
+        pointerInsideRef.current = true;
+      }}
+      onPointerLeave={() => {
+        pointerInsideRef.current = false;
+      }}
+    >
       {/* Game Header */}
       <div className="neural-nexus-header">
         <div className="neural-nexus-hud">
@@ -1069,7 +1127,10 @@ export default function NeuralNexus({ className = '', width, height }: CanvasPro
         <div className="neural-nexus-status-bar">
           <div className="neural-nexus-status-item">
             <span className={`status-dot ${gameState.nodesInZone > 0 ? 'active' : ''}`} />
-            <span>Nodes scoring: <strong>{gameState.nodesInZone}/{settings.COMBO_THRESHOLD}</strong></span>
+            <span>
+              In ring: <strong>{gameState.nodesInZone}</strong>
+              <span className="neural-nexus-status-note"> · combo at {settings.COMBO_THRESHOLD}+</span>
+            </span>
           </div>
           <div className="neural-nexus-status-item">
             <span>Max combo: <strong>x{Math.floor(gameState.maxCombo / 10) + 1}</strong></span>

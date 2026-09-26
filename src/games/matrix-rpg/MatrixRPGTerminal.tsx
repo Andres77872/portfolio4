@@ -3,53 +3,56 @@ import type { CrtIntensity, GameState, TerminalStatus, UserSelectableCrtIntensit
 import MatrixRPGCanvas from './MatrixRPGCanvas';
 import CrtEffects from './CrtEffects';
 import { useTerminal, type TerminalCommand } from './useTerminal';
+import { getCrtLabel } from './crtLabels';
 
 interface Props {
   content: string;
+  promptPrefix: string;
   gameState: GameState;
   terminalStatus: TerminalStatus;
   userInput: string;
   isProcessing: boolean;
   commands: TerminalCommand[];
+  announcements: string[];
   preferredIntensity: UserSelectableCrtIntensity;
   effectiveIntensity: CrtIntensity;
   isCrtOverridden: boolean;
   crtOverrideReason: string | null;
+  soundEnabled: boolean;
+  onToggleSound: () => void;
+  onKeyPress: () => void;
+  onMetrics: (metrics: { cols: number }) => void;
   onInputChange: (input: string) => void;
   onSubmit: () => void;
   onAbort: () => void;
   onCycleIntensity: () => void;
 }
 
+/** Space the on-screen mobile textarea covers at the bottom (8px offset + 34px + gap). */
+const MOBILE_INPUT_INSET = 48;
+
 const isMobileInputEnvironment = () => {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
   return window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(max-width: 640px)').matches;
 };
 
-const getCrtLabel = (intensity: CrtIntensity) => {
-  switch (intensity) {
-    case 0:
-      return 'OFF';
-    case 1:
-      return 'SOBER';
-    case 2:
-      return 'SCREEN';
-    case 3:
-      return 'ARCADE';
-  }
-};
-
 export default function MatrixRPGTerminal({
   content,
+  promptPrefix,
   gameState,
   terminalStatus,
   userInput,
   isProcessing,
   commands,
+  announcements,
   preferredIntensity,
   effectiveIntensity,
   isCrtOverridden,
   crtOverrideReason,
+  soundEnabled,
+  onToggleSound,
+  onKeyPress,
+  onMetrics,
   onInputChange,
   onSubmit,
   onAbort,
@@ -61,6 +64,7 @@ export default function MatrixRPGTerminal({
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const helpPanelRef = useRef<HTMLDivElement>(null);
 
   const terminal = useTerminal({
     commands,
@@ -130,6 +134,46 @@ export default function MatrixRPGTerminal({
     if (!terminal.helpOpen) focusInput();
   }, [focusInput, terminal.helpOpen]);
 
+  // Move focus into the help/settings dialog when it opens (focus is restored to
+  // the terminal input by the effect above when it closes).
+  useEffect(() => {
+    if (!terminal.helpOpen) return;
+    const first = helpPanelRef.current?.querySelector<HTMLElement>('button');
+    first?.focus();
+  }, [terminal.helpOpen]);
+
+  const handlePanelKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Escape') {
+        terminal.setHelpOpen(false);
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const focusables = helpPanelRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusables || focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    },
+    [terminal],
+  );
+
+  const handleInputKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (event.key.length === 1 || event.key === 'Enter' || event.key === 'Backspace') onKeyPress();
+      terminal.handleKeyDown(event);
+    },
+    [onKeyPress, terminal],
+  );
+
   const statusText = useMemo(() => {
     if (terminalStatus === 'connecting') return 'Connecting to Unknown Entity. Ctrl+C interrupts.';
     if (terminalStatus === 'streaming') return 'Unknown Entity stream active. Ctrl+C interrupts.';
@@ -142,7 +186,7 @@ export default function MatrixRPGTerminal({
   const sharedInputProps = {
     value: userInput,
     onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onInputChange(event.target.value),
-    onKeyDown: terminal.handleKeyDown,
+    onKeyDown: handleInputKeyDown,
     onFocus: () => setIsFocused(true),
     onBlur: () => setIsFocused(false),
     disabled: gameState !== 'interactive',
@@ -171,6 +215,7 @@ export default function MatrixRPGTerminal({
 
       <MatrixRPGCanvas
         content={content}
+        promptPrefix={promptPrefix}
         width={dimensions.width}
         height={dimensions.height}
         gameState={gameState}
@@ -179,6 +224,8 @@ export default function MatrixRPGTerminal({
         terminalStatus={terminalStatus}
         completionMessage={terminal.completionMessage}
         suggestions={terminal.suggestions}
+        onMetrics={onMetrics}
+        bottomInset={isMobileInput ? MOBILE_INPUT_INSET : 0}
       />
 
       <CrtEffects />
@@ -196,7 +243,15 @@ export default function MatrixRPGTerminal({
       </button>
 
       {terminal.helpOpen && (
-        <div className="matrix-rpg-help-panel" role="dialog" aria-modal="false" aria-label="Terminal help and CRT settings" onClick={event => event.stopPropagation()}>
+        <div
+          ref={helpPanelRef}
+          className="matrix-rpg-help-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Terminal help and CRT settings"
+          onClick={event => event.stopPropagation()}
+          onKeyDown={handlePanelKeyDown}
+        >
           <div className="matrix-rpg-help-panel__header">
             <span>NXTERM HELP / SETTINGS</span>
             <button type="button" onClick={() => terminal.setHelpOpen(false)}>Esc</button>
@@ -230,9 +285,22 @@ export default function MatrixRPGTerminal({
             </section>
 
             <section>
+              <h3>Sound</h3>
+              <p>Retro audio: key clicks, entity bell, error tones.</p>
+              <button
+                type="button"
+                className={`matrix-rpg-sound-toggle ${soundEnabled ? 'is-on' : ''}`}
+                onClick={onToggleSound}
+                aria-pressed={soundEnabled}
+              >
+                Sound: {soundEnabled ? 'ON' : 'OFF'}
+              </button>
+            </section>
+
+            <section>
               <h3>AI/NPC</h3>
               <p>Unknown Entity responses are streamed through an external AI service. Do not type secrets.</p>
-              <p>Scrollback preserves your reading position; use the bottom affordance when new output arrives.</p>
+              <p>Explore <code>/mirror</code> with <code>ls</code>/<code>cat</code>, then talk to the Entity by just typing.</p>
             </section>
           </div>
         </div>
@@ -240,6 +308,12 @@ export default function MatrixRPGTerminal({
 
       <div className="sr-only" role={terminalStatus === 'error' ? 'alert' : 'status'} aria-live="polite">
         {statusText}
+      </div>
+
+      <div className="sr-only" role="log" aria-live="polite" aria-label="Unknown Entity transcript">
+        {announcements.map((line, index) => (
+          <p key={`${index}-${line.slice(0, 12)}`}>{line}</p>
+        ))}
       </div>
     </div>
   );

@@ -1,62 +1,64 @@
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 interface SectionProps {
   id?: string;
-  title?: string;
-  description?: string | ReactNode;
+  /** Small mono label above the title, e.g. "01 — Work". */
+  eyebrow?: string;
+  title?: ReactNode;
+  description?: ReactNode;
+  /** Right-aligned slot in the section header (counts, links). */
+  actions?: ReactNode;
   children: ReactNode;
   className?: string;
 }
 
-const Section: React.FC<SectionProps> = ({
+export default function Section({
   id,
+  eyebrow,
   title,
   description,
+  actions,
   children,
-  className = '',
-}) => {
+  className,
+}: SectionProps) {
+  const headingId = id && title ? `${id}-heading` : undefined;
+
   return (
     <section
       id={id}
-      className={cn(
-        "py-20 relative",
-        "max-md:py-16",
-        className,
-      )}
+      aria-labelledby={headingId}
+      className={cn('relative scroll-mt-20 py-20 max-md:py-14', className)}
     >
-      <div className="max-w-[1200px] mx-auto px-6 relative max-md:px-4">
-        {(title || description) && (
-          <div className="text-center mb-16">
-            {title && (
-              <>
-                <h2 className={cn(
-                  "font-sans font-bold tracking-tight leading-tight text-foreground mb-3 inline-block",
-                  "text-[clamp(2rem,4vw,3rem)]",
-                  "max-xs:text-[1.75rem]",
-                )}>
+      <div className="mx-auto max-w-[1200px] px-6 max-md:px-4">
+        {(eyebrow || title || description || actions) && (
+          <header className="mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 max-md:mb-8">
+            <div className="max-w-2xl">
+              {eyebrow && (
+                <p className="mb-3 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary">
+                  {eyebrow}
+                </p>
+              )}
+              {title && (
+                <h2
+                  id={headingId}
+                  className="text-balance text-[clamp(1.75rem,3.5vw,2.5rem)] font-semibold leading-tight tracking-tight text-foreground"
+                >
                   {title}
                 </h2>
-                <div className="w-12 h-0.5 bg-primary mx-auto mt-4 mb-6 rounded-full opacity-60" />
-              </>
-            )}
-            {description && (
-              <div className={cn(
-                "text-lg leading-relaxed text-muted-foreground max-w-[600px] mx-auto",
-                "max-xs:text-base",
-              )}>
-                {typeof description === 'string' ? <p>{description}</p> : description}
-              </div>
-            )}
-          </div>
+              )}
+              {description && (
+                <div className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
+                  {description}
+                </div>
+              )}
+            </div>
+            {actions && <div className="shrink-0">{actions}</div>}
+          </header>
         )}
-        
-        <div className="relative">
-          {children}
-        </div>
+
+        {children}
       </div>
     </section>
   );
-};
-
-export default Section;
+}

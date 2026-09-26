@@ -314,6 +314,12 @@
     cursor: default;
   }
 
+  /* The tutorial is informational only: let the pointer reach the canvas through it,
+     so moving over the card starts the game too. */
+  .neural-nexus-tutorial .neural-nexus-tutorial-content {
+    pointer-events: none;
+  }
+
   .neural-nexus-overlay-content h2,
   .neural-nexus-tutorial-content h2 {
     margin: 0 0 0.5rem 0;
@@ -449,6 +455,10 @@
   .neural-nexus-status-item strong {
     color: var(--card-foreground);
     font-weight: 600;
+  }
+
+  .neural-nexus-status-note {
+    opacity: 0.75;
   }
 
   .neural-nexus-status-item.hint {

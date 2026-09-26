@@ -1,0 +1,14 @@
+{
+  "file": "data/mnist/mnist-subset.bin.gz",
+  "format": "MNS1",
+  "version": 1,
+  "trainCount": 10000,
+  "testCount": 2000,
+  "rows": 28,
+  "cols": 28,
+  "compressedBytes": 1944216,
+  "rawBytes": 9420020,
+  "fnv1a": 1267070000,
+  "source": "MNIST (Yann LeCun, Corinna Cortes, Christopher J.C. Burges), official train/test splits",
+  "license": "CC BY-SA 3.0"
+}
