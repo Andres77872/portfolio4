@@ -1,9 +1,13 @@
 [
   {
+    "name": "Andres Arizmendi",
     "title": "AI Developer",
+    "location": "Mexico",
+    "timezone": "UTC-6",
+    "availability": "Available for new projects",
     "description": [
-      "I'm Andres, an AI Developer specializing in Generative AI and large language model (LLM) systems. I design and build end-to-end AI solutions—from research prototypes to production-ready services—leveraging FastAPI backends, React frontends, and state-of-the-art machine learning frameworks.",
-      "My work spans reverse search engines powered by neural embeddings (FindIT), node-graph agent orchestration tools (Novus Talk & magic-agents), encrypted file-sharing platforms (JustAnotherFileStorage), and unified LLM provider wrappers (magic-llm). I'm passionate about diffusion models, vector databases (Qdrant), and autonomous agent systems that bridge the gap between research and real-world applications."
+      "I'm an AI developer specializing in generative AI and large language model systems. I design and build end-to-end AI products — from research prototypes to production services — with FastAPI backends, React frontends and modern machine learning tooling.",
+      "Most of my work sits where retrieval, agents and multimodal models meet real products: reverse image search on neural embeddings, node-graph agent orchestration, unified LLM provider wrappers and fine-tuned vision-language models. I also build for the other side of the browser — WebGL renderers, canvas games and developer tools."
     ],
     "skills": [
       {
@@ -21,8 +25,24 @@
     ],
     "contactLinks": [
       {
+        "name": "Email",
+        "label": "andres@arz.ai",
+        "url": "mailto:andres@arz.ai"
+      },
+      {
         "name": "GitHub",
+        "label": "Andres77872",
         "url": "https://github.com/Andres77872"
+      },
+      {
+        "name": "LinkedIn",
+        "label": "in/arz-ai",
+        "url": "https://www.linkedin.com/in/arz-ai/"
+      },
+      {
+        "name": "Hugging Face",
+        "label": "Andres77872",
+        "url": "https://huggingface.co/Andres77872"
       }
     ]
   }

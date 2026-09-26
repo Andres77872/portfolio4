@@ -1,41 +1,22 @@
 # Portfolio 4
 
-A modern, interactive portfolio built with React, TypeScript, and Vite, featuring an AI-powered chatbot assistant.
+The portfolio of Andres Arizmendi (AI developer), live at [arizmendi.io](https://arizmendi.io/). Built with React, TypeScript, Vite and Tailwind CSS v4.
 
-## Features
+## What's on the page
 
-- **Interactive AI Assistant**: Portfolio chatbot with streaming responses and image optimization
-- **Modern UI/UX**: Clean, responsive design with smooth animations
-- **Performance Optimized**: Memoized components and efficient image loading
-- **TypeScript**: Full type safety throughout the application
-- **Responsive**: Mobile-first design that works on all devices
+The site is **projects-first**: a compact intro, then the work, then personal details at the bottom.
 
-## ChatBot Performance Optimizations
+- **Work** — five featured projects as spotlight cards (one lead + a 2×2 grid) followed by an index of every other project, newest first. Filter by category, by technology stack (several = AND) or by free-text search.
+- **Project details** — a modal with the full write-up, facts (release date, status, license, access), languages and technologies, plus prev/next navigation (buttons or ←/→). Every project has a shareable link: `/?project=<slug>`. Filters are in the URL too (`?category=…&stack=…`).
+- **Playground** — four experiments that load only when scrolled into view, each linkable with `?experiment=<id>`:
+  - **Perceptron on MNIST** (`perceptron`) — ten neurons learn to read handwritten digits from real MNIST data, live in the browser, with weight maps, a learning curve, test errors and a drawing pad.
+  - **Game of Life** (`game-of-life`) — Conway's automaton and other life-like rules on a wrap-around grid, with a pattern library.
+  - **Neural Nexus** (`neural-nexus`) — a physics toy and scoring game on a neural-network graph.
+  - **Matrix RPG** (`matrix-rpg`) — a CRT terminal mystery with an LLM-driven NPC.
+- **About** — bio, focus areas that jump to the matching projects, a contact card (with copy-to-clipboard email) and a toolbox built from the project data.
+- **Portfolio Assistant** — a streaming chat that answers from the site's own data. Project names, filters and sections in its answers are links that open the project, apply the filter or scroll to the section right on the page. It floats in the corner on desktop and becomes a full-screen sheet on phones; conversations are kept in memory only. See [docs/chatbot.md](docs/chatbot.md).
 
-The chatbot system has been optimized to prevent image re-fetching and improve overall performance:
-
-### Image Handling Optimizations
-- **Optimized Image Component**: Custom `OptimizedImage` component with lazy loading, error handling, and proper caching
-- **Loading States**: Visual feedback during image loading with fallback for failed loads
-- **Lazy Loading**: Images load only when needed using `loading="lazy"` and `decoding="async"`
-- **Browser Caching**: Proper image attributes to leverage browser caching mechanisms
-
-### React Performance Optimizations
-- **Memoized Components**: `React.memo()` applied to prevent unnecessary re-renders
-- **Stable Keys**: Timestamp-based keys for message lists to prevent React reconciliation issues
-- **Memoized Functions**: All event handlers and computations use `useCallback()` and `useMemo()`
-- **System Context Caching**: Portfolio data is memoized to prevent recreation on every render
-
-### Component Architecture
-- **Separated Concerns**: Individual memoized components for each message type
-- **ReactMarkdown Optimization**: Component configuration memoized to prevent recreation
-- **Image Link Detection**: Automatic detection and optimization of image links in markdown
-
-### Key Benefits
-- ✅ **No More Image Re-fetching**: Images are loaded once and cached properly
-- ✅ **Improved Rendering Performance**: Reduced unnecessary component re-renders
-- ✅ **Better User Experience**: Faster loading and smoother interactions
-- ✅ **Memory Efficiency**: Reduced memory usage through proper component lifecycle management
+All project content lives in `src/data/projects.json`; the intro stats, category counts, featured cards, toolbox and chatbot prompt are all derived from it. See [docs/data.md](docs/data.md) to add a project.
 
 ## Getting Started
 
@@ -61,7 +42,7 @@ VITE_CHAT_MATRIX_RPG_AGENT_ID=agt-your-matrix-rpg-agent-id
 VITE_CHAT_API_KEY=
 ```
 
-The chat API is called anonymously by default. `VITE_CHAT_API_KEY` is optional, client-visible, and only intended for public/sentinel tokens; real secrets do not belong in Vite variables.
+The chat API is called anonymously by default. `VITE_CHAT_API_KEY` is optional, client-visible, and only intended for public/sentinel tokens; real secrets do not belong in Vite variables. Without `VITE_CHAT_PORTFOLIO_AGENT_ID` the assistant simply does not render (one console warning names the variable). `.env` and `.env.*` are gitignored; `.env.example` is the committed template.
 
 ## Tech Stack
 

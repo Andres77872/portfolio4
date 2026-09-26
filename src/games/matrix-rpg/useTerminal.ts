@@ -1,11 +1,8 @@
 import { useCallback, useRef, useState } from 'react';
 import type React from 'react';
+import { damerauLevenshtein, type TerminalCommand } from './commands';
 
-export interface TerminalCommand {
-  name: 'help' | 'clear' | 'whoami' | 'ps' | 'status' | 'exit';
-  description: string;
-  usage?: string;
-}
+export type { TerminalCommand } from './commands';
 
 export interface UseTerminalOptions {
   commands: TerminalCommand[];
@@ -95,18 +92,21 @@ export function useTerminal({
 
   const handleTab = useCallback(() => {
     const prefix = input.trim().toLowerCase();
-    const matches = commands.filter(command => command.name.startsWith(prefix));
+    const candidates = commands.flatMap(command =>
+      [command.name, ...(command.aliases ?? [])].map(token => ({ token, command })));
+    const matches = candidates.filter(({ token }) => token.startsWith(prefix));
 
     if (matches.length === 1) {
-      onInputChange(matches[0].name);
+      onInputChange(matches[0].token);
       setSuggestions([]);
-      setCompletionMessage(`[COMPLETE] ${matches[0].name} — ${matches[0].description}`);
+      setCompletionMessage(`[COMPLETE] ${matches[0].token} — ${matches[0].command.description}`);
       return;
     }
 
     if (matches.length > 1) {
-      setSuggestions(matches);
-      setCompletionMessage(`[TAB] Multiple matches: ${matches.map(match => match.name).join(', ')}`);
+      const uniqueCommands = [...new Set(matches.map(match => match.command))];
+      setSuggestions(uniqueCommands);
+      setCompletionMessage(`[TAB] Multiple matches: ${matches.map(match => match.token).join(', ')}`);
       return;
     }
 
@@ -173,27 +173,4 @@ export function useTerminal({
     recordCommand,
     clearCompletion,
   };
-}
-
-function damerauLevenshtein(a: string, b: string): number {
-  const matrix = Array.from({ length: a.length + 1 }, () => Array<number>(b.length + 1).fill(0));
-  for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
-  for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
-
-  for (let i = 1; i <= a.length; i++) {
-    for (let j = 1; j <= b.length; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      matrix[i][j] = Math.min(
-        matrix[i - 1][j] + 1,
-        matrix[i][j - 1] + 1,
-        matrix[i - 1][j - 1] + cost
-      );
-
-      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
-        matrix[i][j] = Math.min(matrix[i][j], matrix[i - 2][j - 2] + cost);
-      }
-    }
-  }
-
-  return matrix[a.length][b.length];
 }

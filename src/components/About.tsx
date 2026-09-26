@@ -1,247 +1,191 @@
-import { useMemo } from 'react';
-import { FlaskConical, Rocket, Zap } from 'lucide-react';
+import { useState, type ComponentType } from 'react';
+import { ArrowRight, ArrowUpRight, Box, Check, Copy, Mail, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import type { Project } from '@/components/Projects/types';
-import aboutData from '../data/about.json';
-import projectsData from '../data/projects.json';
+import { GitHubIcon, LinkedInIcon } from '@/components/icons';
+import { profile, getContactLink } from '@/data/profile';
 import Section from './common/Section';
+import {
+  PROJECT_CATEGORIES,
+  catalog,
+  getCategoryCounts,
+  getTechnologyUsage,
+  sortByNewest,
+} from './Projects/catalog';
+import { TechChip } from './Projects/ProjectMeta';
+import { showWork } from './Projects/projectLink';
+import type { ProjectCategoryId } from './Projects/types';
 
-interface Skill {
-  category: string;
-  items: string[];
-}
+const TOOLBOX_SIZE = 20;
+/** One-off technologies say little about a toolbox; show what recurs across projects. */
+const TOOLBOX_MIN_PROJECTS = 2;
 
-interface ContactLink {
-  name: string;
-  url: string;
-}
+const categoryCounts = getCategoryCounts(catalog);
+const toolbox = getTechnologyUsage(catalog)
+  .filter((usage) => usage.count >= TOOLBOX_MIN_PROJECTS)
+  .slice(0, TOOLBOX_SIZE);
+const projectTitlesByCategory = Object.fromEntries(
+  PROJECT_CATEGORIES.map(({ id }) => [
+    id,
+    sortByNewest(catalog.filter((project) => project.category === id)).map((project) => project.title),
+  ]),
+) as Record<ProjectCategoryId, string[]>;
 
-interface AboutData {
-  name: string;
-  title: string;
-  subtitle: string;
-  description: string[];
-  skills: Skill[];
-  contactLinks: ContactLink[];
-}
-
-interface ExpertiseGroup {
-  title: string;
-  description: string;
-  projectTitles: string[];
-  technologies: string[];
-}
-
-const projects = projectsData as Project[];
-const projectLabels = new Set(
-  projects
-    .flatMap((project) => [...(project.tags ?? []), ...(project.language ?? [])])
-    .map((label) => label.toLowerCase()),
-);
-
-const getAvailableTechnologies = (technologies: string[]) =>
-  technologies.filter((technology) => projectLabels.has(technology.toLowerCase()));
-
-const expertiseGroups: ExpertiseGroup[] = [
-  {
-    title: 'AI retrieval & multimodal systems',
-    description: 'Search, RAG, image understanding, and captioning work backed by shipped projects instead of abstract skill claims.',
-    projectTitles: ['FindIT', 'ColWrite', 'Colpali-Arxiv Chat', 'SmolVLM-500M-Anime-Caption'],
-    technologies: getAvailableTechnologies(['LLM', 'RAG', 'COLPALI', 'QDRANT', 'OPENCLIP', 'SIGLIP', 'FINE-TUNING']),
-  },
-  {
-    title: 'Agent workflows & LLM infrastructure',
-    description: 'Node-graph assistants, provider wrappers, and agent frameworks for composing LLM workflows across products and libraries.',
-    projectTitles: ['Novus Talk', 'magic-agents', 'magic-llm', 'Magic Slider', 'Magic Worlds'],
-    technologies: getAvailableTechnologies(['MAGIC-LLM', 'MAGIC-AGENTS', 'AGENTS', 'NODE GRAPH', 'OPENAI', 'ANTHROPIC', 'AWS BEDROCK']),
-  },
-  {
-    title: 'Product frontend & interactive UX',
-    description: 'React/Vite applications, graph visualizations, presentation tools, canvas-driven interfaces, 3D game experiences, and analytics dashboards tied directly to portfolio projects.',
-    projectTitles: ['spyder.findit', 'Magic Slider', 'Portfolio', 'Magic Worlds', 'Yellow Rooms', 'OpenCode Dashboard'],
-    technologies: getAvailableTechnologies(['REACT', 'VITE', 'THREE.JS', 'REACT-FORCE-GRAPH-3D', 'REVEALJS', 'CANVAS', 'WEBGL2', 'GLSL', 'PROCEDURAL GENERATION', 'GO', 'SQLITE', 'BUBBLE TEA', 'TUI', 'ANALYTICS']),
-  },
-  {
-    title: 'APIs, auth & secure product backends',
-    description: 'FastAPI services, encrypted sharing, authentication, and RBAC systems that support real deployed applications.',
-    projectTitles: ['Magic Auth', 'JustAnotherFileStorage', 'FindIT', 'Novus Talk'],
-    technologies: getAvailableTechnologies(['FASTAPI', 'MYSQL', 'JWT', 'RBAC', 'AUTHENTICATION', 'ENCRYPTION', 'HTTPX']),
-  },
-];
-
-// Default data in case the JSON file is empty or missing
-const defaultData: AboutData = {
-  name: "Andres",
-  title: "AI Developer",
-  subtitle: "AI Developer with experience in Generative AI, focusing on Large Language Models (LLMs) and diffusion models, and in developing autonomous agent systems.",
-  description: [
-    "I'm Andres, an AI Developer specializing in Generative AI and large language model (LLM) systems. I design and build end-to-end AI solutions—from research prototypes to production-ready services—leveraging FastAPI backends, React frontends, and state-of-the-art machine learning frameworks.",
-    "My work spans reverse search engines powered by neural embeddings (FindIT), node-graph agent orchestration tools (Novus Talk & magic-agents), encrypted file-sharing platforms (JustAnotherFileStorage), and unified LLM provider wrappers (magic-llm). I'm passionate about diffusion models, vector databases (Qdrant), and autonomous agent systems that bridge the gap between research and real-world applications."
-  ],
-  skills: [],
-  contactLinks: []
+const CONTACT_ICONS: Record<string, ComponentType<{ className?: string }>> = {
+  Email: Mail,
+  GitHub: GitHubIcon,
+  LinkedIn: LinkedInIcon,
+  'Hugging Face': Box,
 };
 
-export default function About() {
-  const data = useMemo(() => {
+function CopyEmailButton({ email }: { email: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
     try {
-      return aboutData && aboutData.length > 0
-        ? aboutData[0] as AboutData
-        : defaultData;
-    } catch (error) {
-      console.error("Error loading about data:", error);
-      return defaultData;
+      await navigator.clipboard.writeText(email);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      window.location.href = `mailto:${email}`;
     }
-  }, []);
+  };
 
   return (
-    <Section
-      id="about"
-      title="About Me"
-    >
-      {/* Content: Description + Highlights */}
-      <div className={cn(
-        "grid grid-cols-2 gap-16 items-start mb-16",
-        "max-md:grid-cols-1 max-md:gap-10",
-      )}>
-        {/* Description Text */}
-        <div className={cn(
-          "flex flex-col gap-6",
-          "max-md:order-1",
-        )}>
-          {data.description.map((paragraph, index) => (
-            <div
-              key={index}
-              className="animate-fade-in-up"
-              style={{ animationDelay: `${0.3 + index * 0.15}s` }}
-            >
-              <p className={cn(
-                "text-lg leading-relaxed text-muted-foreground m-0 relative pl-4",
-                "max-md:text-base",
-                // Gradient accent line via pseudo-element
-                "before:content-[''] before:absolute before:left-0 before:top-0",
-                "before:w-0.5 before:h-full",
-                "before:bg-linear-to-b before:from-indigo-400 before:to-indigo-600",
-                "before:rounded-full before:opacity-60",
-              )}>
+    <>
+      <button
+        type="button"
+        onClick={copy}
+        aria-label={`Copy ${email}`}
+        className={cn(
+          'flex size-9 shrink-0 items-center justify-center rounded-lg border border-border text-muted-foreground',
+          'transition-colors hover:border-foreground/25 hover:text-foreground',
+          'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+        )}
+      >
+        {copied ? <Check className="size-4 text-success" /> : <Copy className="size-4" />}
+      </button>
+      <span className="sr-only" role="status">
+        {copied ? 'Email address copied' : ''}
+      </span>
+    </>
+  );
+}
+
+export default function About() {
+  const email = getContactLink('Email');
+  const [firstName] = profile.name.split(' ');
+
+  return (
+    <Section id="about" eyebrow="03 — About" title={`Hi, I'm ${firstName}.`}>
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-16">
+        <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-5 text-pretty text-lg leading-relaxed text-muted-foreground max-xs:text-base">
+            {profile.description.map((paragraph, index) => (
+              <p key={index} className={cn(index === 0 && 'text-foreground')}>
                 {paragraph}
               </p>
+            ))}
+          </div>
+
+          <div>
+            <h3 className="mb-4 font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              What I work on
+            </h3>
+            <ul className="divide-y divide-border border-y border-border">
+              {PROJECT_CATEGORIES.map((category) => (
+                <li key={category.id}>
+                  <button
+                    type="button"
+                    onClick={() => showWork({ category: category.id })}
+                    className={cn(
+                      'group flex w-full items-start justify-between gap-6 py-5 text-left',
+                      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+                    )}
+                  >
+                    <span className="flex flex-col gap-1">
+                      <span className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">
+                        {category.label}
+                      </span>
+                      <span className="text-sm text-muted-foreground">{category.description}</span>
+                      <span className="mt-1 text-xs text-muted-foreground">
+                        {projectTitlesByCategory[category.id].join(' · ')}
+                      </span>
+                    </span>
+                    <span className="flex shrink-0 items-center gap-1.5 pt-0.5 font-mono text-xs text-muted-foreground transition-colors group-hover:text-primary">
+                      {categoryCounts[category.id]} projects
+                      <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none" />
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <aside className="flex flex-col gap-6">
+          <div id="contact" className="scroll-mt-24 rounded-2xl border border-border bg-card p-6 max-xs:p-5">
+            <p className="inline-flex items-center gap-2 rounded-full border border-success/25 bg-success/10 px-3 py-1 text-xs font-medium text-success">
+              <span className="relative flex size-2">
+                <span className="absolute inset-0 rounded-full bg-success/40 animate-status-pulse" />
+                <span className="relative size-2 rounded-full bg-success" />
+              </span>
+              {profile.availability}
+            </p>
+            <h3 className="mt-4 text-xl font-semibold tracking-tight text-foreground">Let's build something</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Open to new opportunities, AI consulting and collaborations. Email is the fastest way to reach me.
+            </p>
+            <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+              <MapPin aria-hidden="true" className="size-3.5" />
+              Based in {profile.location} · {profile.timezone}
+            </p>
+
+            <ul className="mt-5 flex flex-col gap-2">
+              {profile.contactLinks.map((link) => {
+                const Icon = CONTACT_ICONS[link.name] ?? ArrowUpRight;
+                const isEmail = link.url.startsWith('mailto:');
+                return (
+                  <li key={link.name} className="flex items-center gap-2">
+                    <a
+                      href={link.url}
+                      {...(isEmail ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+                      className={cn(
+                        'group flex min-w-0 flex-1 items-center gap-3 rounded-lg border border-border px-3 py-2',
+                        'transition-colors hover:border-foreground/25 hover:bg-accent/40',
+                        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+                        isEmail && 'border-primary/30 bg-primary/[0.06]',
+                      )}
+                    >
+                      <Icon className={cn('size-4 shrink-0', isEmail ? 'text-primary' : 'text-muted-foreground')} />
+                      <span className="flex min-w-0 flex-col">
+                        <span className="text-sm font-medium text-foreground">{link.name}</span>
+                        <span className="truncate text-xs text-muted-foreground">{link.label}</span>
+                      </span>
+                      <ArrowUpRight
+                        aria-hidden="true"
+                        className="ml-auto size-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none"
+                      />
+                      {!isEmail && <span className="sr-only">(opens in new tab)</span>}
+                    </a>
+                    {isEmail && email && <CopyEmailButton email={email.label} />}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
+          <div className="rounded-2xl border border-border p-6 max-xs:p-5">
+            <h3 className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">Toolbox</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Technologies that recur across these projects. Select one to filter the work.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {toolbox.map(({ name, count }) => (
+                <TechChip key={name} name={name} count={count} onClick={(technology) => showWork({ stack: technology })} />
+              ))}
             </div>
-          ))}
-        </div>
-
-        {/* Highlight Cards */}
-        <div className={cn(
-          "flex flex-col gap-6",
-          "max-md:order-2",
-        )}>
-          {[
-            { icon: Rocket, title: 'Innovation Focus', desc: 'Transforming cutting-edge AI research into real-world applications' },
-            { icon: FlaskConical, title: 'Research & Development', desc: 'Bridging the gap between academic research and production systems' },
-            { icon: Zap, title: 'End-to-End Solutions', desc: 'From concept to deployment, creating comprehensive AI ecosystems' },
-          ].map((card, index) => (
-            <div
-              key={card.title}
-              className={cn(
-                "bg-foreground/[0.03] border border-border rounded-lg p-6",
-                "transition-colors duration-200",
-                "hover:border-foreground/[0.15]",
-                "animate-fade-in-up",
-                "max-xs:p-5",
-              )}
-              style={{ animationDelay: `${0.5 + index * 0.1}s` }}
-            >
-              <div className="flex items-center justify-center w-9 h-9 rounded-md bg-primary/10 text-primary mb-3">
-                <card.icon className="size-4.5" />
-              </div>
-              <h3 className="text-lg font-bold text-foreground mb-1">{card.title}</h3>
-              <p className="text-base text-muted-foreground m-0 leading-relaxed">{card.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Project-backed Expertise Section */}
-      <div>
-        <div className="text-center mb-12">
-          <h3 className="text-[clamp(1.5rem,3vw,2rem)] font-bold tracking-tight text-foreground">
-            Technical Expertise
-          </h3>
-          <p className="text-lg text-muted-foreground mt-3 mx-auto max-w-[680px]">
-            Project-backed areas of work derived from the technologies and domains represented in the portfolio.
-          </p>
-        </div>
-
-        <div className={cn(
-          "grid gap-6",
-          "grid-cols-[repeat(auto-fit,minmax(320px,1fr))]",
-          "max-md:grid-cols-1",
-        )}>
-          {expertiseGroups.map((group) => (
-            <Card
-              key={group.title}
-              className={cn(
-                "bg-foreground/[0.03] border-border h-full",
-                "max-xs:p-5",
-              )}
-            >
-              <CardHeader className="space-y-3">
-                <CardTitle className={cn(
-                  "text-xl font-bold text-foreground leading-tight",
-                  "max-xs:text-lg",
-                )}>
-                  {group.title}
-                </CardTitle>
-                <p className="text-sm text-muted-foreground leading-relaxed m-0">
-                  {group.description}
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-5">
-                <div>
-                  <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-3">
-                    Project evidence
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {group.projectTitles.map((projectTitle) => (
-                      <Badge
-                        key={projectTitle}
-                        variant="outline"
-                        className={cn(
-                          "bg-primary/10 text-foreground border-primary/30",
-                          "rounded-md py-1 px-3 text-sm font-medium",
-                        )}
-                      >
-                        {projectTitle}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-3">
-                    Technologies in use
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {group.technologies.map((technology) => (
-                      <Badge
-                        key={technology}
-                        variant="outline"
-                        className={cn(
-                          "bg-foreground/[0.05] text-muted-foreground border-border",
-                          "rounded-md py-1 px-3 text-sm font-medium",
-                        )}
-                      >
-                        {technology}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+          </div>
+        </aside>
       </div>
     </Section>
   );

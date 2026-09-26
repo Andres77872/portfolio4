@@ -1,17 +1,27 @@
 [
   {
     "title": "FindIT",
-    "description": "Reverse search engine powered by an NN model, openclip, and Qdrant. Features a FastAPI backend and a React frontend.",
-    "descriptionMD": "**FindIT: Advanced Reverse Image Search**\n\nDiscover the story behind any image with FindIT, a sophisticated reverse search engine.\nUtilizing a powerful **Neural Network (NN) model**, **OpenCLIP** for robust image embeddings, and **Qdrant** for efficient vector similarity search, FindIT delivers accurate and relevant results.\n\n**Key Technologies:**\n*   **Frontend:** Built with **React** for a dynamic and responsive user experience.\n*   **Backend:** Powered by **FastAPI**, ensuring high performance and scalability.\n*   **Core:** Leverages **OpenCLIP** for image understanding and **Qdrant** for managing and searching image embeddings.\n\nSimply upload an image, and let FindIT unveil its origins and related content.",
+    "tagline": "Anime reverse image search across nine booru sites, with tagging, captioning, upscaling and SDXL tools.",
+    "category": "retrieval-vision",
+    "featured": 1,
+    "highlights": [
+      "Qdrant search over nine booru sites: tagger-model image embeddings plus OpenCLIP text queries",
+      "FastAPI backend with a public API that also powers spyder.findit",
+      "React 19 frontend with reverse search, tagger, captioning, upscaling and SDXL generation"
+    ],
+    "description": "Reverse image search for anime art: matches an image, URL or text query against over 17 million images indexed from nine booru sites and links each result to its source post. React frontend over a FastAPI API backed by Qdrant.",
+    "descriptionMD": "**FindIT: Anime Reverse Image Search**\n\nFindIT (findit.moe) finds the source of anime artwork by matching an uploaded image, image URL or text query against images indexed from nine booru sites (Danbooru, Gelbooru, Zerochan and others), linking each result to its original post. The same public API also serves tagging, captioning and image utilities.\n\n**Key Features:**\n*   **Reverse Image Search:** Upload, paste, drag-and-drop or link an image; filter by source site, content rating, and required or excluded tags.\n*   **Text Search:** Natural-language queries encoded with **OpenCLIP** (ViT-L-14) and matched in **Qdrant**.\n*   **Auto-Tagger:** Rating, character and general tags with per-category confidence thresholds.\n*   **Image Tools:** Streaming captions, SDXL text-to-image, Real-ESRGAN upscaling, format conversion, and EXIF viewing and removal.\n*   **Accounts:** Sign-in through Magic Auth is required for SDXL generation, upscaling, favorites and search history; search, tagging, captioning and format/EXIF tools work signed out.\n\n**Technology Stack:**\n*   **Frontend:** **React 19**, TypeScript, Vite, Tailwind CSS 4, shadcn/ui (Radix).\n*   **Backend:** **FastAPI** (Python), MySQL, Redis.\n*   **Search:** Qdrant (one collection with separate image and text vectors, filtered by source site); image embeddings from a TensorFlow anime-tagger model, text embeddings from OpenCLIP.\n*   **Generation:** SDXL on RunPod serverless endpoints; Real-ESRGAN for upscaling.",
     "url": "https://findit.moe/",
     "apiUrl": "https://api.findit.moe/",
     "image": "https://img.arz.ai/0RgBiDTt",
     "tags": [
       "REACT",
+      "VITE",
       "FASTAPI",
-      "NN",
+      "QDRANT",
       "OPENCLIP",
-      "QDRANT"
+      "TENSORFLOW",
+      "REVERSE IMAGE SEARCH"
     ],
     "status": "production",
     "license": "",
@@ -19,52 +29,66 @@
     "releaseDate": "2023-01-14",
     "auth": {
       "login": true,
-      "register": false
+      "register": true
     }
   },
   {
     "title": "Novus Talk",
-    "description": "Node graph agent creation tool inspired by ComfyUI. Uses LLMs with JSON graph definitions for agents/assistants, aiming for OpenAI schema compatible output. FastAPI backend with magic-llm. Work in progress.",
-    "descriptionMD": "**Novus Talk: Intuitive Node-Based Agent Creation**\n\nInspired by the flexibility of ComfyUI, Novus Talk is a cutting-edge tool for designing and deploying **AI agents and assistants** using a visual node graph interface.\n\n**Core Features:**\n*   **Visual Programming:** Define complex agent behaviors by connecting nodes in an intuitive graph.\n*   **LLM Integration:** Seamlessly integrates with Large Language Models (LLMs) through **JSON graph definitions**.\n*   **Standardized Output:** Aims for compatibility with the **OpenAI schema** for consistent agent interactions.\n*   **Backend:** Robust **FastAPI** backend utilizing the **magic-llm** library for versatile LLM provider connections.\n\nNovus Talk is currently under active development, paving the way for innovative AI agent creation.",
+    "tagline": "LLM chat platform with a node-graph Studio for building agents, served through an OpenAI-compatible API.",
+    "category": "agents-llm",
+    "featured": 4,
+    "highlights": [
+      "Agents built as JSON node graphs in a React Flow Studio and executed by magic-agents",
+      "OpenAI-compatible /v1 API where saved agents are listed and called as models (agt-* IDs)",
+      "FastAPI backend using magic-llm for chat, embeddings and audio across providers"
+    ],
+    "description": "Web app for chatting with models from multiple LLM providers and building agents as JSON node graphs in a visual Studio. A FastAPI backend runs agents with magic-agents, reaches models through magic-llm, and exposes both via OpenAI-compatible endpoints.",
+    "descriptionMD": "**Novus Talk: LLM Chat and Agent Studio**\n\nNovus Talk is a web app for chatting with models from multiple LLM providers and for building agents as node graphs. Agents are saved as JSON graphs, executed by **magic-agents**, and published as models on an OpenAI-compatible API.\n\n**Key Features:**\n*   **Multi-Model Chat:** Streaming chat with conversation history, branching and regeneration, Markdown and LaTeX rendering, a model picker with per-model capabilities, and optional web-browsing and image-generation tools.\n*   **Agent Studio:** **React Flow** node editor with 18 node types (including LLM, chat, Jinja2 parser, conditional, loop, inner flow, fetch, MCP server, Python exec, memory and tool), JSON import/export and a test playground.\n*   **Agents as Models:** Public agents appear in an agent gallery and in `/v1/models`, and are called through `/v1/chat/completions` by their `agt-*` ID.\n*   **OpenAI-Compatible API:** `/v1/chat/completions`, `/v1/models`, `/v1/embeddings` and `/v1/audio` endpoints, plus an Ollama-style `/ollama/api/chat`.\n*   **Workspace Tools:** Tokenizer, model catalog, a searchable document library, per-user usage stats, and an admin panel for providers, models, pricing and user groups.\n\n**Technology Stack:**\n*   **Frontend:** **React 18 + TypeScript + Vite**, Tailwind CSS, Radix UI, React Flow, Zustand and TanStack Query.\n*   **Backend:** **FastAPI** with **magic-llm** for provider access and **magic-agents** for graph execution; MySQL, Redis, Qdrant and Langfuse tracing.\n*   **Auth:** Username/password sign-in and registration through the Magic Auth service.\n\nThe Studio is marked as under active development on the live site.",
     "url": "https://talk.novus.chat/",
-    "apiUrl": "https://llm.arz.ai/",
+    "apiUrl": "https://llm.arz.ai/docs",
     "image": "https://img.arz.ai/0GSBN8FV",
     "tags": [
-      "FASTAPI",
       "LLM",
-      "NODE GRAPH",
+      "CHAT",
       "AGENTS",
-      "JSON",
-      "OPENAI",
-      "MAGIC-LLM"
+      "NODE GRAPH",
+      "REACT FLOW",
+      "FASTAPI",
+      "OPENAI-COMPATIBLE",
+      "MAGIC-LLM",
+      "MAGIC-AGENTS"
     ],
     "status": "production",
     "language": ["Python", "TypeScript", "React"],
     "releaseDate": "2023-12-02",
     "auth": {
       "login": true,
-      "register": false
+      "register": true
     }
   },
   {
     "title": "Magic Auth",
-    "description": "Enterprise-grade 3-tier authentication system with Root/Admin/Consumer user types and complete RBAC capabilities. Multi-project support with hierarchical access control and advanced security features.",
-    "descriptionMD": "**Magic Auth: Enterprise 3-Tier Authentication System**\n\nA comprehensive authentication platform designed for enterprise-grade access control with sophisticated user management and multi-project capabilities.\n\n**3-Tier User Architecture:**\n*   **ROOT USERS:** Unrestricted global access and system administration\n*   **ADMIN USERS:** Multi-project administration with complete project isolation\n*   **CONSUMER USERS:** RBAC-based access through user groups and permissions\n\n**Core Features:**\n*   **Advanced Authentication:** JWT-based sessions with HTTP-only cookie support and Bearer token fallback\n*   **Complete RBAC Management:** Granular permissions, role assignments, and real-time validation\n*   **Multi-Project Support:** Project isolation with hierarchical access control\n*   **Enterprise Security:** UUID-based identification, audit trails, and multi-layer security\n*   **Production Ready:** Scalable design with Redis caching and performance optimization\n\n**Technology Stack:**\n*   **Backend:** High-performance API built with **FastAPI** and **MySQL** database\n*   **Frontend:** Modern interface developed with **React + Vite**\n*   **Security:** JWT tokens, secure cookies, and comprehensive access control\n\nMagic Auth provides the foundation for complex organizational structures requiring sophisticated access management and enterprise-level security.",
+    "tagline": "Multi-project auth service: 3-tier users, group-based project access, RBAC, OAuth, API keys and admin dashboard.",
+    "category": "platforms-tools",
+    "description": "FastAPI authentication and authorization service for multi-project apps: root/admin/consumer users, group-based access to projects, roles and permissions, JWT access/refresh sessions, OAuth sign-in and API keys, managed from a React admin dashboard.",
+    "descriptionMD": "**Magic Auth: Multi-Project Authentication Service**\n\nMagic Auth is a FastAPI service that handles sign-in and access control for several projects at once, with a React dashboard for root and admin operators. Users reach projects through user groups and project groups, and get permissions through roles and permission groups.\n\n**Key Features:**\n*   **3-Tier Users:** Root (global access), admin (project administration) and consumer (access through groups) accounts.\n*   **Sessions:** Short-lived JWT access tokens and rotating refresh tokens tracked in Redis, sent as HttpOnly cookies or Bearer headers.\n*   **Credentials:** Username and password with Argon2id hashing, OAuth/OIDC sign-in (Google, GitHub, Discord, Microsoft or any OIDC provider), and API keys stored as peppered HMAC-SHA-256 hashes.\n*   **Access Control and Audit:** User groups and project groups decide which projects a user can reach, and a global role with its permission groups decides what they can do; an audit log supports CSV/JSON export.\n*   **Integrations:** Transactional email templates via Resend, Stripe billing (status, Checkout and Customer Portal) and Patreon entitlement linking.\n\n**Technology Stack:**\n*   **Backend:** **Python**, **FastAPI**, **MySQL**, **Redis**.\n*   **Dashboard:** **React 19**, **TypeScript**, **Vite**, Tailwind CSS 4 and Radix UI ([magic-auth-dashboard](https://github.com/Andres77872/magic-auth-dashboard)).\n*   **Client:** Async Python client built on httpx and Pydantic ([magic_auth_client](https://github.com/Andres77872/magic_auth_client)).",
     "url": "https://auth-ui.arz.ai/",
     "apiUrl": "https://auth-v2.arz.ai/",
     "image": "https://img.arz.ai/0whA6FF1",
-    "repoUrl": "https://github.com/Andres77872/magic-auth-dashboard",
+    "repoUrl": "https://github.com/Andres77872/api.auth",
     "tags": [
       "FASTAPI",
       "MYSQL",
+      "REDIS",
       "REACT",
       "VITE",
       "AUTHENTICATION",
       "RBAC",
-      "JWT"
+      "JWT",
+      "OAUTH"
     ],
     "status": "production",
-    "license": "Apache 2.0",
+    "license": "",
     "language": ["Python", "TypeScript", "React", "MySQL"],
     "releaseDate": "2025-06-28",
     "auth": {
@@ -74,19 +98,22 @@
   },
   {
     "title": "JustAnotherFileStorage",
-    "description": "Temporal file sharing system creating unique, encrypted file links. Decryption key is part of the URL; URLs are not stored, making recovery impossible. FastAPI backend, React frontend.",
-    "descriptionMD": "**JustAnotherFileStorage (JAFS): Secure & Ephemeral File Sharing**\n\nShare files with an emphasis on privacy and security using JAFS. This system generates unique, encrypted links for your files, offering a temporal sharing solution.\n\n**Security by Design:**\n*   **Client-Side Encryption:** Files are encrypted in your browser before upload.\n*   **Key in URL:** The decryption key is embedded directly within the shared link's fragment identifier (hash).\n*   **Zero Knowledge (Server-Side):** The server never sees the decryption key, and the links themselves are not stored, making file recovery impossible if the link is lost. This ensures maximum privacy.\n\n**Technology Stack:**\n*   **Frontend:** Interactive and user-friendly interface built with **React**.\n*   **Backend:** High-performance and secure API developed with **FastAPI**.\n\nJAFS is ideal for sharing sensitive information that requires a self-destructing mechanism or when you want to ensure that only the recipient with the exact link can access the content.",
+    "tagline": "Temporary file sharing: upload up to 100 MB, no account, and get a download link that expires (72 h by default).",
+    "category": "platforms-tools",
+    "description": "Temporary file-sharing site. Files up to 100 MB get a download link that expires after 72 hours by default. Stored files are XOR-scrambled with a keystream seeded from the link, and only a hash of the link is kept. FastAPI and MySQL backend, React frontend.",
+    "descriptionMD": "**JustAnotherFileStorage (JAFS): Temporary File Sharing**\n\nJAFS (shr.wtf) turns an uploaded file into a short-lived download link. No account is needed, and the link itself carries the seed needed to unscramble the stored file.\n\n**Key Features:**\n*   **Expiring Links:** Links last 72 hours by default (the API accepts 1 hour to 30 days) and return 404 once expired.\n*   **Seed in the Link:** Each upload gets a random 32-bit seed, encoded in the link, that XOR-scrambles the file on disk. The database keeps only a SHA-256 hash of the link, so a lost link cannot be recovered.\n*   **Integrity Check:** The server verifies the file's SHA-256 hash while streaming the download.\n*   **Download Page:** Shows the file name, size and time remaining before you download.\n*   **Public API:** Upload, metadata and download endpoints documented with Swagger at shr.arz.ai/docs.\n\n**Technology Stack:**\n*   **Backend:** **Python**, **FastAPI**, **MySQL**, NumPy.\n*   **Frontend:** **React**, **TypeScript**, **Vite**.\n\nScrambling and unscrambling happen on the server. They obscure stored files on disk (32-bit seed); this is obfuscation, not encryption.",
     "url": "https://shr.wtf/",
     "apiUrl": "https://shr.arz.ai/",
     "image": "https://img.arz.ai/gHIAqEJR",
     "tags": [
       "FASTAPI",
+      "MYSQL",
       "REACT",
-      "FILE SHARING",
-      "ENCRYPTION"
+      "VITE",
+      "FILE SHARING"
     ],
     "status": "production",
-    "language": ["Python", "TypeScript", "React"],
+    "language": ["Python", "TypeScript", "React", "MySQL"],
     "releaseDate": "2023-12-30",
     "auth": {
       "login": false,
@@ -95,8 +122,10 @@
   },
   {
     "title": "spyder.findit",
-    "description": "Reverse image search tool that displays results in a graph, using vector embeddings to calculate edges. Consumes the api.findit.moe API.",
-    "descriptionMD": "**spyder.findit: Visualizing Image Similarity**\n\nExplore image connections like never before with `spyder.findit`. This innovative tool takes reverse image search a step further by displaying results as an interactive 3D graph.\n\n**Key Features:**\n*   **Graph-Based Results:** Instead of a simple list, `spyder.findit` visualizes image relationships, with **edges calculated based on the similarity of their vector embeddings**.\n*   **Powered by FindIT API:** Leverages the robust search capabilities of the `api.findit.moe` backend.\n*   **Immersive Exploration:** Navigate through a 3D force-directed graph to uncover visual connections and discover related imagery.\n\n**Technologies:**\n*   **Frontend:** Built with **React**.\n*   **3D Visualization:** Utilizes **Three.js** and **react-force-graph-3d** to render interactive and dynamic graphs.\n\n`spyder.findit` offers a unique and engaging way to perform reverse image searches and understand the intricate relationships between visual content.",
+    "tagline": "Reverse image search results from api.findit.moe explored as an interactive 3D similarity graph.",
+    "category": "retrieval-vision",
+    "description": "Upload an anime image to search api.findit.moe, then explore the results as a 3D graph whose edges are cosine similarities between result embeddings. Built with React, Three.js and d3-force.",
+    "descriptionMD": "**spyder.findit: Image Similarity Graph**\n\nspyder.findit runs a reverse image search against the FindIT API (api.findit.moe) and renders the results as a 3D graph instead of a list. Edges connect results whose embedding vectors are similar, so clusters of related images become visible.\n\n**Key Features:**\n*   **Similarity Edges:** Pairwise cosine similarity between result embeddings, filtered by an adjustable threshold (default 0.75) that also hides weakly connected nodes.\n*   **Graph Expansion:** Click a node to fetch up to 64 more similar images; the graph is capped at 128 nodes.\n*   **Three Views:** Graph, list or hybrid layout, with a virtualized result list and a detail panel showing each image's closest peers.\n*   **Upload Options:** Drag-and-drop or file picker; the query embedding comes from the API's encoder endpoint.\n\n**Technology Stack:**\n*   **Frontend:** **React 19**, TypeScript, Vite.\n*   **3D Rendering:** **Three.js** with OrbitControls and bloom/outline post-processing; d3-force for layout.\n*   **Data:** FindIT API (`/util/encoder`, `/search/image/file`, `/search/image/query`).\n*   **Testing:** Vitest and Testing Library.",
     "url": "https://spyder.findit.moe/",
     "image": "https://img.arz.ai/z9WApj2V",
     "apiUrl": "https://api.findit.moe/docs#/General%20anime%20image%20search",
@@ -104,12 +133,12 @@
     "tags": [
       "REACT",
       "THREE.JS",
-      "REACT-FORCE-GRAPH-3D",
+      "D3-FORCE",
       "VECTOR EMBEDDINGS",
       "GRAPH VISUALIZATION"
     ],
     "status": "production",
-    "license": "Apache 2.0",
+    "license": "",
     "language": ["TypeScript", "React", "Three.js"],
     "releaseDate": "2025-05-29",
     "auth": {
@@ -119,23 +148,23 @@
   },
   {
     "title": "Magic Slider",
-    "description": "AI-powered slide creator that generates RevealJS presentations through LLM prompts. Integrates with talk.novus.chat backend API for intelligent content generation. Built with React + Vite, featuring RAG and agentic capabilities through magic-agents. Proof-of-concept for automated presentation creation.",
-    "descriptionMD": "**Magic Slider: AI-Powered Presentation Creator**\n\nTransform your ideas into compelling presentations effortlessly with Magic Slider, an innovative **Proof-of-Concept (POC)** that leverages AI to generate professional slides from simple prompts.\n\n**Core Features:**\n*   **LLM-Driven Content Generation:** Simply describe your presentation topic, and let AI create structured, engaging slides for you.\n*   **RevealJS Integration:** Generates modern, interactive presentations using the powerful RevealJS framework.\n*   **Intelligent Backend:** Powered by the **talk.novus.chat API** for sophisticated content processing and generation.\n*   **Advanced AI Capabilities:** Incorporates **RAG (Retrieval-Augmented Generation)** and **agentic workflows** through the **magic-agents** framework.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for fast development and optimal performance.\n*   **AI Framework:** Utilizes **magic-agents** for sophisticated AI-driven content creation.\n*   **Presentation Engine:** **RevealJS** for creating beautiful, interactive slide presentations.\n\n**Current Status:**\n*   **Proof-of-Concept** demonstrating the potential of AI-assisted presentation creation.\n\nMagic Slider represents the future of presentation design, where creativity meets artificial intelligence to streamline content creation.",
-    "url": "https://magic-slider.novus.chat/",
+    "tagline": "Turns a text prompt into a Reveal.js slide deck, streamed as JSON from a hosted LLM agent.",
+    "category": "agents-llm",
+    "description": "Proof-of-concept React app that sends a prompt to a hosted LLM agent, streams back a JSON slide spec, and renders it in the browser as a Reveal.js presentation with optional code highlighting and speaker notes.",
+    "descriptionMD": "**Magic Slider: Prompt-to-Presentation Generator**\n\nMagic Slider is a proof-of-concept that turns a short text prompt into a Reveal.js slide deck. The prompt is sent to a hosted LLM agent through an OpenAI-compatible chat-completions endpoint; the agent streams back a JSON presentation spec, which the app parses and renders in the browser.\n\n**Key Features:**\n*   **Prompt Input:** Free-text description of the deck, with example prompts to start from.\n*   **Streamed Generation:** Reads the server-sent-event stream and assembles the JSON spec before rendering it.\n*   **JSON Slide Schema:** Each slide can have a title, HTML content, a background image and custom attributes; the spec can also set Reveal.js options and plugins.\n*   **Reveal.js Rendering:** Builds an embedded, navigable deck; the spec can enable the Highlight (code) and Notes (speaker notes) plugins.\n\n**Technology Stack:**\n*   **Frontend:** **React 18**, **TypeScript** and **Vite**.\n*   **Presentation:** **Reveal.js** with highlight.js.\n*   **AI Backend:** OpenAI-compatible streaming chat-completions API serving a hosted agent.\n\nThe hosted demo no longer generates decks: its generation backend (magic.arz.ai) is offline.",
     "image": "https://img.arz.ai/vGqCivS9",
-    "apiUrl": "https://llm.arz.ai/docs#/Chat/completion_chat_openai_v1_completion_post",
     "repoUrl": "https://github.com/Andres77872/magic-slider",
     "tags": [
       "REACT",
+      "TYPESCRIPT",
       "VITE",
-      "REVEALJS",
+      "REVEAL.JS",
       "LLM",
-      "RAG",
-      "MAGIC-AGENTS"
+      "STREAMING"
     ],
-    "status": "production",
-    "license": "Apache 2.0",
-    "language": ["TypeScript", "React", "RevealJS"],
+    "status": "repo",
+    "license": "",
+    "language": ["TypeScript", "React"],
     "releaseDate": "2025-06-07",
     "auth": {
       "login": false,
@@ -144,30 +173,47 @@
   },
   {
     "title": "Magic Worlds",
-    "description": "Role-Play with AI designed to create characters, worlds, and adventures using artificial intelligence. Build and explore immersive stories with AI-generated content and interactive narratives.",
-    "descriptionMD": "**Magic Worlds: AI-Powered Role-Playing Experience**\n\nDive into limitless storytelling possibilities with Magic Worlds, an innovative platform that leverages AI to create rich, immersive role-playing experiences.\n\n**Core Features:**\n*   **Character Creation:** Design unique characters with AI assistance, developing detailed backstories and personalities.\n*   **World Building:** Craft intricate worlds, settings, and environments that respond to your creative input.\n*   **Adventure Generation:** Create engaging narratives and interactive adventures that adapt to player choices.\n*   **Collaborative Storytelling:** Work alongside AI to develop plots, dialogue, and scenarios that bring your stories to life.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for a responsive and immersive user experience.\n*   **AI Integration:** Powered by advanced language models through the **magic-assistant** framework.\n*   **Backend:** Utilizes the robust API from **llm.arz.ai** for intelligent content generation.\n\nMagic Worlds represents the intersection of traditional role-playing games and cutting-edge AI technology, offering an ever-expanding canvas for your imagination.",
+    "tagline": "AI roleplay app (Reverie): build character, world and item cards, then chat with your characters.",
+    "category": "agents-llm",
+    "description": "React frontend for Reverie, an AI roleplay platform. Users create character, world and item cards with AI help, generate portraits and theme songs, and hold streamed one-on-one chats with characters. Data is stored by a private FastAPI backend.",
+    "descriptionMD": "**Magic Worlds (Reverie): AI Roleplay and Storytelling**\n\nMagic Worlds is the web frontend of Reverie, an AI roleplay platform. Users build characters, worlds and items as reusable cards and bring them into conversations with AI-played characters. The app is a client for a private FastAPI backend that stores all content behind user accounts and runs the LLM, image, music and speech jobs.\n\n**Key Features:**\n*   **Card Creators:** Character, world and item creators with AI-generated drafts, an AI card-assistant chat, attribute presets and version history.\n*   **Character Chat:** One-on-one chats with a character, streamed over WebSockets with automatic reconnect, with optional TTS narration and generated scene images.\n*   **Media Generation:** AI portraits and theme songs for cards, run as background jobs and collected in a media gallery with an app-wide audio playlist.\n*   **Accounts:** Username registration, sign-in with username or email, Google sign-in, password reset and email verification.\n*   **In Development:** Adventure sessions with an AI game master, lorebooks, a long-form Story Studio and voice calls are implemented behind feature flags and disabled on the public site.\n\n**Technology Stack:**\n*   **Frontend:** **React 19**, **TypeScript**, **Vite**, Tailwind CSS 4, i18next (English and Spanish).\n*   **Testing:** Vitest with Testing Library, plus Storybook for components.\n*   **Backend (private):** FastAPI and MySQL, calling the Magic LLM agents API for text, fal.ai for images and music, and MiniMax for speech.",
     "url": "https://magic-worlds.novus.chat/",
-    "apiUrl": "https://llm.arz.ai/docs#/Chat/completion_chat_openai_v1_completion_post",
+    "apiUrl": "https://api-magic-worlds.arz.ai/docs",
     "image": "https://img.arz.ai/lO8Bbe-p",
     "repoUrl": "https://github.com/Andres77872/magic-worlds",
     "tags": [
       "REACT",
+      "TYPESCRIPT",
       "VITE",
-      "MAGIC-ASSISTANT"
+      "TAILWIND CSS",
+      "WEBSOCKETS",
+      "I18NEXT",
+      "VITEST",
+      "STORYBOOK",
+      "FASTAPI",
+      "LLM"
     ],
     "status": "production",
-    "license": "Apache 2.0",
+    "license": "",
     "language": ["TypeScript", "React"],
     "releaseDate": "2025-06-14",
     "auth": {
       "login": true,
-      "register": false
+      "register": true
     }
   },
   {
     "title": "Yellow Rooms",
-    "description": "Browser-based first-person liminal-horror game built with Three.js. Deterministic, infinitely streamed procedural world, custom deferred renderer with raw GLSL shaders, two AI-driven enemies, and full mobile support. Pure client-side WebGL2 — no framework, no backend.",
-    "descriptionMD": "**Yellow Rooms: A Liminal Descent**\n\nYou've no-clipped out of reality into an endless yellow labyrinth. Find the exit. Don't let it reach you.\n\n**Key Features:**\n*   **Deterministic Infinite World:** Procedurally generated from a text seed with streamed chunks, domain-warped macro regions, and distinct architectural styles — office districts, warehouse bays, and pillar halls — stacked into a multi-floor vertical world connected by walkable stairways.\n*   **Custom Deferred Renderer:** Raw **GLSL** pipeline on **Three.js**/WebGL2 — G-buffer, SSAO, shadow mapping, bloom, FXAA, volumetric light, and an ink/outline pass for an anime-inspired cel-shaded look.\n*   **Two AI Enemies:** A teleporting Stalker that A*-pathfinds around corners on line of sight, and a relentless Pursuer that tracks you across floors and can't be frozen by the flashlight.\n*   **Survival Mechanics:** Manage stamina, battery, sanity, and exposure — staring at the entity with your flashlight freezes it, but drains your sanity.\n*   **Full Mobile Support:** Virtual joystick, drag-to-look, and immersive fullscreen alongside desktop WASD + pointer-lock controls.\n\n**Technology Stack:**\n*   **Engine:** **Three.js** with a hand-rolled deferred rendering pipeline in vanilla JavaScript — no UI framework.\n*   **Build & Testing:** **Vite** and **Vitest**, with deterministic golden tests validating world generation.\n*   **Architecture:** Fully client-side — a single procedural topology drives rendering, collision, AI pathfinding, and the minimap.",
+    "tagline": "First-person liminal-horror browser game: infinite procedural world on a custom WebGL2 deferred renderer.",
+    "category": "games-interactive",
+    "featured": 2,
+    "highlights": [
+      "Deterministic, infinitely streamed multi-floor world from a text seed, with five map families",
+      "Custom deferred renderer in raw GLSL: SSAO, screen-space shadows, volumetric light, bloom, ink outlines",
+      "Three enemy types (two hunt with A* pathfinding), mobile touch controls and a map editor"
+    ],
+    "description": "First-person liminal-horror game for the browser. A text seed drives a deterministic, infinitely streamed multi-floor world in five map styles, drawn by a custom deferred renderer written in raw GLSL on Three.js. Three enemy types, mobile controls and a map editor.",
+    "descriptionMD": "**Yellow Rooms: A Liminal Descent**\n\nYou've no-clipped out of reality into an endless yellow labyrinth. Find the exit. Don't let it reach you.\n\n**Key Features:**\n*   **Deterministic Infinite World:** Generated from a text seed and streamed in chunks as a multi-floor world joined by walkable stairs, with five selectable map families (office, hotel, sewer, tower and lattice). One topology drives rendering, collision, AI pathfinding and the minimap.\n*   **Custom Deferred Renderer:** Raw **GLSL** passes on **Three.js**/WebGL2: G-buffer, SSAO, screen-space lamp shadows, many-lamp toon lighting, volumetric light shafts, bloom, ink outlines, color grading and FXAA.\n*   **Three Enemies:** A teleporting Stalker that follows you around corners with A* pathfinding and freezes under the flashlight, a Pursuer that tracks you across floors and can't be frozen, and a static Husk the player can destroy.\n*   **Survival Mechanics:** Stamina, flashlight battery and sanity; the flashlight holds the Stalker only for a limited time, and seeing enemies drains sanity.\n*   **Controls and Tools:** Desktop WASD with pointer lock, a mobile joystick with drag-to-look and fullscreen, Low to Ultra graphics presets, and a standalone map editor that imports and exports `.yrmap` files.\n\n**Technology Stack:**\n*   **Engine:** **Three.js** with a hand-written deferred pipeline in vanilla JavaScript, no UI framework, and procedural Web Audio sound.\n*   **Assets:** Furniture and enemy models built by Blender Python scripts and loaded as GLB.\n*   **Build & Testing:** **Vite** and **Vitest**, including golden tests that pin world-generation output.",
     "url": "https://yr.arz.ai/",
     "image": "https://img.arz.ai/s0yCNwzV",
     "repoUrl": "https://github.com/Andres77872/yellow-rooms",
@@ -176,9 +222,12 @@
       "WEBGL2",
       "GLSL",
       "VITE",
+      "VITEST",
       "PROCEDURAL GENERATION",
+      "DEFERRED RENDERING",
       "GAME",
-      "DEFERRED RENDERING"
+      "BLENDER",
+      "WEB AUDIO"
     ],
     "status": "production",
     "license": "",
@@ -190,24 +239,82 @@
     }
   },
   {
+    "title": "magic-geo",
+    "tagline": "Causal planet generator: a C++20 engine simulates tectonics, climate, water, biomes and settlements on a spherical mesh.",
+    "category": "games-interactive",
+    "description": "Procedural planet generator that simulates worlds from first principles: a C++20 engine runs plate tectonics, a seasonal climate, hydrology, erosion, biomes and settlements on a spherical cell mesh. Driven from a local web workbench, a CLI or Python, with the same planet from the same seed.",
+    "descriptionMD": "**magic-geo: Procedural Planets, Simulated from Plate to Biome**\n\nmagic-geo builds planets causally instead of painting noise onto a map. A **C++20** engine builds a spherical cell mesh and simulates each system on top of the one below it, while a **Python** layer handles configuration, validation, enrichment and file output. The web workbench, the CLI and the Python API run the same pipeline and write the same world format.\n\n**Key Features:**\n*   **Full Simulation Stack:** Plate tectonics, relief and isostasy; a twelve-month seasonal energy-balance climate; rivers, lakes and groundwater; erosion, ice and permafrost; soils, biomes and ecosystems; then resources, settlements, routes, borders, cultures and history.\n*   **Spherical Mesh:** Worlds live on a Fibonacci sphere (default) or a subdivided geodesic icosahedron rather than a rectangular image.\n*   **Web Workbench:** Edit YAML configs with schema validation, run generation as background jobs, then explore about 500 layers on a **Three.js** globe or on equirectangular and Mollweide maps, with month and stage playback and a table view of every record.\n*   **Reproducible and Honest:** The same seed and configuration produce the same planet, configs are validated against a versioned JSON Schema, and unavailable estimates stay unavailable instead of becoming zeros.\n*   **Calibration and Validation:** Scores generated worlds against Earth reference data (Natural Earth, ETOPO, WorldClim, HydroBASINS, HydroRIVERS) and runs a multi-scenario validation suite; nine original presets range from a desert planet to a super-Earth.\n\n**Technology Stack:**\n*   **Engine:** **C++20** with CMake and OpenMP, plus optional **CUDA** 12.8+ and OpenCL backends; the CPU core is the deterministic reference.\n*   **Python Layer:** Typer CLI, Pydantic and YAML configuration, and JSON or binary MessagePack (`.mgeo`) world files.\n*   **Workbench:** **FastAPI** backend and a browser frontend built on **Three.js**.\n*   **Deployment:** A Docker Compose image bundles the native core, CLI and workbench.",
+    "image": "https://img.arz.ai/gghBPDmV",
+    "repoUrl": "https://github.com/Andres77872/magic_geo",
+    "tags": [
+      "C++",
+      "CUDA",
+      "OPENCL",
+      "FASTAPI",
+      "THREE.JS",
+      "PROCEDURAL GENERATION",
+      "SIMULATION",
+      "CLI",
+      "DOCKER"
+    ],
+    "status": "repo",
+    "license": "",
+    "language": ["C++", "Python", "CUDA", "JavaScript"],
+    "releaseDate": "2026-07-10",
+    "auth": {
+      "login": false,
+      "register": false
+    }
+  },
+  {
+    "title": "Music Studio",
+    "tagline": "Local studio for open music models: MiniMax Music 3 and ACE-Step 1.5 behind one FastAPI gateway, with an LLM songwriting assistant.",
+    "category": "agents-llm",
+    "description": "Local studio for open music models: a FastAPI gateway and a plain HTML/CSS/JS web studio that turn lyrics and a music caption into a full song with MiniMax Music 3 or ACE-Step 1.5. Projects keep every take with its prompt and seed, and an LLM assistant edits the project through tools.",
+    "descriptionMD": "**Music Studio: A Local Studio for Open Music Models**\n\nMusic Studio pairs a **FastAPI** gateway, which exposes each music model's full control surface as a JSON API, with a web studio served from the same process. Lyrics and a music caption go in; a complete song comes out as 16-bit stereo WAV.\n\n**Key Features:**\n*   **Two Model Families:** **MiniMax Music 3** (autoregressive plus acoustic stage, driven by a long Structured Caption, 4–360 s) and **ACE-Step 1.5** turbo, base and SFT (a diffusion transformer with a short caption plus BPM, key and metre, 10–600 s at 48 kHz, with cover, repaint and stem editing).\n*   **Model Catalogue as Data:** Each model's features, duration range, prompt limits, section tags, settings and VRAM needs live in one catalogue entry that the editor, the lyrics linter and the LLM prompts all read. Switching models unloads the resident one and loads the next, and checkpoints can be downloaded or deleted from Settings.\n*   **Projects and Takes:** Workspaces hold collections and projects; every take records the exact lyrics, caption, seed and engine it was rendered from and can be reused. A shared player has waveform scrubbing and keyboard and media-key controls.\n*   **LLM Songwriting Assistant:** A per-project chat streams its replies and tool calls over SSE and edits the project live, with one-click revert per turn; a one-shot writer drafts lyrics and a model-specific caption. Any OpenAI-compatible endpoint can be added as an LLM profile.\n*   **Engines and GPU Management:** In-process **diffusers** pipelines by default, an opt-in SGLang-Omni server, and a mock engine for GPU-free development; all share one bounded job queue, and the gateway reports free VRAM and refuses loads that will not fit. Validated on an RTX 5090.\n\n**Technology Stack:**\n*   **Backend:** **Python**, **FastAPI**, Pydantic and SQLite, with the LLM layer on the OpenAI and Anthropic SDKs.\n*   **Models:** **PyTorch** and **diffusers** (`MiniMaxMusic3ModularPipeline`, `AceStepPipeline`), plus SGLang-Omni.\n*   **Frontend:** Framework-free JavaScript ES modules, HTML and CSS with no build step.\n*   **Deployment:** Docker Compose, plus setup scripts for a single-GPU machine.",
+    "image": "https://img.arz.ai/qfABFHQ5",
+    "repoUrl": "https://github.com/Andres77872/minimax_music3",
+    "tags": [
+      "FASTAPI",
+      "MINIMAX MUSIC 3",
+      "ACE-STEP",
+      "DIFFUSERS",
+      "SGLANG",
+      "MUSIC GENERATION",
+      "LLM",
+      "TOOL CALLING",
+      "SQLITE",
+      "DOCKER"
+    ],
+    "status": "repo",
+    "license": "",
+    "language": ["Python", "JavaScript", "PyTorch"],
+    "releaseDate": "2026-09-26",
+    "auth": {
+      "login": false,
+      "register": false
+    }
+  },
+  {
     "title": "Colpali-Arxiv Chat",
-    "description": "Proof-of-concept showcasing Colpali's capabilities for embedding, indexing, and RAG from Arxiv papers. Reformulates queries for targeted searches via Colpali index (llm.arz.ai) and generates summaries. Built with Streamlit, uses magic-llm. Single-turn chat POC, conversational features planned.",
-    "descriptionMD": "**Colpali-Arxiv Chat: RAG for Scientific Research**\n\nThis **Proof-of-Concept (POC)** demonstrates the power of Colpali in revolutionizing how we interact with scientific literature from Arxiv.\n\n**Core Functionality:**\n*   **Retrieval-Augmented Generation (RAG):** Leverages Colpali for advanced embedding, indexing, and retrieval of information from Arxiv research papers.\n*   **Intelligent Query Reformulation:** When you enter a topic, the system uses Colpali to break it down into 1-5 targeted search queries for more precise results from the Colpali index (hosted at `llm.arz.ai`).\n*   **Concise Summaries:** Generates a summary report based on the retrieved information, providing quick insights into complex topics.\n*   **LLM Integration:** Uses the **magic-llm** wrapper for flexible language model interactions.\n\n**Development & Future:**\n*   **Platform:** Built with **Streamlit** for rapid prototyping and interactive web application development.\n*   **Current Stage:** A POC focusing on **single-turn chat interactions**.\n*   **Roadmap:** Enhancements for conversational abilities are planned for the future.\n*   **Independent Index:** The Colpali index is maintained separately, ensuring up-to-date and comprehensive data.\n\nColpali-Arxiv Chat aims to make navigating and understanding scientific research more efficient and accessible.",
-    "url": "https://magic-reports.streamlit.app/",
+    "tagline": "Streamlit chat that answers arXiv questions from ColPali-retrieved page images using a vision LLM.",
+    "category": "retrieval-vision",
+    "description": "Streamlit proof-of-concept for questions about arXiv papers. An LLM rewrites the question into search queries, ColPali retrieves matching page images from the llm.arz.ai index, and a vision-language model writes a cited Markdown report.",
+    "descriptionMD": "**Colpali-Arxiv Chat: Visual RAG over arXiv Pages**\n\nA Streamlit proof-of-concept that answers questions about arXiv research by retrieving whole paper pages as images with ColPali and passing them to a vision-language model. The ColPali index and search endpoint are hosted separately at `llm.arz.ai`.\n\n**Key Features:**\n*   **LLM Query Rewriting:** The selected model turns the question and recent chat history into up to 5 search queries (configurable 1–10), returned as a JSON array.\n*   **ColPali Page Retrieval:** Queries run in parallel against the `/rag/colpali/arxiv` endpoint; results are deduplicated by page and the page images are fetched and resized.\n*   **Cited Reports from Page Images:** A vision-language model reads the page images and streams a Markdown report citing paper ID, title, page and URL; it is prompted to reproduce tables in Markdown and diagrams as Mermaid code.\n*   **Configurable Pipeline:** Model choice (Gemini 2.0 Flash, Llama 4, Qwen2.5-VL and others), sampling parameters, results per query, image resolution and editable Jinja2 prompt templates.\n*   **Transparent Output:** Shows the generated queries, source pages with thumbnails and arXiv links, and token usage with time-to-first-token and tokens per second; answers can be regenerated.\n\n**Technology Stack:**\n*   **App:** **Python** + **Streamlit**, with thread pools for parallel search and image fetching.\n*   **LLM Access:** **magic-llm** client against the OpenAI-compatible `llm.arz.ai` gateway.\n*   **Retrieval:** **ColPali** (`vidore/colpali-v1.3`) page index served by `llm.arz.ai`.\n*   **Prompting:** **Jinja2** templates; **Pillow** for image resizing.\n\nThe hosted Streamlit demo no longer works: the ColPali search endpoint returns errors and the configured model IDs are no longer served by the gateway.",
     "image": "https://img.arz.ai/7NWBNqhx",
     "repoUrl": "https://github.com/Andres77872/magic-reports",
-    "apiUrl": "https://llm.arz.ai/docs#/data%20sources/colpali_rag_colpali_arxiv_post",
     "tags": [
       "RAG",
-      "STREAMLIT",
-      "MAGIC-LLM",
       "COLPALI",
-      "LLM"
+      "VISION-LANGUAGE",
+      "ARXIV",
+      "STREAMLIT",
+      "MAGIC-LLM"
     ],
-    "status": "production",
-    "license": "Apache 2.0",
+    "status": "repo",
+    "license": "",
     "language": ["Python", "Streamlit"],
-    "releaseDate": "2025-03-06",
+    "releaseDate": "2025-04-06",
     "auth": {
       "login": false,
       "register": false
@@ -215,26 +322,29 @@
   },
   {
     "title": "ColWrite",
-    "description": "AI-powered writing assistant leveraging ColPali embeddings for advanced RAG capabilities. Built with React+Vite frontend and seamless integration with Qdrant for vector storage, delivering context-aware writing suggestions.",
-    "descriptionMD": "**ColWrite: Context-Enhanced AI Writing Assistant**\n\nElevate your writing experience with ColWrite, a sophisticated AI assistant that understands context like never before. Harnessing the power of ColPali embeddings and retrieval-augmented generation, ColWrite delivers personalized writing assistance with remarkable precision.\n\n**Core Features:**\n*   **Advanced RAG System:** Utilizes **ColPali embeddings** for superior understanding of context and semantic relationships in your documents.\n*   **Intelligent Suggestions:** Provides contextually relevant writing recommendations, completions, and improvements based on your unique writing style and content.\n*   **Vector-Based Knowledge:** Leverages **Qdrant** for efficient vector storage and similarity search, ensuring fast and accurate retrieval of relevant information.\n*   **LLM Integration:** Powered by state-of-the-art language models through the **magic-assistant** framework for natural and helpful interactions.\n\n**Technology Stack:**\n*   **Frontend:** Modern and responsive interface built with **React + Vite** for optimal performance and development experience.\n*   **Embedding System:** Utilizes **ColPali** for primary embeddings, complemented by basic embedding techniques for enhanced retrieval.\n*   **Vector Database:** **Qdrant** for high-performance similarity search capabilities.\n*   **AI Framework:** Implements the **magic-assistant** library for seamless LLM integration and RAG workflows.\n\nColWrite represents the future of writing tools, where artificial intelligence enhances human creativity rather than replacing it, providing the perfect balance of assistance while keeping you in control of your unique voice.",
+    "tagline": "Scientific paper editor with an AI agent whose edits wait for approval, plus arXiv and PDF research tools.",
+    "category": "agents-llm",
+    "description": "Alpha editor for scientific papers: a block document with inline citations, LaTeX equations, tables and Mermaid diagrams, and an AI agent whose edits arrive as accept/reject suggestions. Research tools cover arXiv, Semantic Scholar and uploaded PDFs.",
+    "descriptionMD": "**ColWrite: Scientific Writing with Reviewable AI Edits**\n\nColWrite is an alpha writing environment for arXiv-style papers. Documents are an ordered list of JSON blocks with inline scientific widgets, and an AI agent can read and edit them, but every edit is staged as a suggestion the author accepts or rejects. Accounts are invite-only.\n\n**Key Features:**\n*   **Block Editor for Papers:** Headings, lists, callouts, code, Mermaid diagrams, structured figures and multi-column paragraphs, with slash commands and Markdown shortcuts; inline citations (numeric, author–year, IEEE), KaTeX equations, tables and mini-charts.\n*   **Reviewable AI Editing:** Ask AI on a selection (improve, shorten, translate, find citations, check claims) and a per-document chat agent whose edits arrive as word-level diffs to accept or reject; blocks can be locked or hidden from the assistant.\n*   **Research Tools:** arXiv search, opt-in Semantic Scholar search with citation graphs and claim checking, and a sources panel with BibTeX export.\n*   **PDF Library:** Upload PDFs into nested folders attached to documents; files are converted to Markdown so the assistant can list, read and search them.\n*   **Versioned Documents:** Five-second autosave, revision history with diff and restore, and export to standalone HTML or PDF via the browser print dialog.\n\n**Technology Stack:**\n*   **Frontend:** **React 19 + Vite 8 + TypeScript**, **Tailwind CSS 4**, Radix UI, **KaTeX** and **Mermaid**, tested with Vitest.\n*   **Backend:** **Python / FastAPI** with **MongoDB** (documents and PDFs) and **MySQL** (users, chats, folders); agent loop built on **magic-llm**.\n*   **Retrieval:** arXiv embedding search at `llm.arz.ai`; Jina Reader for PDF-to-Markdown conversion.\n*   **Auth:** Session login through the Magic Auth client.",
     "url": "https://magic-arxiv.novus.chat/",
     "image": "https://img.arz.ai/kIoBNtA5",
-    "apiUrl": "https://llm.arz.ai/docs",
-    "repoUrl": "https://github.com/Andres77872/magic-arxiv-writer",
+    "apiUrl": "https://colwrite-api.novus.chat/docs",
+    "repoUrl": "https://github.com/Andres77872/colwrite-ui",
     "tags": [
       "REACT",
       "VITE",
-      "RAG",
-      "COLPALI",
-      "QDRANT",
+      "TYPESCRIPT",
+      "FASTAPI",
       "LLM",
-      "EMBEDDINGS",
-      "MAGIC-ASSISTANT"
+      "AI AGENT",
+      "ARXIV",
+      "MAGIC-LLM",
+      "MONGODB"
     ],
     "status": "production",
-    "license": "Apache 2.0",
+    "license": "",
     "language": ["TypeScript", "React", "Python"],
-    "releaseDate": "2025-06-18",
+    "releaseDate": "2025-08-10",
     "auth": {
       "login": true,
       "register": false
@@ -242,19 +352,22 @@
   },
   {
     "title": "magic-llm",
-    "description": "LLM wrapper unifying providers like Anthropic, Cohere, AWS Bedrock, OpenAI, and any OpenAI compatible provider into a single OpenAI schema-based output format.",
-    "descriptionMD": "**magic-llm: Unified LLM Integration Framework**\n\n`magic-llm` is a powerful Python library designed to simplify interactions with a multitude of Large Language Model (LLM) providers. It acts as a versatile wrapper, abstracting the complexities of different APIs.\n\n**Key Goals & Features:**\n*   **Provider Agnostic:** Supports major LLM providers including **Anthropic, Cohere, AWS Bedrock, OpenAI**, and any **OpenAI-compatible** service.\n*   **Standardized Output:** Unifies the output from various providers into a **single, consistent schema based on OpenAI's format**. This dramatically reduces the effort required to switch between or use multiple LLMs.\n*   **Simplified Development:** Allows developers to write code once and interact with different LLMs without significant modifications.\n\n**Core Dependencies:**\n*   **`boto3`**: For AWS Bedrock integration.\n*   **`httpx` / `aiohttp`**: For efficient asynchronous and synchronous HTTP requests to LLM APIs.\n\n`magic-llm` streamlines the development of LLM-powered applications by providing a consistent and easy-to-use interface across various providers.",
+    "tagline": "One Python interface for OpenAI, Anthropic, Gemini, Bedrock, Cohere and any OpenAI-compatible LLM API.",
+    "category": "agents-llm",
+    "description": "Python 3.10+ library with one MagicLLM interface for OpenAI, Anthropic, Google Gemini, AWS Bedrock, Cohere, Cloudflare Workers AI and any OpenAI-compatible endpoint, with streaming, async, embeddings, audio, model discovery, tool calling and a ReAct agent loop.",
+    "descriptionMD": "**magic-llm: One Python Client for Many LLM Providers**\n\n`magic-llm` is a Python 3.10+ client library that exposes a single `MagicLLM` interface across native and OpenAI-compatible LLM APIs and returns OpenAI-style response and stream-chunk models with usage metadata.\n\n**Key Features:**\n*   **Native Engines:** OpenAI, Anthropic, Google Gemini, AWS Bedrock (Anthropic, Meta, Nova and Titan models), Cohere, Cloudflare Workers AI, and Azure Speech for audio.\n*   **OpenAI-Compatible Routing:** `engine=\"openai\"` plus `base_url`, with dedicated adapters for Groq, SambaNova, OpenRouter, Mistral, Fireworks, DeepSeek, DeepInfra and Together.\n*   **Sync, Async and Streaming:** `generate`, `stream_generate`, `async_generate` and `async_stream_generate`, with fallback clients and callbacks.\n*   **Beyond Chat:** Image input, embeddings, text-to-speech and speech-to-text (provider-dependent), and model discovery.\n*   **Tool Calling and Agents:** Tools from Python callables, JSON schemas or Pydantic models; a ReAct agent loop (`run_agent` plus streaming and async variants) and YAML-defined subagents.\n\n**Technology Stack:**\n*   **Python 3.10+** with **Pydantic** response models.\n*   **aiohttp** (async) and **requests** (sync) for HTTP; **botocore** for AWS SigV4 signing.\n*   **tiktoken** and **tokenizers** for token counting; **PyYAML** for subagent manifests and **jsonschema** for validating subagent task inputs.\n\nInstalled from GitHub (`pip install git+https://github.com/Andres77872/magic-llm.git`); every push to master cuts a tagged release.",
     "repoUrl": "https://github.com/Andres77872/magic-llm",
     "image": "https://img.arz.ai/5n3AU6bp",
     "tags": [
       "LLM",
-      "WRAPPER",
+      "PYTHON LIBRARY",
       "OPENAI",
       "ANTHROPIC",
-      "COHERE",
+      "GEMINI",
       "AWS BEDROCK",
-      "BOTO3",
-      "HTTPX",
+      "COHERE",
+      "STREAMING",
+      "TOOL CALLING",
       "AIOHTTP"
     ],
     "status": "repo",
@@ -268,23 +381,26 @@
   },
   {
     "title": "magic-agents",
-    "description": "Graph framework for Novus Talk, inspired by ComfyUI. Uses magic-llm for LLM connections. Graph built with NetworkX, Jinja2 for node logic. Under development.",
-    "descriptionMD": "**magic-agents: A ComfyUI-Inspired Graph Framework for AI Agents**\n\n`magic-agents` is the foundational graph framework powering **Novus Talk**, offering a flexible and intuitive way to construct sophisticated AI agents. Drawing inspiration from the node-based paradigm of ComfyUI, it allows for modular and visual agent design.\n\n**Core Components & Philosophy:**\n*   **Node-Based Architecture:** Agents are built by connecting functional nodes in a graph, where each node represents a specific task or logic unit.\n*   **LLM Connectivity:** Seamlessly integrates with Large Language Models through the **`magic-llm`** wrapper, enabling versatile LLM provider support.\n*   **Graph Management:** Utilizes **NetworkX** for robust graph creation, manipulation, and analysis.\n*   **Dynamic Node Logic:** Employs **Jinja2 templating** to define and execute logic within individual nodes, allowing for dynamic and configurable agent behaviors.\n\n**Current Status:**\n*   Actively **under development**, with a focus on building a comprehensive and user-friendly framework for creating next-generation AI agents.\n\n`magic-agents` aims to empower developers to build complex and adaptable AI systems with ease and precision.",
+    "tagline": "Async Python runtime that executes LLM agent workflows defined as JSON node graphs.",
+    "category": "agents-llm",
+    "description": "Python library that runs LLM workflows defined as JSON node-and-edge graphs. A reactive asyncio executor runs each node when its inputs arrive, with 20 built-in node types for LLM calls, routing, loops, HTTP, MCP tools and memory. Uses magic-llm and powers Novus Talk agents.",
+    "descriptionMD": "**magic-agents: Graph Runtime for LLM Agent Workflows**\n\n`magic-agents` is a Python 3.11+ library that builds and executes LLM workflows defined as JSON graphs of nodes and handle-to-handle edges. It is the agent engine behind **Novus Talk** and uses **magic-llm** for model access.\n\n**Key Features:**\n*   **20 Built-in Node Types:** User input, text, constant, parser, fetch, client, LLM, chat, send message, loop, conditional, inner (nested graph), end, void, hook, Python exec, MCP, memory, codex and tool.\n*   **Reactive Execution:** Each node runs as an asyncio task once its inputs are ready, so independent branches run concurrently and output streams back as events.\n*   **Control Flow:** Jinja2 conditions that pick one branch and bypass the rest, loops over lists, and nested subgraphs.\n*   **Tools and Memory:** LLM nodes can call HTTP fetch, Python exec and MCP server tools; the memory node stores embeddings in an in-memory or Qdrant vector store.\n*   **Validation and Observability:** Graph validation, lifecycle hooks, and structured debug events.\n\n**Technology Stack:**\n*   **Python 3.11+**, **asyncio** and **Pydantic** graph models.\n*   **magic-llm** for LLM clients and OpenAI-style stream chunks.\n*   **Jinja2** templates, **NetworkX** for build-time node ordering and layout, the **MCP** Python SDK, and optional **qdrant-client**.",
     "repoUrl": "https://github.com/Andres77872/magic-agents",
     "image": "https://img.arz.ai/pfgAs1_B",
     "tags": [
-      "GRAPH FRAMEWORK",
+      "AGENTS",
       "LLM",
-      "COMFYUI",
-      "MAGIC-LLM",
-      "NETWORKX",
+      "GRAPH",
+      "WORKFLOW",
+      "ASYNCIO",
       "JINJA2",
-      "AGENTS"
+      "MCP",
+      "MAGIC-LLM"
     ],
     "status": "repo",
     "license": "Apache 2.0",
-    "language": ["Python", "NetworkX", "Jinja2"],
-    "releaseDate": "2024-12-01",
+    "language": ["Python"],
+    "releaseDate": "2024-11-30",
     "auth": {
       "login": false,
       "register": false
@@ -292,8 +408,16 @@
   },
   {
     "title": "OpenCode Dashboard",
-    "description": "Local analytics for AI coding-assistant usage — one Go binary with both a web SPA and a terminal UI. Reads OpenCode, Claude Code, and Codex usage data read-only, tracking sessions, costs, tokens, models, tools, and subscription quotas. Fully offline and local-only.",
-    "descriptionMD": "**OpenCode Dashboard: Local Analytics for AI Coding Assistants**\n\nOne binary, web or terminal, works offline. OpenCode Dashboard turns your local **OpenCode**, **Claude Code**, and **Codex** usage data into rich analytics — without uploading a byte.\n\n**Key Features:**\n*   **Dual Interface, One Binary:** A browser SPA and a full-keyboard **Bubble Tea** terminal UI share seven analytics surfaces — Overview, Daily, Models, Tools, Projects, Sessions, and Config — with live source switching and flexible time-range presets.\n*   **Cross-Source Overview:** Merges every source into combined totals for sessions, messages, and tokens while keeping costs per-source, respecting each provider's cost provenance.\n*   **Self-Maintaining SQLite Cache:** Background sync consolidates aggregates while serving live raw data, with incremental resync and clear-and-rebuild from the web UI.\n*   **Subscription Quota Tracking:** Monitors Codex, Claude Code, and MiniMax rate limits using only official surfaces — including a statusline hook that captures Claude Code Pro/Max quotas.\n*   **Full JSON API:** Everything the UIs show is available under `/api/v1` — sources, overview, daily, models, tools, projects, sessions, messages, config, and quotas.\n\n**Technology Stack:**\n*   **Backend:** **Go** single binary (CGO-free) with pure-Go **SQLite**, serving the API and the embedded frontend.\n*   **Frontend:** **React 19 + Vite + TypeScript** SPA built on an in-house component system with pure-SVG charts.\n*   **TUI:** **Bubble Tea** + Lip Gloss terminal interface.\n\nPrivacy by design: read-only data sources, local-only storage, and a clean uninstall that removes only dashboard-owned files.",
+    "tagline": "Local usage analytics for OpenCode, Claude Code, Codex, Kimi Code and Qwen Code in one Go binary, web and TUI.",
+    "category": "platforms-tools",
+    "featured": 5,
+    "highlights": [
+      "Single CGO-free Go binary with an embedded React SPA and a Bubble Tea terminal UI",
+      "Combines usage from five coding agents in a self-maintaining SQLite cache, with costs kept per source",
+      "Tracks subscription quotas and answers usage questions with an optional LLM analytics assistant"
+    ],
+    "description": "Local analytics for AI coding-assistant usage in one Go binary with a web dashboard and a terminal UI. Reads OpenCode, Claude Code, Codex, Kimi Code and Qwen Code data read-only and reports sessions, tokens, costs, models, tools, projects and subscription quotas.",
+    "descriptionMD": "**OpenCode Dashboard: Local Analytics for AI Coding Assistants**\n\nOpenCode Dashboard reads the local usage data of **OpenCode**, **Claude Code**, **Codex**, **Kimi Code** and **Qwen Code** without modifying it, and shows it in a browser dashboard or a terminal UI. Dashboard views work offline; only quota checks and the optional assistant make network calls.\n\n**Key Features:**\n*   **Web and Terminal UIs:** Both expose seven views (Overview, Daily, Models, Tools, Projects, Sessions, Config) with live source and time-range switching.\n*   **Cross-Source Overview:** Combines sessions, requests, messages and tokens across sources while keeping costs per source, labeled by provenance (reported, computed or estimated).\n*   **SQLite Cache:** Aggregates are cached locally and synced in the background; recent hours are always read live, and the web UI can resync or rebuild.\n*   **Quota Tracking:** Shows remaining subscription quota for Codex, Claude Code (via its statusline command), Kimi Code and MiniMax, using official surfaces only.\n*   **Analytics Assistant:** An optional web-only LLM agent (Kimi, MiniMax or any OpenAI-compatible endpoint) answers usage questions with read-only aggregate tools and draws charts.\n\n**Technology Stack:**\n*   **Backend:** **Go** single binary (CGO-free) with pure-Go **SQLite**, serving a JSON API under `/api/v1` and the embedded frontend.\n*   **Frontend:** **React 19**, **TypeScript**, **Vite**, Tailwind CSS 4 and an in-house component library with SVG charts.\n*   **TUI:** **Bubble Tea** and Lip Gloss.\n*   **Distribution:** GoReleaser builds for Linux and macOS (amd64/arm64), installed with a script and updated with `opencode-dashboard update`.",
     "image": "https://img.arz.ai/iBoCguaJ",
     "repoUrl": "https://github.com/Andres77872/opencode-dashboard",
     "tags": [
@@ -304,7 +428,8 @@
       "BUBBLE TEA",
       "TUI",
       "ANALYTICS",
-      "CLI"
+      "CLI",
+      "LLM"
     ],
     "status": "repo",
     "license": "Apache 2.0",
@@ -317,21 +442,25 @@
   },
   {
     "title": "Portfolio",
-    "description": "Interactive personal portfolio showcasing projects and skills. Features an AI chatbot for portfolio exploration and a terminal-based canvas RPG game powered by LLM technology.",
-    "descriptionMD": "**Portfolio: Interactive Developer Showcase**\n\nA modern and engaging portfolio that demonstrates technical skills and creative projects through interactive elements and AI integration.\n\n**Key Features:**\n*   **AI Chatbot Assistant:** Engage with an intelligent chatbot that provides information about projects, skills, and experience in an interactive format.\n*   **Terminal RPG Game:** Experience a unique mini-game with a terminal interface rendered on canvas, using LLM technology to simulate an immersive role-playing experience.\n*   **Project Showcase:** Comprehensive display of development projects with detailed information and visual elements.\n\n**Technology Stack:**\n*   **Frontend:** Built with **React + Vite** for optimal performance and development experience.\n*   **AI Integration:** Incorporates LLM technology for interactive elements and game simulation.\n*   **Canvas Rendering:** Utilizes HTML5 Canvas for creative visual elements and the terminal-based game interface.\n\nThis portfolio represents both a showcase of technical skills and a demonstration of creative application development.",
+    "tagline": "This site: a project catalog, an AI assistant that knows every project, and four interactive experiments.",
+    "category": "games-interactive",
+    "description": "Personal portfolio built with React, TypeScript and Vite. It lists every project with filters and shareable links, includes a streaming AI assistant grounded in the project data, and a playground of four canvas experiments, including an LLM-driven terminal game.",
+    "descriptionMD": "**Portfolio: Interactive Developer Showcase**\n\nThe site you are on. All project content comes from one JSON file, which also drives the intro stats, featured cards and the assistant's prompt.\n\n**Key Features:**\n*   **Project Catalog:** Featured cards plus a full index filterable by category, technology or text, with detail modals and shareable `?project=` links.\n*   **Portfolio Assistant:** A floating chatbot that streams answers from an LLM agent, grounded in the project data, and links to projects and page sections.\n*   **Matrix RPG:** A CRT-style terminal drawn on Canvas with a virtual filesystem, scripted commands and an LLM-driven NPC that is told what you have discovered.\n*   **Playground Experiments:** A perceptron that trains on real MNIST digits in the browser, Conway's Game of Life with other life-like rules, and the Neural Nexus physics toy.\n\n**Technology Stack:**\n*   **Frontend:** **React 18**, **TypeScript**, **Vite**, **Tailwind CSS 4**, Radix UI and react-markdown.\n*   **AI:** Streaming OpenAI-compatible chat completions (SSE), with separate agents for the assistant and the game.\n*   **Graphics:** HTML5 **Canvas 2D** for the terminal and every experiment.\n*   **Testing:** Vitest and Testing Library.",
     "url": "https://arizmendi.io/",
     "image": "https://img.arz.ai/_lOApj6h",
     "repoUrl": "https://github.com/Andres77872/portfolio4",
     "tags": [
       "REACT",
       "VITE",
+      "TAILWIND CSS",
       "LLM",
-      "CANVAS",
       "CHATBOT",
-      "RPG"
+      "CANVAS",
+      "RPG",
+      "MNIST"
     ],
     "status": "production",
-    "license": "Apache 2.0",
+    "license": "",
     "language": ["TypeScript", "React", "Canvas"],
     "releaseDate": "2025-06-07",
     "auth": {
@@ -341,11 +470,18 @@
   },
   {
     "title": "SmolVLM-500M-Anime-Caption",
-    "description": "Specialized vision-language model for anime image captioning, fine-tuned from SmolVLM-500M-Base on 400,000 synthetic image/caption pairs generated with Llama 4 Maverick. Produces natural English descriptions for anime and illustration artworks.",
-    "descriptionMD": "**SmolVLM-500M-Anime-Caption: Specialized Anime Image Captioning Model**\n\nA vision-language model specifically designed for describing anime-style images with natural English captions. This model represents a significant advancement in anime content understanding and description generation.\n\n**Core Features:**\n*   **Anime-Focused Captioning:** Generates detailed, accurate descriptions for anime, manga panels, and illustrations.\n*   **Fine-Tuned Architecture:** Built on **HuggingFaceTB/SmolVLM-500M-Base** with **SigLIP** vision encoder (google/siglip-base-patch16-512).\n*   **Extensive Training Data:** Trained on 400,000 synthetic image/caption pairs (200k SFW / 200k NSFW) generated with **Llama 4 Maverick**.\n*   **Content Indexing:** Ideal for tagging and organizing anime-focused archives, databases, and creative tools.\n\n**Technical Details:**\n*   **Model Size:** 500M parameters for efficient inference while maintaining high-quality outputs.\n*   **Language:** English image captioning with natural language descriptions.\n*   **License:** Apache 2.0 (inherited from base and training components).\n\nThis model bridges the gap between computer vision and natural language processing specifically for anime content, enabling more sophisticated anime image understanding and description.",
+    "tagline": "500M-parameter vision-language model fine-tuned to caption anime and illustrations.",
+    "category": "retrieval-vision",
+    "featured": 3,
+    "highlights": [
+      "Fine-tuned from SmolVLM-500M-Base with a SigLIP vision encoder",
+      "Trained on 400k anime images with synthetic captions from Llama 4 Maverick",
+      "Structured captions: description, details, style, search query, tags and rating; Gradio demo Space"
+    ],
+    "description": "SmolVLM-500M-Base fine-tuned to caption anime-style images, trained on 400,000 image/caption pairs whose captions were generated by Llama 4 Maverick. Outputs a structured English description with details, style notes, a search query, booru-style tags and a content rating.",
+    "descriptionMD": "**SmolVLM-500M-Anime-Caption: Anime Image Captioning Model**\n\nA vision-language model fine-tuned from HuggingFaceTB/SmolVLM-500M-Base to describe anime-style images. It is a captioning model, not a visual question-answering model: it is prompted with the fixed instruction \"describe the image\".\n\n**Key Features:**\n*   **Structured Output:** Sections for description, details, style, a short search query, booru-style tags and a content rating.\n*   **Training Data:** 400,000 image/caption pairs (200k SFW / 200k NSFW) with captions generated by Llama 4 Maverick; the SFW half is published as the `findit_v0.2_safe` dataset.\n*   **Fine-Tuning:** 3 epochs over the base model (14,868 optimizer steps).\n*   **Demo:** Gradio Space on ZeroGPU with streamed output.\n\n**Technology Stack:**\n*   **Model:** Idefics3 architecture, SigLIP vision encoder (google/siglip-base-patch16-512), ~507M parameters, BF16 safetensors.\n*   **Libraries:** **PyTorch**, Hugging Face **Transformers**.\n*   **Demo:** **Gradio** on Hugging Face Spaces.\n*   **License:** Apache 2.0, as declared on the model card.",
     "url": "https://huggingface.co/spaces/Andres77872/anime-caption-v0.2",
     "image": "https://img.arz.ai/l6oA8nJp",
-    "apiUrl": "https://api.findit.moe/docs#/Utilities/image_caption_util_image_caption_post",
     "repoUrl": "https://huggingface.co/Andres77872/SmolVLM-500M-anime-caption-v0.2",
     "tags": [
       "HUGGINGFACE",
@@ -353,11 +489,12 @@
       "IMAGE CAPTIONING",
       "SIGLIP",
       "FINE-TUNING",
-      "LLM"
+      "TRANSFORMERS",
+      "GRADIO"
     ],
     "status": "production",
     "license": "Apache 2.0",
-    "language": ["Python", "transformers", "PyTorch"],
+    "language": ["Python", "PyTorch", "Transformers"],
     "releaseDate": "2025-05-12",
     "auth": {
       "login": false,

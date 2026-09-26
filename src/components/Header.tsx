@@ -1,152 +1,61 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import Navbar from './Navbar';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { useModal } from '../contexts/ModalContext';
 import { Button } from '@/components/ui/button';
 import { GitHubIcon } from '@/components/icons';
+import { getContactLink, profile } from '@/data/profile';
 
-const SCROLL_THRESHOLD = 60;
+const SCROLL_THRESHOLD = 24;
 
 export default function Header() {
-  const headerRef = useRef<HTMLElement>(null);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { isModalOpen } = useModal();
-
-  // Update CSS variable with header height
-  const updateHeaderHeight = useCallback(() => {
-    if (headerRef.current) {
-      const height = headerRef.current.offsetHeight;
-      document.documentElement.style.setProperty('--header-height', `${height}px`);
-    }
-  }, []);
+  const github = getContactLink('GitHub');
 
   useEffect(() => {
-    updateHeaderHeight();
-    window.addEventListener('resize', updateHeaderHeight);
-    
-    return () => window.removeEventListener('resize', updateHeaderHeight);
-  }, [updateHeaderHeight]);
-
-  // Handle scroll effect with throttle-like behavior
-  const handleScroll = useCallback(() => {
-    const scrolled = window.scrollY > SCROLL_THRESHOLD;
-    if (scrolled !== isScrolled) {
-      setIsScrolled(scrolled);
-      // Update height after state change
-      setTimeout(updateHeaderHeight, 350); // After transition
-    }
-  }, [isScrolled, updateHeaderHeight]);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
-
-  // Scroll to top handler
-  const handleLogoClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const update = () => setIsScrolled(window.scrollY > SCROLL_THRESHOLD);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    return () => window.removeEventListener('scroll', update);
   }, []);
-
-  // Hide header when modal is open
-  if (isModalOpen) return null;
 
   return (
-    <header 
-      ref={headerRef}
+    <header
       className={cn(
-        "fixed top-4 left-1/2 -translate-x-1/2 z-[100]",
-        "bg-background/80 backdrop-blur-xl",
-        "border border-border/50 rounded-xl",
-        "shadow-sm shadow-black/5",
-        "transition-all duration-300 ease-out",
-        "animate-header-slide-in",
-        // Responsive widths
-        "max-md:w-[calc(100%-1rem)] max-md:top-2",
-        "max-lg:w-[calc(100%-1.5rem)] max-lg:top-3",
-        "max-xs:w-[calc(100%-0.75rem)]",
-        // Scrolled state - more prominent
-        isScrolled && [
-          "top-3 max-md:top-1.5",
-          "bg-background/90 backdrop-blur-2xl",
-          "border-border/70",
-          "shadow-md shadow-black/10",
-        ],
-        // Accessibility
-        "motion-reduce:animate-none",
-        "contrast-more:border-2 contrast-more:border-foreground contrast-more:bg-background",
+        'fixed inset-x-0 top-0 z-[100] transition-[background-color,border-color,box-shadow] duration-300',
+        'border-b border-transparent',
+        isScrolled && 'border-border/70 bg-background/80 shadow-sm shadow-black/5 backdrop-blur-xl',
+        'contrast-more:border-foreground contrast-more:bg-background',
       )}
-      role="banner"
     >
-      <div className="grid grid-cols-[auto_1fr_auto] items-stretch h-14 max-md:h-[52px] max-xs:h-12">
-        {/* Logo Section */}
-        <div className="flex items-stretch">
-          <a
-            href="#top"
-            onClick={handleLogoClick}
-            className={cn(
-              "flex items-center gap-2 px-4 no-underline text-foreground",
-              "border-r border-border/50",
-              "transition-colors duration-200",
-              "hover:bg-accent/50",
-              "focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2",
-              "max-md:px-3 max-xs:px-2.5",
-              "contrast-more:text-foreground contrast-more:border-r-2",
-            )}
-            aria-label="Scroll to top"
-          >
-            <div className="flex flex-col gap-0.5">
-              <div className={cn(
-                "flex items-baseline font-sans text-lg font-semibold leading-none tracking-tight",
-                "max-md:text-base max-xs:text-sm",
-              )}>
-                <span className="text-foreground contrast-more:text-foreground">arizmendi</span>
-                <span className="text-primary font-bold contrast-more:text-primary">.io</span>
-              </div>
-              <span className="text-[0.6rem] font-medium text-muted-foreground uppercase tracking-[0.15em] max-md:hidden">
-                AI Developer
-              </span>
-            </div>
-          </a>
-        </div>
+      <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-6 max-md:h-14 max-md:px-4">
+        <a
+          href="#top"
+          className={cn(
+            'group flex items-baseline gap-2 rounded-md text-foreground no-underline',
+            'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring',
+          )}
+          aria-label={`${profile.name} — back to top`}
+        >
+          <span className="text-base font-semibold tracking-tight">
+            arizmendi<span className="text-primary">.io</span>
+          </span>
+          <span className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-muted-foreground max-md:hidden">
+            {profile.title}
+          </span>
+        </a>
 
-        {/* Navigation */}
-        <Navbar />
-
-        {/* Actions */}
-        <div className="flex items-stretch">
-          <div className={cn(
-            "flex items-center justify-center",
-            "border-l border-border/50",
-            "contrast-more:border-l-2",
-          )}>
-            <ThemeToggle />
-          </div>
-          <Button
-            variant="ghost"
-            asChild
-            className={cn(
-              "flex items-center gap-2 px-4 h-auto rounded-none rounded-r-xl",
-              "text-muted-foreground",
-              "border-l border-border/50",
-              "transition-colors duration-200",
-              "hover:text-foreground hover:bg-accent/50",
-              "focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2",
-              "max-md:px-3 max-xs:px-2.5",
-              "contrast-more:border-l-2 contrast-more:border-foreground",
-            )}
-          >
-            <a 
-              href="https://github.com/Andres77872"
-              target="_blank" 
-              rel="noopener noreferrer"
-              aria-label="View GitHub profile (opens in new tab)"
-            >
-              <GitHubIcon className="size-4.5 max-xs:size-4" />
-              <span className="font-medium tracking-[0.05em] uppercase text-xs max-md:hidden">GitHub</span>
-            </a>
-          </Button>
+        <div className="flex items-center gap-1">
+          <Navbar />
+          <span aria-hidden="true" className="mx-2 h-5 w-px bg-border max-md:hidden" />
+          <ThemeToggle />
+          {github && (
+            <Button variant="ghost" size="icon" asChild className="size-8 rounded-full text-muted-foreground hover:text-foreground">
+              <a href={github.url} target="_blank" rel="noopener noreferrer" aria-label="GitHub profile (opens in new tab)">
+                <GitHubIcon className="size-4" />
+              </a>
+            </Button>
+          )}
         </div>
       </div>
     </header>

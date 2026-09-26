@@ -27,12 +27,27 @@ const hasWindow = () => typeof window !== 'undefined';
 const isUserIntensity = (value: unknown): value is UserSelectableCrtIntensity =>
   value === 1 || value === 2 || value === 3;
 
+// localStorage throws in some privacy modes (e.g. Safari with all cookies blocked);
+// the preference then just lives for the session.
 const readStoredIntensity = (): UserSelectableCrtIntensity => {
   if (!hasWindow()) return 1;
 
-  const raw = window.localStorage.getItem(STORAGE_KEY);
-  const parsed = raw === null ? Number.NaN : Number(raw);
-  return isUserIntensity(parsed) ? parsed : 1;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const parsed = raw === null ? Number.NaN : Number(raw);
+    return isUserIntensity(parsed) ? parsed : 1;
+  } catch {
+    return 1;
+  }
+};
+
+const storeIntensity = (value: UserSelectableCrtIntensity) => {
+  if (!hasWindow()) return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, String(value));
+  } catch {
+    // Storage unavailable: keep the in-memory preference only.
+  }
 };
 
 const getMediaSnapshot = (): MediaSnapshot => {
@@ -128,17 +143,13 @@ export function useCrtIntensity(): CrtPreferenceState {
   const setIntensity = useCallback((value: UserSelectableCrtIntensity) => {
     if (!isUserIntensity(value)) return;
     setPreferredIntensity(value);
-    if (hasWindow()) {
-      window.localStorage.setItem(STORAGE_KEY, String(value));
-    }
+    storeIntensity(value);
   }, []);
 
   const cycleIntensity = useCallback(() => {
     setPreferredIntensity(current => {
       const next = USER_VALUES[(USER_VALUES.indexOf(current) + 1) % USER_VALUES.length];
-      if (hasWindow()) {
-        window.localStorage.setItem(STORAGE_KEY, String(next));
-      }
+      storeIntensity(next);
       return next;
     });
   }, []);

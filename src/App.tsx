@@ -1,28 +1,34 @@
 // Portfolio App - Main Component
-import { Header, Hero, About, Projects, Contact, Footer, ChatBot } from './components';
-import { ModalProvider } from './contexts/ModalContext';
+import { Header, Intro, Projects, Playground, About, Footer, ChatBot } from './components';
 import { ThemeProvider } from '@/components/theme-provider';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { useInitialHashScroll } from '@/hooks/useInitialHashScroll';
 
 function App() {
+  useInitialHashScroll();
+
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <TooltipProvider>
-        <ModalProvider>
-          <div className="mx-auto min-h-screen flex flex-col bg-background text-foreground font-sans">
-            <Header />
-            
-            <main className="grow flex flex-col gap-12 lg:gap-16">
-              <Hero />
-              <About />
-              <Projects />
-              <Contact />
-            </main>
-            
-            <Footer />
-            <ChatBot />
-          </div>
-        </ModalProvider>
+        <div id="top" className="flex min-h-screen flex-col font-sans text-foreground">
+          <a
+            href="#main"
+            className="sr-only z-[300] rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+          >
+            Skip to content
+          </a>
+          <Header />
+
+          <main id="main" tabIndex={-1} className="grow outline-none">
+            <Intro />
+            <Projects />
+            <Playground />
+            <About />
+          </main>
+
+          <Footer />
+          <ChatBot />
+        </div>
       </TooltipProvider>
     </ThemeProvider>
   );

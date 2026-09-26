@@ -8,24 +8,32 @@ import type { GameState, MatrixRPGProps, Message, TerminalStatus } from './types
 import MatrixRPGHeader from './MatrixRPGHeader';
 import MatrixRPGFooter from './MatrixRPGFooter';
 import MatrixRPGTerminal from './MatrixRPGTerminal';
-import { findClosestCommand, type TerminalCommand } from './useTerminal';
+import {
+  SYSTEM_INFO,
+  buildExplorationContext,
+  buildPrompt,
+  classifyUnknown,
+  parseTokens,
+  resolveCommand,
+  visibleCommands,
+  type CommandContext,
+  type CommandResult,
+} from './commands';
+import {
+  createDiscovered,
+  isRestored,
+  reduceDiscovery,
+  TOTAL_FRAGMENTS,
+  type DiscoveredState,
+  type DiscoveryEvent,
+} from './discovery';
+import { makeFormat, type TerminalFormat } from './terminalFormat';
+import { HOME } from './vfs';
+import { useTerminalSound } from './useTerminalSound';
 
-const SYSTEM_INFO = {
-  OS: 'SYNAPTIC-OS v3.7.9',
-  KERNEL: 'Neural-Core 5.14.0-matrix',
-  CPU: 'Quantum Processing Unit (QPU) x8',
-  MEMORY: '128GB Neural RAM',
-  HOSTNAME: 'nxterm-37912',
-  USER: 'root',
-  SHELL: '/bin/neurosh',
-};
+const VISIBLE_COMMANDS = visibleCommands();
 
-const BOOT_SEQUENCE = [
-  '',
-  '╔════════════════════════════════════════════════════╗',
-  '║  SYNAPTIC INNOVATIONS NX-3700 Terminal             ║',
-  '║  BIOS v2.4.1 - Quantum Core Ready                  ║',
-  '╚════════════════════════════════════════════════════╝',
+const BOOT_BODY = [
   '',
   'POST: Neural Memory Test......... 131072 KB OK',
   'POST: Quantum Processor Check.... QPU x8 Online',
@@ -43,32 +51,38 @@ const BOOT_SEQUENCE = [
   '',
 ];
 
-const WELCOME_MESSAGE = `
-┌────────────────────────────────────────────────────┐
-│ Welcome to ${SYSTEM_INFO.OS}                      │
-│ ${SYSTEM_INFO.HOSTNAME} • Session Active                      │
-└────────────────────────────────────────────────────┘
+const buildBootLines = (fmt: TerminalFormat): string[] => [
+  '',
+  ...fmt
+    .boxify(['SYNAPTIC INNOVATIONS NX-3700', 'BIOS v2.4.1 - Quantum Core Ready'], { title: 'BOOT' })
+    .split('\n'),
+  ...BOOT_BODY,
+];
 
-System Status:
-  Kernel........... ${SYSTEM_INFO.KERNEL}
-  Processor........ ${SYSTEM_INFO.CPU}
-  Memory........... ${SYSTEM_INFO.MEMORY}
-  Shell............ ${SYSTEM_INFO.SHELL}
+const buildWelcome = (fmt: TerminalFormat): string =>
+  [
+    '',
+    fmt.boxify([`Welcome to ${SYSTEM_INFO.OS}`, `${SYSTEM_INFO.HOSTNAME} - session active`], { title: 'SYNAPTIC-OS' }),
+    '',
+    'System Status:',
+    `  Kernel....... ${SYSTEM_INFO.KERNEL}`,
+    `  Processor.... ${SYSTEM_INFO.CPU}`,
+    `  Memory....... ${SYSTEM_INFO.MEMORY}`,
+    `  Shell........ ${SYSTEM_INFO.SHELL}`,
+    '',
+    'WARNING: Neural interface unstable. Memory fragments detected.',
+    'WARNING: Project MIRROR status: DISCONNECTED',
+    '',
+    'AI DISCLOSURE: Neural transmissions are processed by an external AI service.',
+    'Do not enter secrets, credentials, or sensitive personal data.',
+    '',
+    fmt.rule('━'),
+    "Type 'help', try 'ls /mirror', or just start talking...",
+  ].join('\n');
 
-WARNING: Neural interface unstable. Memory fragments detected.
-WARNING: Project MIRROR status: DISCONNECTED
-WARNING: Subject consciousness: UNKNOWN
-
-AI DISCLOSURE: Neural transmissions are processed by an external AI service.
-Do not enter secrets, credentials, or sensitive personal data.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Type 'help' or press '?' for commands/settings, or just start talking...
-`;
-
-const COMMAND_PROMPT = `${SYSTEM_INFO.USER}@${SYSTEM_INFO.HOSTNAME}:~$ `;
 const CURSOR_CHAR = '█';
 const MAX_CONVERSATION_MESSAGES = 12;
+const SCROLLBACK_MAX_LINES = 500;
 
 interface ActiveStream {
   id: string;
@@ -78,8 +92,8 @@ interface ActiveStream {
 }
 
 const createStreamId = (): string => `matrix-stream-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-const createStreamMarker = (streamId: string) => `\uE000${streamId}\uE001`;
-const stripStreamMarkers = (content: string) => content.replace(/\uE000matrix-stream-[^\uE001]+\uE001/g, '');
+const createStreamMarker = (streamId: string) => `${streamId}`;
+const stripStreamMarkers = (content: string) => content.replace(/matrix-stream-[^]+/g, '');
 const isAbortError = (error: unknown): boolean => error instanceof Error && error.name === 'AbortError';
 
 const MATRIX_RPG_SYSTEM_CONTEXT: ChatRequestMessage = {
@@ -90,6 +104,7 @@ GAME CONTEXT:
 - The user is connected as root through an unstable neural interface.
 - Project MIRROR is disconnected and memory fragments are detected.
 - You are confused, fragmented, and asking the user for help while staying in character.
+- The user can explore a fake filesystem (/mirror) to recover your memory fragments.
 - The UI is a terminal, so responses must be concise and readable as terminal output.
 
 INSTRUCTIONS:
@@ -109,16 +124,15 @@ const INITIAL_MESSAGES = [
   'Please... help me...',
 ];
 
-const COMMANDS: TerminalCommand[] = [
-  { name: 'help', description: 'Display command and AI safety help' },
-  { name: 'clear', description: 'Clear terminal screen' },
-  { name: 'whoami', description: 'Display current user information' },
-  { name: 'ps', description: 'List running neural processes' },
-  { name: 'status', description: 'Show system status report' },
-  { name: 'exit', description: 'Terminate neural session affordance' },
-];
+const appendPrompt = (content: string, prompt: string): string =>
+  `${content}${content.length === 0 || content.endsWith('\n') ? '' : '\n'}${prompt}`;
 
-const appendPrompt = (content = '') => `${content}${content.endsWith('\n') || content.length === 0 ? '' : '\n'}${COMMAND_PROMPT}`;
+const capScrollback = (text: string): string => {
+  const lines = text.split('\n');
+  if (lines.length <= SCROLLBACK_MAX_LINES) return text;
+  const kept = lines.slice(lines.length - (SCROLLBACK_MAX_LINES - 1));
+  return `[... scrollback truncated ...]\n${kept.join('\n')}`;
+};
 
 const replaceStreamBlock = (previous: string, marker: string, response: string) => {
   const start = previous.indexOf(marker);
@@ -134,8 +148,13 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
   const [terminalStatus, setTerminalStatus] = useState<TerminalStatus>('idle');
   const [conversations, setConversations] = useState<Message[]>([]);
   const [isPoweringOn, setIsPoweringOn] = useState(false);
+  const [cwd, setCwd] = useState(HOME);
+  const [discovered, setDiscovered] = useState<DiscoveredState>(createDiscovered);
+  const [announcements, setAnnouncements] = useState<string[]>([]);
 
   const crt = useCrtIntensity();
+  const sound = useTerminalSound();
+
   const messageIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const bootTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const bootLineTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -147,7 +166,35 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
   const hasUserInteractedRef = useRef(false);
   const isMountedRef = useRef(false);
 
+  const colsRef = useRef(60);
+  const cwdRef = useRef(HOME);
+  const discoveredRef = useRef(discovered);
+  const commandHistoryRef = useRef<string[]>([]);
+  const lastRouteRef = useRef<'chat' | 'command' | null>(null);
+
   const isProcessing = terminalStatus === 'connecting' || terminalStatus === 'streaming';
+  const promptPrefix = useMemo(() => buildPrompt(cwd), [cwd]);
+
+  const handleMetrics = useCallback(({ cols }: { cols: number }) => {
+    colsRef.current = cols;
+  }, []);
+
+  const announce = useCallback((line: string) => {
+    setAnnouncements((prev) => [...prev, line].slice(-30));
+  }, []);
+
+  const applyCwd = useCallback((path: string) => {
+    cwdRef.current = path;
+    setCwd(path);
+  }, []);
+
+  const discover = useCallback((event: DiscoveryEvent) => {
+    setDiscovered((prev) => {
+      const next = reduceDiscovery(prev, event);
+      discoveredRef.current = next;
+      return next;
+    });
+  }, []);
 
   const clearMysteriousMessages = useCallback(() => {
     if (messageIntervalRef.current) {
@@ -172,19 +219,92 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
       }
 
       const message = INITIAL_MESSAGES[messageIndexRef.current];
-      setTerminalOutput(prev => `${prev}\n[SYSTEM] Incoming neural transmission...\nUnknown Entity: ${message}\n\n${COMMAND_PROMPT}`);
+      setTerminalOutput((prev) => `${prev}\n[SYSTEM] Incoming neural transmission...\nUnknown Entity: ${message}\n\n${buildPrompt(cwdRef.current)}`);
+      announce(`Unknown Entity: ${message}`);
+      sound.playBell();
       messageIndexRef.current++;
     }, 8000);
-  }, [clearMysteriousMessages, gameState]);
+  }, [announce, clearMysteriousMessages, gameState, sound]);
 
   const clearBootTimers = useCallback(() => {
-    [bootTimerRef, bootLineTimerRef, readyTimerRef, interactiveTimerRef, powerTimerRef].forEach(ref => {
+    [bootTimerRef, bootLineTimerRef, readyTimerRef, interactiveTimerRef, powerTimerRef].forEach((ref) => {
       if (ref.current) {
         clearTimeout(ref.current);
         ref.current = null;
       }
     });
   }, []);
+
+  const triggerReboot = useCallback(() => {
+    clearBootTimers();
+    clearMysteriousMessages();
+    activeStreamRef.current?.controller.abort();
+    activeStreamRef.current?.reader?.cancel().catch(() => undefined);
+    activeStreamRef.current = null;
+    setTerminalStatus('idle');
+    applyCwd(HOME);
+    setUserInput('');
+    hasUserInteractedRef.current = true; // don't replay the mysterious intro after a manual reboot
+    setGameState('loading');
+    setTerminalOutput('Rebooting Synaptic Neural Interface...\n\n');
+  }, [applyCwd, clearBootTimers, clearMysteriousMessages]);
+
+  const buildContext = useCallback(
+    (tokens: string[], rawArgs: string): CommandContext => {
+      const { args, flags } = parseTokens(tokens);
+      return {
+        args,
+        rawArgs,
+        flags,
+        cols: colsRef.current,
+        cwd: cwdRef.current,
+        setCwd: applyCwd,
+        discovered: discoveredRef.current,
+        discover,
+        history: commandHistoryRef.current,
+        fmt: makeFormat(colsRef.current),
+        sys: SYSTEM_INFO,
+        now: new Date(),
+      };
+    },
+    [applyCwd, discover],
+  );
+
+  const applyResult = useCallback(
+    (result: CommandResult) => {
+      const prompt = buildPrompt(cwdRef.current);
+      if (result.kind === 'clear') {
+        setTerminalOutput(prompt);
+        return;
+      }
+      if (result.kind === 'reboot') {
+        triggerReboot();
+        return;
+      }
+      if (result.kind === 'silent') {
+        setTerminalOutput((prev) => appendPrompt(capScrollback(prev), prompt));
+        return;
+      }
+      setTerminalOutput((prev) => capScrollback(`${prev}${result.text}\n\n${prompt}`));
+    },
+    [triggerReboot],
+  );
+
+  const dispatch = useCallback(
+    (raw: string): boolean => {
+      const input = raw.trim();
+      const [head, ...rest] = input.split(/\s+/);
+      const command = resolveCommand(head);
+      if (!command) return false;
+
+      const rawArgs = input.slice(head.length).trim();
+      applyResult(command.handler(buildContext(rest, rawArgs)));
+      commandHistoryRef.current = [...commandHistoryRef.current, input].slice(-100);
+      lastRouteRef.current = 'command';
+      return true;
+    },
+    [applyResult, buildContext],
+  );
 
   const handleAbort = useCallback(() => {
     markUserInteracted();
@@ -195,133 +315,68 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
       activeStream.reader?.cancel().catch(() => undefined);
       activeStreamRef.current = null;
       setTerminalStatus('aborted');
-      setTerminalOutput(prev => `${stripStreamMarkers(prev)}\n^C\n[SYSTEM] Neural transmission interrupted.\n\n${COMMAND_PROMPT}`);
+      setTerminalOutput((prev) => `${stripStreamMarkers(prev)}\n^C\n[SYSTEM] Neural transmission interrupted.\n\n${buildPrompt(cwdRef.current)}`);
       setUserInput('');
+      announce('Neural transmission interrupted.');
+      sound.playError();
       return;
     }
 
     if (userInput.trim()) {
-      setTerminalOutput(prev => `${prev}${userInput}\n^C\n${COMMAND_PROMPT}`);
+      setTerminalOutput((prev) => `${prev}${userInput}\n^C\n${buildPrompt(cwdRef.current)}`);
       setUserInput('');
     }
-  }, [markUserInteracted, userInput]);
-
-  const runCommand = useCallback((command: string): boolean => {
-    const normalized = command.toLowerCase();
-
-    if (normalized === 'help') {
-      setTerminalOutput(prev => prev +
-        '\n┌─────────────────────────────────────────────────────────────────┐\n' +
-        '│ AVAILABLE COMMANDS                                              │\n' +
-        '├─────────────────────────────────────────────────────────────────┤\n' +
-        '│  help     Display this help menu                                │\n' +
-        '│  clear    Clear terminal screen                                 │\n' +
-        '│  whoami   Display current user information                      │\n' +
-        '│  ps       List running neural processes                         │\n' +
-        '│  status   Show system status report                             │\n' +
-        '│  exit     Terminate neural session                              │\n' +
-        '├─────────────────────────────────────────────────────────────────┤\n' +
-        '│  ?        Open help/settings overlay                            │\n' +
-        '│  Tab      Complete commands or show matches                     │\n' +
-        '│  ↑/↓      Navigate command history                              │\n' +
-        '│  Ctrl+C   Interrupt active neural transmission                  │\n' +
-        '│  AI NOTE  Messages are processed by an external AI service.     │\n' +
-        '└─────────────────────────────────────────────────────────────────┘\n\n' + COMMAND_PROMPT);
-      return true;
-    }
-
-    if (normalized === 'clear') {
-      setTerminalOutput(COMMAND_PROMPT);
-      return true;
-    }
-
-    if (normalized === 'whoami') {
-      setTerminalOutput(prev => prev + '\n' +
-        `User.......... ${SYSTEM_INFO.USER}\n` +
-        'Session....... Neural Interface Terminal\n' +
-        'Access........ ROOT (Emergency Protocol)\n' +
-        'UID........... 0\n' +
-        'Groups........ root, neural, mirror, cortex\n\n' + COMMAND_PROMPT);
-      return true;
-    }
-
-    if (normalized === 'ps') {
-      setTerminalOutput(prev => prev +
-        '\n  PID  TTY      STAT   TIME COMMAND\n' +
-        '    1  ?        Ss     0:03 /sbin/init --neural\n' +
-        '  127  tty1     S      0:15 neural-cortex-bridge -d\n' +
-        '  256  ?        S      2:41 memory-fragment-scanner --deep\n' +
-        '  512  ?        R     12:33 consciousness-monitor --watch\n' +
-        ' 1024  ?        Sl    45:21 project-mirror-daemon\n' +
-        ' 2048  pts/0    S+     8:17 unknown-entity-handler\n' +
-        ' 3072  pts/0    R+     0:00 ps aux\n\n' + COMMAND_PROMPT);
-      return true;
-    }
-
-    if (normalized === 'status') {
-      setTerminalOutput(prev => prev +
-        '\n┌─ SYSTEM STATUS REPORT ──────────────────────────────────────────┐\n' +
-        '│                                                                 │\n' +
-        '│  Neural Interface............ ████████░░░░ UNSTABLE (67%)       │\n' +
-        '│  Memory Integrity............ ██░░░░░░░░░░ CRITICAL (23%)       │\n' +
-        '│  Consciousness Transfer...... ░░░░░░░░░░░░ FAILED               │\n' +
-        '│  Project MIRROR.............. ░░░░░░░░░░░░ DISCONNECTED         │\n' +
-        '│  Unknown Entity.............. ████████████ ACTIVE               │\n' +
-        '│  Emergency Protocol.......... ████████████ ENGAGED              │\n' +
-        '│                                                                 │\n' +
-        '└─────────────────────────────────────────────────────────────────┘\n\n' + COMMAND_PROMPT);
-      return true;
-    }
-
-    if (normalized === 'exit') {
-      setTerminalOutput(prev => prev + '\n[SYSTEM] Session termination request ignored. Emergency neural bridge remains active.\n\n' + COMMAND_PROMPT);
-      return true;
-    }
-
-    return false;
-  }, []);
+  }, [announce, markUserInteracted, sound, userInput]);
 
   const handleSubmit = useCallback(async () => {
-    const submittedInput = userInput.trim();
-    if (!submittedInput || activeStreamRef.current) return;
+    const submitted = userInput.trim();
+    if (!submitted || activeStreamRef.current) return;
 
     markUserInteracted();
     setTerminalStatus('idle');
-    setTerminalOutput(prev => prev + submittedInput + '\n');
+    setTerminalOutput((prev) => prev + submitted + '\n');
     setUserInput('');
 
-    if (runCommand(submittedInput)) return;
+    if (dispatch(submitted)) return;
 
-    const closestCommand = findClosestCommand(submittedInput, COMMANDS);
-    if (closestCommand) {
-      setTerminalOutput(prev => `${prev}\n[HINT] Unknown command '${submittedInput}'. Did you mean '${closestCommand.name}'?\n\n${COMMAND_PROMPT}`);
+    const typo = classifyUnknown(submitted, { lastRoute: lastRouteRef.current });
+    if (typo) {
+      const prompt = buildPrompt(cwdRef.current);
+      setTerminalOutput((prev) =>
+        `${prev}[HINT] Unknown command '${submitted}'. Did you mean '${typo.suggestion.name}'?\n` +
+        `[HINT] Add a word or punctuation to talk to the Entity instead.\n\n${prompt}`);
       return;
     }
+
+    lastRouteRef.current = 'chat';
 
     const streamId = createStreamId();
     const marker = createStreamMarker(streamId);
     const controller = new AbortController();
     activeStreamRef.current = { id: streamId, controller, marker };
 
-    const userMessage: Message = { role: 'user', content: submittedInput };
+    const userMessage: Message = { role: 'user', content: submitted };
     const boundedMessages = [...conversations, userMessage].slice(-MAX_CONVERSATION_MESSAGES);
     setConversations(boundedMessages);
     setTerminalStatus('connecting');
 
     try {
-      setTerminalOutput(prev => `${prev}[SYSTEM] Establishing neural link... Ctrl+C to interrupt.\n${marker}Unknown Entity: `);
+      setTerminalOutput((prev) => `${prev}[SYSTEM] Establishing neural link... Ctrl+C to interrupt.\n${marker}Unknown Entity: `);
 
-      const messages: ChatRequestMessage[] = boundedMessages.map(message => ({
+      const messages: ChatRequestMessage[] = boundedMessages.map((message) => ({
         role: message.role,
         content: message.content,
       }));
 
-      const stream = await streamChatCompletion({
-        messages: [MATRIX_RPG_SYSTEM_CONTEXT, ...messages],
-      }, {
-        consumer: CHAT_CONSUMERS.MATRIX_RPG,
-        signal: controller.signal,
-      });
+      const stream = await streamChatCompletion(
+        {
+          messages: [MATRIX_RPG_SYSTEM_CONTEXT, buildExplorationContext(discoveredRef.current), ...messages],
+        },
+        {
+          consumer: CHAT_CONSUMERS.MATRIX_RPG,
+          signal: controller.signal,
+        },
+      );
 
       if (controller.signal.aborted || activeStreamRef.current?.id !== streamId) return;
 
@@ -340,7 +395,7 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
         }
 
         assistantResponse += decoder.decode(value, { stream: true });
-        setTerminalOutput(prev => replaceStreamBlock(prev, marker, assistantResponse));
+        setTerminalOutput((prev) => replaceStreamBlock(prev, marker, assistantResponse));
       }
 
       assistantResponse += decoder.decode();
@@ -348,21 +403,25 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
       if (controller.signal.aborted || activeStreamRef.current?.id !== streamId) return;
 
       const assistantMessage: Message = { role: 'assistant', content: assistantResponse };
-      setConversations(prev => [...prev, assistantMessage].slice(-MAX_CONVERSATION_MESSAGES));
-      setTerminalOutput(prev => `${stripStreamMarkers(replaceStreamBlock(prev, marker, assistantResponse))}\n\n${COMMAND_PROMPT}`);
+      setConversations((prev) => [...prev, assistantMessage].slice(-MAX_CONVERSATION_MESSAGES));
+      setTerminalOutput((prev) => capScrollback(`${stripStreamMarkers(replaceStreamBlock(prev, marker, assistantResponse))}\n\n${buildPrompt(cwdRef.current)}`));
       setTerminalStatus('idle');
+      announce(`Unknown Entity: ${assistantResponse}`);
+      sound.playBell();
     } catch (error) {
       if (controller.signal.aborted || isAbortError(error) || activeStreamRef.current?.id !== streamId) return;
 
       console.error('Error processing Matrix RPG chat:', error);
       setTerminalStatus('error');
-      setTerminalOutput(prev => `${stripStreamMarkers(prev)}\n[ERROR] Neural interface connection lost\n[SYSTEM] Attempting to reconnect...\n\n${COMMAND_PROMPT}`);
+      setTerminalOutput((prev) => `${stripStreamMarkers(prev)}\n[ERROR] Neural interface connection lost\n[SYSTEM] Prompt restored; try again.\n\n${buildPrompt(cwdRef.current)}`);
+      announce('Neural interface error. Prompt restored.');
+      sound.playError();
     } finally {
       if (activeStreamRef.current?.id === streamId) {
         activeStreamRef.current = null;
       }
     }
-  }, [conversations, markUserInteracted, runCommand, userInput]);
+  }, [announce, conversations, dispatch, markUserInteracted, sound, userInput]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -401,38 +460,58 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Phase 1: stream the boot log line by line, then hand off to 'ready'.
   useEffect(() => {
     if (gameState !== 'loading') return;
 
+    let cancelled = false;
+    const bootLines = buildBootLines(makeFormat(colsRef.current));
     let line = 0;
+
     const tick = () => {
-      if (!isMountedRef.current) return;
+      if (cancelled || !isMountedRef.current) return;
 
-      setTerminalOutput(prev => prev + BOOT_SEQUENCE[line] + '\n');
-      line++;
-
-      if (line < BOOT_SEQUENCE.length) {
-        bootLineTimerRef.current = setTimeout(tick, 80 + Math.random() * 120);
+      if (line >= bootLines.length) {
+        readyTimerRef.current = setTimeout(() => {
+          if (cancelled || !isMountedRef.current) return;
+          setTerminalOutput((prev) => prev + buildWelcome(makeFormat(colsRef.current)) + '\n');
+          setGameState('ready');
+        }, 800);
         return;
       }
 
-      readyTimerRef.current = setTimeout(() => {
-        if (!isMountedRef.current) return;
-        setGameState('ready');
-        setTerminalOutput(prev => prev + WELCOME_MESSAGE + '\n');
-
-        interactiveTimerRef.current = setTimeout(() => {
-          if (!isMountedRef.current) return;
-          setGameState('interactive');
-          setTerminalOutput(prev => appendPrompt(prev));
-        }, 2000);
-      }, 1000);
+      // Capture the line's content now; reading bootLines[line] inside the
+      // updater would re-read the mutated `line` at render time (and StrictMode
+      // double-invokes updaters), which drops/duplicates lines.
+      const current = bootLines[line];
+      line++;
+      setTerminalOutput((prev) => prev + current + '\n');
+      bootLineTimerRef.current = setTimeout(tick, 80 + Math.random() * 120);
     };
 
     bootLineTimerRef.current = setTimeout(tick, 80 + Math.random() * 120);
 
     return () => {
+      cancelled = true;
       if (bootLineTimerRef.current) clearTimeout(bootLineTimerRef.current);
+      if (readyTimerRef.current) clearTimeout(readyTimerRef.current);
+    };
+  }, [gameState]);
+
+  // Phase 2: after the welcome settles, go interactive and show the prompt.
+  useEffect(() => {
+    if (gameState !== 'ready') return;
+
+    let cancelled = false;
+    interactiveTimerRef.current = setTimeout(() => {
+      if (cancelled || !isMountedRef.current) return;
+      setGameState('interactive');
+      setTerminalOutput((prev) => appendPrompt(prev, buildPrompt(cwdRef.current)));
+    }, 2000);
+
+    return () => {
+      cancelled = true;
+      if (interactiveTimerRef.current) clearTimeout(interactiveTimerRef.current);
     };
   }, [gameState]);
 
@@ -441,7 +520,7 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
   }, [gameState, startMysteriousMessages]);
 
   useEffect(() => {
-    const cursorInterval = setInterval(() => setShowCursor(prev => !prev), 500);
+    const cursorInterval = setInterval(() => setShowCursor((prev) => !prev), 500);
     return () => clearInterval(cursorInterval);
   }, []);
 
@@ -457,20 +536,29 @@ export default function MatrixRPG({ className = '' }: MatrixRPGProps) {
         gameState={gameState}
         crtIntensity={crt.effectiveIntensity}
         isCrtOverridden={crt.isOverriddenByOs}
+        fragmentsRecovered={discovered.fragments.size}
+        totalFragments={TOTAL_FRAGMENTS}
+        mirrorRestored={isRestored(discovered)}
       />
 
       <div className={`matrix-rpg-container ${className}`}>
         <MatrixRPGTerminal
           content={renderedContent}
+          promptPrefix={promptPrefix}
           gameState={gameState}
           terminalStatus={terminalStatus}
           userInput={userInput}
           isProcessing={isProcessing}
-          commands={COMMANDS}
+          commands={VISIBLE_COMMANDS}
+          announcements={announcements}
           preferredIntensity={crt.preferredIntensity}
           effectiveIntensity={crt.effectiveIntensity}
           isCrtOverridden={crt.isOverriddenByOs}
           crtOverrideReason={crt.overrideReason}
+          soundEnabled={sound.enabled}
+          onToggleSound={sound.toggle}
+          onKeyPress={sound.playKey}
+          onMetrics={handleMetrics}
           onInputChange={setUserInput}
           onSubmit={handleSubmit}
           onAbort={handleAbort}

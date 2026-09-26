@@ -40,6 +40,15 @@
   --indigo-400: hsl(234 89% 74%);
   --indigo-500: hsl(239 84% 67%);
   --indigo-600: hsl(243 75% 59%);
+
+  /* Fixed site header height (mirrors Header h-16); floating overlays clear it. */
+  --site-header-h: 4rem;
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --site-header-h: 3.5rem; /* mirrors Header max-md:h-14 */
+  }
 }
 
 /* ===== Dark Theme ===== */
@@ -132,12 +141,8 @@
   --breakpoint-xl: 1200px;
   --breakpoint-2xl: 1400px;
 
-  /* Animations — one entrance pattern, a few small ambient loops */
+  /* Animations — one entrance pattern and one ambient status pulse */
   --animate-fade-in-up: fadeInUp 0.6s cubic-bezier(0, 0, 0.2, 1) both;
-  --animate-header-slide-in: headerSlideIn 0.5s cubic-bezier(0, 0, 0.2, 1)
-    both;
-  --animate-wave: wave 2.4s ease-in-out infinite;
-  --animate-bounce-arrow: bounceArrow 2.2s ease-in-out infinite;
   --animate-status-pulse: statusPulse 2s ease-in-out infinite;
 }
 
@@ -150,53 +155,6 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-/* Header entrance: animates opacity/Y only — horizontal centering lives on
-   the element (-translate-x-1/2) so reduced-motion stays centered. */
-@keyframes headerSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes wave {
-  0%,
-  20%,
-  40%,
-  60%,
-  80%,
-  100% {
-    transform: rotate(0deg);
-  }
-  10%,
-  30%,
-  50%,
-  70%,
-  90% {
-    transform: rotate(12deg);
-  }
-}
-
-@keyframes bounceArrow {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-4px);
-  }
-  60% {
-    transform: translateY(-2px);
   }
 }
 
@@ -216,6 +174,20 @@
 @layer base {
   * {
     @apply border-border;
+  }
+
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+
+  /* Anchor jumps (#projects, #about…) glide unless the user prefers reduced motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   body {

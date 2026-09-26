@@ -1,25 +1,23 @@
 import type { CrtIntensity, GameState } from './types';
+import { getCrtLabel } from './crtLabels';
 
 interface Props {
   gameState: GameState;
   crtIntensity: CrtIntensity;
   isCrtOverridden: boolean;
+  fragmentsRecovered: number;
+  totalFragments: number;
+  mirrorRestored: boolean;
 }
 
-const getCrtLabel = (intensity: CrtIntensity) => {
-  switch (intensity) {
-    case 0:
-      return 'OFF';
-    case 1:
-      return 'SOBER';
-    case 2:
-      return 'SCREEN';
-    case 3:
-      return 'ARCADE';
-  }
-};
-
-export default function MatrixRPGHeader({ gameState, crtIntensity, isCrtOverridden }: Props) {
+export default function MatrixRPGHeader({
+  gameState,
+  crtIntensity,
+  isCrtOverridden,
+  fragmentsRecovered,
+  totalFragments,
+  mirrorRestored,
+}: Props) {
   const getStatusText = () => {
     switch (gameState) {
       case 'initializing':
@@ -43,11 +41,21 @@ export default function MatrixRPGHeader({ gameState, crtIntensity, isCrtOverridd
         <span className="matrix-rpg-model">NX-3700</span>
       </div>
 
-      <div className="matrix-rpg-title">NEURAL INTERFACE • PROJECT MIRROR</div>
+      <div className="matrix-rpg-title">
+        <span className="matrix-rpg-title-prefix">NEURAL INTERFACE • </span>PROJECT MIRROR
+      </div>
 
       <div className="matrix-rpg-controls">
         <div className="matrix-rpg-sys-info">
           <span className="matrix-rpg-node">SYS.37912</span>
+          {isActive && (
+            <span
+              className={`matrix-rpg-mirror ${mirrorRestored ? 'matrix-rpg-mirror--restored' : ''}`}
+              title={mirrorRestored ? 'PROJECT MIRROR restored' : 'Memory fragments recovered'}
+            >
+              MIRROR:{mirrorRestored ? 'OK' : `${fragmentsRecovered}/${totalFragments}`}
+            </span>
+          )}
           <span
             className={`matrix-rpg-crt-indicator matrix-rpg-crt-indicator--${crtIntensity}`}
             title={isCrtOverridden ? 'CRT reduced by OS accessibility preference' : 'CRT intensity'}

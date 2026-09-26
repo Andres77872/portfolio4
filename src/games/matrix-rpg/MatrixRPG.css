@@ -171,6 +171,9 @@
     /* Slight perspective for 3D effect */
     transform: perspective(1000px) rotateX(1deg);
     transform-origin: center bottom;
+
+    /* The bezel adapts to the space the game gets, not to the viewport. */
+    container: matrix-rpg / inline-size;
   }
 
   .matrix-rpg-game--power-on .matrix-rpg-container {
@@ -315,6 +318,24 @@
     color: #ddd;
     border-color: rgba(255, 255, 255, 0.2);
     text-shadow: none;
+  }
+
+  .matrix-rpg-mirror {
+    font-size: 8px;
+    letter-spacing: 0.8px;
+    color: var(--crt-phosphor);
+    border: 1px solid color-mix(in srgb, var(--crt-phosphor) 28%, transparent);
+    background: rgba(0, 0, 0, 0.35);
+    padding: 2px 5px;
+    border-radius: 2px;
+    text-shadow: 0 0 5px var(--crt-phosphor-glow);
+    white-space: nowrap;
+  }
+
+  .matrix-rpg-mirror--restored {
+    color: var(--crt-green-bright);
+    border-color: color-mix(in srgb, var(--crt-green) 45%, transparent);
+    text-shadow: 0 0 6px color-mix(in srgb, var(--crt-green) 40%, transparent);
   }
 
   /* Power LED indicator */
@@ -687,6 +708,12 @@
     padding: 4px 8px;
   }
 
+  .matrix-rpg-sound-toggle.is-on {
+    border-color: color-mix(in srgb, var(--crt-phosphor) 70%, transparent);
+    background: color-mix(in srgb, var(--crt-phosphor) 16%, rgba(0, 0, 0, 0.45));
+    box-shadow: 0 0 8px var(--crt-phosphor-glow);
+  }
+
   .matrix-rpg-scroll-bottom {
     position: absolute;
     right: 14px;
@@ -784,58 +811,16 @@
    RESPONSIVE DESIGN (outside @layer so media queries work correctly)
    ═══════════════════════════════════════════════════════════════════════════ */
 @media (max-width: 720px) {
+  /* The game always fills the panel it is given: no min sizes that could overflow it. */
   .matrix-rpg-game {
-    width: 100%;
-    min-width: 320px;
-    max-width: 100%;
-    height: auto;
-    min-height: 500px;
-    padding: 12px;
+    padding: 10px;
     border-radius: 12px;
     transform: none;
   }
-  
-  .matrix-rpg-header {
-    padding: 10px 16px;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  
-  .matrix-rpg-brand {
-    display: none;
-  }
-  
-  .matrix-rpg-title {
-    font-size: 9px;
-    padding: 3px 8px;
-  }
-  
-  .matrix-rpg-footer {
-    padding: 10px 16px;
-  }
-  
-  .matrix-rpg-footer-buttons {
-    display: none;
-  }
-  
+
   .matrix-rpg-container {
     border-width: 3px;
     padding: 6px;
-    min-height: 350px;
-  }
-  
-  .matrix-rpg-terminal {
-    min-height: 330px;
-    min-width: 280px;
-  }
-
-  .matrix-rpg-sys-info {
-    gap: 6px;
-  }
-
-  .matrix-rpg-crt-indicator,
-  .matrix-rpg-node {
-    display: none;
   }
 
   .matrix-rpg-help-panel {
@@ -845,6 +830,57 @@
 
   .matrix-rpg-help-panel__grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* The playground panel is at most 576px wide whatever the viewport, so the bezel is
+   condensed by container width: one header row and a slim footer leave the screen
+   most of the height. */
+@container matrix-rpg (max-width: 640px) {
+  .matrix-rpg-header {
+    padding: 6px 10px;
+    gap: 10px;
+  }
+
+  .matrix-rpg-model,
+  .matrix-rpg-node,
+  .matrix-rpg-title-prefix {
+    display: none;
+  }
+
+  .matrix-rpg-title {
+    white-space: nowrap;
+    letter-spacing: 1.5px;
+    padding: 3px 8px;
+  }
+
+  .matrix-rpg-sys-info {
+    gap: 6px;
+  }
+
+  .matrix-rpg-footer {
+    padding: 6px 14px;
+  }
+
+  .matrix-rpg-footer-brand {
+    font-size: 9px;
+    letter-spacing: 3px;
+  }
+
+  .matrix-rpg-footer-buttons {
+    display: none;
+  }
+}
+
+@container matrix-rpg (max-width: 440px) {
+  .matrix-rpg-brand,
+  .matrix-rpg-crt-indicator,
+  .matrix-rpg-footer-info {
+    display: none;
+  }
+
+  .matrix-rpg-title {
+    font-size: 9px;
   }
 }
 
