@@ -18,6 +18,8 @@ The site is **projects-first**: a compact intro, then the work, then personal de
 
 All project content lives in `src/data/projects.json`; the intro stats, category counts, featured cards, toolbox and chatbot prompt are all derived from it. See [docs/data.md](docs/data.md) to add a project.
 
+[`public/llms.txt`](public/llms.txt) ([llmstxt.org](https://llmstxt.org/) format, served at `https://arizmendi.io/llms.txt`) describes Andres and every project for AI tools, and is written to be the assistant agent's system prompt. It is hand-written; `src/data/llmsTxt.test.ts` fails when it drifts from the data.
+
 ## Getting Started
 
 ```bash
