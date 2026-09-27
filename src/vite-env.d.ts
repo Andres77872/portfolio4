@@ -1,6 +1,8 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
+  readonly VITE_PROJECT_IMAGES?: 'legacy' | 'generated';
+  readonly VITE_PROJECT_IMAGE_VARIANT?: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
   readonly VITE_CHAT_API_URL?: string;
   readonly VITE_CHAT_API_KEY?: string;
   readonly VITE_CHAT_PORTFOLIO_AGENT_ID?: string;

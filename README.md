@@ -40,9 +40,15 @@ VITE_CHAT_API_URL=https://llm.arz.ai/v1/completions
 VITE_CHAT_PORTFOLIO_AGENT_ID=agt-your-portfolio-assistant-agent-id
 VITE_CHAT_MATRIX_RPG_AGENT_ID=agt-your-matrix-rpg-agent-id
 VITE_CHAT_API_KEY=
+VITE_PROJECT_IMAGES=legacy
+VITE_PROJECT_IMAGE_VARIANT=7
 ```
 
 The chat API is called anonymously by default. `VITE_CHAT_API_KEY` is optional, client-visible, and only intended for public/sentinel tokens; real secrets do not belong in Vite variables. Without `VITE_CHAT_PORTFOLIO_AGENT_ID` the assistant simply does not render (one console warning names the variable). `.env` and `.env.*` are gitignored; `.env.example` is the committed template.
+
+Set `VITE_PROJECT_IMAGES=generated` to use the local illustrated artwork, or `legacy` to keep the original image URLs. Unset or unrecognized mode values keep the legacy artwork. `VITE_PROJECT_IMAGE_VARIANT=1` through `9` selects a set across all projects (default: `7`). Sets 7–9 contain no characters: each project has its own subject, palette, scale, and composition, connected by a painted animation-background treatment and restrained color. Each set supplies a different scene for every project. Earlier sets 1–6 remain available through explicit selection. Invalid or unavailable variants fall back to set 7. Restart Vite or rebuild after changing either variable. Selection happens in the catalog and applies to featured cards, project cards, detail modals, and assistant cards; there is no visitor-facing toggle or label.
+
+Each project has nine WebP covers in `public/images/projects/<slug>/`, registered in `src/data/projectArtwork.json`. Original URLs remain in `src/data/projects.json`, and projects without generated artwork fall back to those URLs. Exact generation prompts are saved in `output/project-artwork/prompts.json` (sets 1–3), `output/project-artwork/prompts-4-6.json` (sets 4–6), and `output/project-artwork/prompts-7-9.json` (sets 7–9), alongside a contact sheet for each set.
 
 ## Tech Stack
 

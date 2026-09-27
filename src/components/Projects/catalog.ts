@@ -1,4 +1,5 @@
 import projectsData from '@/data/projects.json';
+import { resolveProjectImage } from '@/config/projectImages';
 import type { CatalogProject, Project, ProjectCategoryId } from './types';
 
 export interface ProjectCategory {
@@ -54,10 +55,12 @@ const normalizeTechnology = (value: string) => value.trim().toUpperCase();
 
 export const toCatalogProject = (project: Project): CatalogProject => {
     const year = project.releaseDate ? Number.parseInt(project.releaseDate.slice(0, 4), 10) : Number.NaN;
+    const slug = slugify(project.title);
 
     return {
         ...project,
-        slug: slugify(project.title),
+        slug,
+        image: resolveProjectImage(slug, project.image),
         year: Number.isFinite(year) ? year : null,
         technologies: Array.from(
             new Set([...(project.tags ?? []), ...(project.language ?? [])].map(normalizeTechnology)),
