@@ -151,7 +151,8 @@
     "tagline": "Turns a text prompt into a Reveal.js slide deck, streamed as JSON from a hosted LLM agent.",
     "category": "agents-llm",
     "description": "Proof-of-concept React app that sends a prompt to a hosted LLM agent, streams back a JSON slide spec, and renders it in the browser as a Reveal.js presentation with optional code highlighting and speaker notes.",
-    "descriptionMD": "**Magic Slider: Prompt-to-Presentation Generator**\n\nMagic Slider is a proof-of-concept that turns a short text prompt into a Reveal.js slide deck. The prompt is sent to a hosted LLM agent through an OpenAI-compatible chat-completions endpoint; the agent streams back a JSON presentation spec, which the app parses and renders in the browser.\n\n**Key Features:**\n*   **Prompt Input:** Free-text description of the deck, with example prompts to start from.\n*   **Streamed Generation:** Reads the server-sent-event stream and assembles the JSON spec before rendering it.\n*   **JSON Slide Schema:** Each slide can have a title, HTML content, a background image and custom attributes; the spec can also set Reveal.js options and plugins.\n*   **Reveal.js Rendering:** Builds an embedded, navigable deck; the spec can enable the Highlight (code) and Notes (speaker notes) plugins.\n\n**Technology Stack:**\n*   **Frontend:** **React 18**, **TypeScript** and **Vite**.\n*   **Presentation:** **Reveal.js** with highlight.js.\n*   **AI Backend:** OpenAI-compatible streaming chat-completions API serving a hosted agent.\n\nThe hosted demo no longer generates decks: its generation backend (magic.arz.ai) is offline.",
+    "descriptionMD": "**Magic Slider: Prompt-to-Presentation Generator**\n\nMagic Slider is a proof-of-concept that turns a short text prompt into a Reveal.js slide deck. The prompt is sent to a hosted LLM agent through an OpenAI-compatible chat-completions endpoint; the agent streams back a JSON presentation spec, which the app parses and renders in the browser.\n\n**Key Features:**\n*   **Prompt Input:** Free-text description of the deck, with example prompts to start from.\n*   **Streamed Generation:** Reads the server-sent-event stream and assembles the JSON spec before rendering it.\n*   **JSON Slide Schema:** Each slide can have a title, HTML content, a background image and custom attributes; the spec can also set Reveal.js options and plugins.\n*   **Reveal.js Rendering:** Builds an embedded, navigable deck; the spec can enable the Highlight (code) and Notes (speaker notes) plugins.\n\n**Technology Stack:**\n*   **Frontend:** **React 18**, **TypeScript** and **Vite**.\n*   **Presentation:** **Reveal.js** with highlight.js.\n*   **AI Backend:** OpenAI-compatible streaming chat-completions API serving a hosted agent.",
+    "url": "https://magic-slider.novus.chat/",
     "image": "https://img.arz.ai/vGqCivS9",
     "repoUrl": "https://github.com/Andres77872/magic-slider",
     "tags": [
@@ -162,7 +163,7 @@
       "LLM",
       "STREAMING"
     ],
-    "status": "repo",
+    "status": "production",
     "license": "",
     "language": ["TypeScript", "React"],
     "releaseDate": "2025-06-07",
